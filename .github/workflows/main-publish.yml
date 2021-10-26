@@ -49,5 +49,5 @@ jobs:
         path: /app/CosmosPublisher
         
     - name: Build Editor Docker Image
-      run: docker build -f /app/CosmosEditor/Dockerfile
+      run: docker build /app/CosmosEditor
 
