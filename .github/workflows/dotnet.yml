@@ -9,9 +9,11 @@ on:
 
 jobs:
   build:
-
+    env:
+      TAGNAME: $(date +%s)
+      
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -38,6 +40,7 @@ jobs:
               # Password or personal access token used to log against the Docker registry
               password: ${{ secrets.DOCKERPASSWORD }}
     - name: Build the Docker image
-      run: docker build . --file /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/Dockerfile --tag cosmoseditor:$(date +%s)
-    - name: Docker image push
-      run: docker image push --all-tags cosmoseditor
+      run: docker build . --file /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/Dockerfile --tag cosmoseditor:${TAGNAME}
+    - name: Create Docker tag
+      run:  docker push toiyabe/cosmoseditor:${TAGNAME}
+
