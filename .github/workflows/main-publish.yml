@@ -31,22 +31,22 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet publish Cosmos Editor
-      run: dotnet publish D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms\CDT.Cosmos.Cms.csproj -c Release -o /app/CosmosEditor
+      run: dotnet publish D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms\CDT.Cosmos.Cms.csproj -c Release -o /app/cosmoseditor
       
     - name: dotnet publish Cosmos Publisher
-      run: dotnet publish D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms.Website\CDT.Cosmos.Cms.Website.csproj -c Release -o /app/CosmosPublisher
+      run: dotnet publish D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms.Website\CDT.Cosmos.Cms.Website.csproj -c Release -o /app/cosmospublisher
 
     - name: Upload Cosmos Editor artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
         name: Cosmos Editor Artifact
-        path: /app/CosmosEditor
+        path: /app/cosmoseditor
         
     - name: Upload Cosmos Publisher artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
         name: Cosmos Publisher Artifact
-        path: /app/CosmosPublisher
+        path: /app/cosmospublisher
         
     - name: Build Editor Docker Image
       run: docker build D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms
