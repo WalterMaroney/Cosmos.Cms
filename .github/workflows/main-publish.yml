@@ -31,7 +31,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet publish Cosmos Editor
-      run: dotnet publish D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms.csproj -c Release -o ${{env.DOTNET_ROOT}}/CosmosEditor
+      run: dotnet publish D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms\CDT.Cosmos.Cms.csproj -c Release -o ${{env.DOTNET_ROOT}}/CosmosEditor
       
     - name: dotnet publish Cosmos Publisher
       run: dotnet publish D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms.Website\CDT.Cosmos.Cms.Website.csproj -c Release -o ${{env.DOTNET_ROOT}}/CosmosPublisher
