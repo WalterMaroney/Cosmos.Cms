@@ -1,5 +1,6 @@
 # [Cosmos Content Management Platform](https://cosmos.azureedge.net)
 
+[![Build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml)
 
 Cosmos CMS (C/CMS) is a ASP.NET Core (v.5) hybrid [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). It is a "[hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))"  because of its open architecture allows you to "mashup," or combine the functionality of this CMS with your own web application.
 
