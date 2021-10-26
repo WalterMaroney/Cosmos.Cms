@@ -33,10 +33,10 @@ jobs:
       # uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
       uses: docker/login-action@v1.10.0
       with:
-              # Server address of Docker registry. If not set then will default to Docker Hub
-              registry: toiyabe/cosmoseditor
               # Username used to log against the Docker registry
               username: toiyabe
               # Password or personal access token used to log against the Docker registry
               password: ${{ secrets.DOCKERPASSWORD }}
+    - name: Build the Docker image
+      run: docker build . --file /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/Dockerfile --tag my-image-name:$(date +%s)
     
