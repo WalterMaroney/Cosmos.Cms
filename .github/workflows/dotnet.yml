@@ -1,3 +1,4 @@
+
 name: ubunto build
 
 on:
@@ -20,11 +21,12 @@ jobs:
     - name: Adding Telerik NuGet
       run: dotnet nuget add source --username ${{ secrets.TELERIK_USER }} --password ${{ secrets.TELERIK_PASSWORD }} --store-password-in-clear-text --name telerik.com "https://nuget.telerik.com/nuget"
     - name: Restore dependencies
-      run: dotnet restore --no-cache
+      run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal
+    
     - name: dotnet publish Cosmos Editor
       run: dotnet publish /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/CDT.Cosmos.Cms.csproj -c Release -o /home/runner/work/app/cosmoseditor
       
