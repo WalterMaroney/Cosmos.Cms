@@ -20,7 +20,7 @@ jobs:
     - name: Adding Telerik NuGet
       run: dotnet nuget add source --username ${{ secrets.TELERIK_USER }} --password ${{ secrets.TELERIK_PASSWORD }} --store-password-in-clear-text --name telerik.com "https://nuget.telerik.com/nuget"
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --no-cache
     - name: Build
       run: dotnet build --no-restore
     #- name: Test
