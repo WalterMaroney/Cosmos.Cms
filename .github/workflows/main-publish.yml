@@ -48,6 +48,9 @@ jobs:
         name: Cosmos Publisher Artifact
         path: /app/cosmospublisher
         
+    - name: Docker login
+      run: docker login -u ${{ secrets.DOCKERLOGIN }} -p {{ secrets.DOCKERPASSWORD }}
+        
     - name: Build Editor Docker Image
       run: docker build D:\a\Cosmos.Cms\Cosmos.Cms\CDT.Cosmos.Cms
 
