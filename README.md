@@ -2,7 +2,9 @@
 
 [![Build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml)
 
-Cosmos CMS (C/CMS) is a ASP.NET Core (v.5) hybrid [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). It is a "[hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))"  because of its open architecture allows you to "mashup," or combine the functionality of this CMS with your own web application.
+Cosmos HL/CMS (C/CMS) is a dynamic, high performance "headless" [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). Tests have shown that it serves HTML pages two and a half times faster than a static website with blob storage.
+
+It is a "[hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))"  because of its open architecture allows you to "mashup," or combine the functionality of this CMS with your own web application.
 
 Each Cosmos instance has at least two websites, a database and blob or file storage. One website is the "publisher," and it's job is to host the public website.  The second is the "Editor," and it's role is to create and maintain content for the website.  The two are split out so that the "publisher" isn't burdened with the heavy load associated with content management--which ranges from editing HTML and other code, to uploading files such as images, videos, or JavaScript files or Cascading Style Sheet files.
 
