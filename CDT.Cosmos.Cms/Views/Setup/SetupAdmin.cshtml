@@ -1,0 +1,80 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityResult
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Register ";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card bg-secondary text-light">
+                <div class="card-header">
+                    @if (Model.Succeeded)
+                    {
+                        <h4 class="card-title">
+                            Admin Account Created
+                        </h4>
+                    }
+                    else
+                    {
+                        <h4 class="card-title">
+                            Error Creating Admin Account
+                        </h4>
+                    }
+                </div>
+                <div class="card-body">
+                    @if (Model.Succeeded)
+                    {
+                        <section>
+                            <h4>
+                                Final steps:
+                            </h4>
+                            <p>To finish your setup, we need you to do the following:</p>
+                            <ul>
+                                <li>
+                                    <p>It is highly recommended to make the following changes in configuration</p>
+                                    <div class="p-3 bg-light text-dark">
+                                        <code>
+                                            SiteCustomizations.AllowSetup = false
+                                        </code>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>To finish your setup, we need you to do the following:</p>
+                                    <ul>
+                                        <li>Log out</li>
+                                        <li>Close your web browser</li>
+                                        <li>Open a new web browser</li>
+                                        <li>Log in</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <p>Please click the logout button below to log out:</p>
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+                                <button class="btn btn-primary" type="submit">Logout</button>
+                            </form>
+                        </section>
+                    }
+                    else
+                    {
+                        <section>
+                            <h4>
+                                Error(s):
+                            </h4>
+                            <ul>
+                                @foreach (var error in Model.Errors)
+                                {
+                                    <li>@error.Description</li>
+                                }
+                            </ul>
+                            <a class="text-light" href="@Url.Action("Index")">Back to setup</a>
+                        </section>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

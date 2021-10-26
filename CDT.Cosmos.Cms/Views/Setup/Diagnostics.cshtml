@@ -1,0 +1,46 @@
+﻿@using CDT.Cosmos.Cms.Common.Services.Configurations
+@model CosmosConfigStatus
+@addTagHelper *, Kendo.Mvc
+@using Kendo.Mvc.UI
+@{
+    ViewData["Title"] = "Diagnostics";
+}
+<script src="https://kendo.cdn.telerik.com/2021.3.914/js/jszip.min.js"></script>
+
+<div class="card bg-secondary">
+    <div class="card-header">
+        <h4><i class="fa fa-medkit"></i> Diagnostics</h4> <a class="btn btn-sm btn-primary float-right" asp-action="Index">Setup Center</a>
+
+        <p>
+            If there are problems with setup or boot time configuration, look at
+            the diagnostics shown below. Key in those diagnostics which have success
+            is set to &quot;false.&quot;
+        </p>
+        <p>IMPORTANT! Set the startup variable &quot;CosmosAllowSetup&quot; to &quot;false&quot; to disable this page.</p>
+
+    </div>
+    <div class="card-body">
+        @(
+         Html.Kendo().Grid(Model.Diagnostics).Name("grid")
+         .Columns(col =>
+         {
+             col.Bound(m => m.Success).Sortable(true).ClientTemplate("#= showStatus(data) #");
+             col.Bound(m => m.ServiceType).Sortable(true);
+             col.Bound(m => m.Message).Sortable(false);
+         })
+         .Sortable()
+         .ToolBar(tools => tools.Excel())
+         .Excel(excel => excel.AllPages(true).FileName("CosmosDiagnostis.xlsx").ProxyURL(Url.Action("Excel_Export_Save")))
+        )
+    </div>
+</div>
+<script>
+    function showStatus(data) {
+        if (data.Success) {
+            
+            return "<div class='fa fa-check-circle fa-lg text-success'> </div>";
+        }
+
+        return "<div class='fa fa-times-circle fa-lg text-danger'> </div> Error";
+    }
+</script>

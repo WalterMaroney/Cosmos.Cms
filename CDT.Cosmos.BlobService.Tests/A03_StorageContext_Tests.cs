@@ -1,0 +1,276 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using CDT.Cosmos.BlobService.Drivers;
+using CDT.Cosmos.BlobService.Models;
+using CDT.Cosmos.Cms.Common.Services.Configurations;
+using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CDT.Cosmos.BlobService.Tests
+{
+    [TestClass]
+    public class A03_StorageContext_Tests
+    {
+        //private static AmazonStorageConfig _amazonStorageConfig;
+        private static string _fullPathTestFile;
+
+        //private static AzureStorageConfig _azureStorageConfig;
+        private static CosmosConfig _cosmosConfig;
+
+        [ClassInitialize]
+        public static void Initialize(TestContext context)
+        {
+            var config = new CosmosConfig
+            {
+                StorageConfig = new StorageConfig()
+            };
+
+            config.StorageConfig = StaticUtilities.GetCosmosConfig().Value.StorageConfig;
+
+            _cosmosConfig = config;
+
+            _fullPathTestFile = Path.Combine(context.DeploymentDirectory, DriverTestConstants.TestFile1);
+        }
+
+        [TestMethod]
+        public async Task A01_ReadFiles()
+        {
+            _cosmosConfig.PrimaryCloud = "azure";
+
+            var service1 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            var result1 = await service1.GetObjectsAsync("");
+
+            _cosmosConfig.PrimaryCloud = "amazon";
+
+            var service2 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            var result2 = await service2.GetObjectsAsync("");
+
+            Assert.AreEqual(1, result1.Count);
+            Assert.AreEqual(1, result2.Count);
+        }
+
+        [TestMethod]
+        public async Task A02_UploadFileMultiCloud()
+        {
+            var azureDriver = new AzureStorage(_cosmosConfig.StorageConfig.AzureConfigs.FirstOrDefault());
+            var awsDriver = new AmazonStorage(_cosmosConfig.StorageConfig.AmazonConfigs.FirstOrDefault(),
+                StaticUtilities.GetMemoryCache());
+
+            await using var memStream = new MemoryStream();
+            await using var fileStream = File.OpenRead(_fullPathTestFile);
+            await fileStream.CopyToAsync(memStream);
+            memStream.Position = 0;
+            var data = memStream.ToArray();
+
+            var fullPath1 = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile2;
+
+            var fileUploadMetadata1 = new FileUploadMetaData
+            {
+                UploadUid = Guid.NewGuid().ToString(),
+                FileName = DriverTestConstants.TestFile2,
+                RelativePath = fullPath1.TrimStart('/'),
+                ContentType = "image/jpeg",
+                ChunkIndex = 0,
+                TotalChunks = 1,
+                TotalFileSize = data.Length
+            };
+
+            _cosmosConfig.PrimaryCloud = "azure";
+
+            var service1 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            service1.AppendBlob(memStream, fileUploadMetadata1);
+
+            _cosmosConfig.PrimaryCloud = "amazon";
+
+            var service2 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            var fullPath2 = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile3;
+
+            var fileUploadMetadata2 = new FileUploadMetaData
+            {
+                UploadUid = Guid.NewGuid().ToString(),
+                FileName = DriverTestConstants.TestFile3,
+                RelativePath = fullPath2.TrimStart('/'),
+                ContentType = "image/jpeg",
+                ChunkIndex = 0,
+                TotalChunks = 1,
+                TotalFileSize = data.Length
+            };
+
+            service2.AppendBlob(memStream, fileUploadMetadata2);
+
+            // See if the files uploaded to Azure
+
+            var azBlobs1 = await azureDriver.GetBlobAsync(fullPath1);
+            var azBlobs2 = await azureDriver.GetBlobAsync(fullPath2);
+
+            var awsBlobs1 = await awsDriver.GetBlobAsync(fullPath1);
+            var awsBlobs2 = await awsDriver.GetBlobAsync(fullPath2);
+
+            Assert.AreEqual(azBlobs1.Name, awsBlobs1.Key);
+            Assert.AreEqual(azBlobs2.Name, awsBlobs2.Key);
+        }
+
+        [TestMethod]
+        public async Task A03_RenameFolder()
+        {
+            _cosmosConfig.PrimaryCloud = "azure";
+
+            var service1 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            var blobsToMove =
+                await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3);
+            await service1.RenameAsync(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3,
+                DriverTestConstants.FolderRename1);
+            var blobsMoved = await service1.GetFolderContents(DriverTestConstants.FolderRename1);
+            var blobsRemaining =
+                await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3);
+
+            // The number of blobs to move, should match the number moved
+            Assert.AreEqual(blobsToMove.Count, blobsMoved.Count);
+            // After the move, there should be no blobs remaining in the old location
+            Assert.AreEqual(0, blobsRemaining.Count);
+        }
+
+        [TestMethod]
+        public async Task A04_RenameFile()
+        {
+            _cosmosConfig.PrimaryCloud = "azure";
+
+            var service1 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            var fileToRename = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile3;
+
+            var fileNewName = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.RenameFile2;
+
+            Assert.IsTrue(await service1.BlobExistsAsync(fileToRename));
+
+            await service1.RenameAsync(fileToRename, fileNewName);
+
+            Assert.IsFalse(await service1.BlobExistsAsync(fileToRename));
+            Assert.IsTrue(await service1.BlobExistsAsync(fileNewName));
+        }
+
+        [TestMethod]
+        public async Task A05_NavigateSubFolders_AmazonPrimary()
+        {
+            _cosmosConfig.PrimaryCloud = "amazon";
+
+            var service1 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            //
+            // Arrange sub folders with files
+            //
+            var folder = service1.CreateFolder(DriverTestConstants.HelloWorldSubdirectory2Subdirectory5);
+
+            // Create a file to upload.
+            await using var memStream = new MemoryStream();
+            {
+                await using var fileStream = File.OpenRead(_fullPathTestFile);
+                await fileStream.CopyToAsync(memStream);
+            }
+
+            for (var i = 0; i < 5; i++)
+            {
+                var fileName = $"file{i}.jpg";
+                var path = DriverTestConstants.HelloWorldSubDirectory2 + "/" + fileName;
+
+                var fileUploadMetadata1 = new FileUploadMetaData
+                {
+                    UploadUid = Guid.NewGuid().ToString(),
+                    FileName = fileName,
+                    RelativePath = path.TrimStart('/'),
+                    ContentType = "image/jpeg",
+                    ChunkIndex = 0,
+                    TotalChunks = 1,
+                    TotalFileSize = memStream.Length
+                };
+
+                service1.AppendBlob(memStream, fileUploadMetadata1);
+            }
+
+            var folder1 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubDirectory2);
+
+            foreach (var entry in folder1)
+            {
+                Assert.IsNotNull(entry.Name);
+                Assert.IsNotNull(entry.Path);
+            }
+
+            for (var i = 0; i < 9; i++)
+            {
+                var fileName = $"file{i}.jpg";
+                var path = DriverTestConstants.HelloWorldSubdirectory2Subdirectory5 + "/" + fileName;
+
+                var fileUploadMetadata1 = new FileUploadMetaData
+                {
+                    UploadUid = Guid.NewGuid().ToString(),
+                    FileName = fileName,
+                    RelativePath = path.TrimStart('/'),
+                    ContentType = "image/jpeg",
+                    ChunkIndex = 0,
+                    TotalChunks = 1,
+                    TotalFileSize = memStream.Length
+                };
+
+                service1.AppendBlob(memStream, fileUploadMetadata1);
+            }
+
+            var folder2 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory5);
+
+            foreach (var entry in folder2)
+            {
+                Assert.IsNotNull(entry.Name);
+                Assert.IsNotNull(entry.Path);
+            }
+
+            Assert.AreEqual(10, folder1.Count);
+            Assert.AreEqual(9, folder2.Count);
+        }
+
+
+        [TestMethod]
+        public async Task A06_NavigateSubFolders_AzurePrimary()
+        {
+            _cosmosConfig.PrimaryCloud = "azure";
+
+            var service1 =
+                new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
+
+            //_cosmosConfig.StorageConfig.PrimaryProvider = "amazon";
+
+            //var service2 = new BlobService.StorageContext(Options.Create(_cosmosConfig));
+
+            var folder1 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubDirectory2);
+
+            foreach (var entry in folder1)
+            {
+                Assert.IsNotNull(entry.Name);
+                Assert.IsNotNull(entry.Path);
+            }
+
+            var folder2 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory5);
+
+            foreach (var entry in folder2)
+            {
+                Assert.IsNotNull(entry.Name);
+                Assert.IsNotNull(entry.Path);
+            }
+
+            Assert.AreEqual(10, folder1.Count);
+            Assert.AreEqual(9, folder2.Count);
+        }
+    }
+}

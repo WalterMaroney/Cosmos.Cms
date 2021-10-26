@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<UserSecretsId>e1a86c21-4832-4fdb-8709-f0a8e1879f01</UserSecretsId>
+		<AnalysisLevel>5.0</AnalysisLevel>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<StartupObject>CDT.Cosmos.Cms.Website.Program</StartupObject>
+		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+		<AssemblyVersion>2021.10.17.0</AssemblyVersion>
+		<FileVersion>2021.10.17.0</FileVersion>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+		<ApplicationInsightsResourceId>/subscriptions/aec61f6c-81f1-4589-b4a5-c743876b4847/resourceGroups/CosmosCMS/providers/microsoft.insights/components/cosmos-cms</ApplicationInsightsResourceId>
+		<Version>2021.7.20.1</Version>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<Optimize>false</Optimize>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="wwwroot\.well-known\microsoft-identity-association.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Views\Shared\Error.cshtml" />
+	  <None Include="Views\Shared\_CosmosLayout.cshtml" />
+	  <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.1" />
+		<PackageReference Include="Azure.Identity" Version="1.4.1" />
+		<PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.2.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.8.0" />
+		<PackageReference Include="Azure.Storage.Queues" Version="12.8.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.18.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="5.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.1.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CDT.Cosmos.Cms.Common\CDT.Cosmos.Cms.Common.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="CA-Response-Portal-bfc617b86937.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Update="Views\Home\Index.cshtml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Views\Shared\Components\ArticleComponent\" />
+	</ItemGroup>
+
+</Project>

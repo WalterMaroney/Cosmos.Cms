@@ -1,0 +1,49 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy Editor and Publisher Artifacts
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+        
+    - name: Adding Telerik NuGet
+      run: dotnet nuget add source --username ${{ secrets.TELERIK_USER }} --password ${{ secrets.TELERIK_PASSWORD }} --store-password-in-clear-text --name telerik.com "https://nuget.telerik.com/nuget"
+   
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+
+    - name: dotnet publish Cosmos Editor
+      run: dotnet publish D:\a\Cosmos\Cosmos\CDT.Cosmos.Cms\CDT.Cosmos.Cms.csproj -c Release -o ${{env.DOTNET_ROOT}}/CosmosEditor
+      
+    - name: dotnet publish Cosmos Publisher
+      run: dotnet publish D:\a\Cosmos\Cosmos\CDT.Cosmos.Cms.Website\CDT.Cosmos.Cms.Website.csproj -c Release -o ${{env.DOTNET_ROOT}}/CosmosPublisher
+
+    - name: Upload Cosmos Editor artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: Cosmos Editor Artifact
+        path: ${{env.DOTNET_ROOT}}/CosmosEditor
+        
+    - name: Upload Cosmos Publisher artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: Cosmos Publisher Artifact
+        path: ${{env.DOTNET_ROOT}}/CosmosPublisher

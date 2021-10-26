@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Cosmos Upgrade";
+}
+<style>
+    .btn-circle.btn-sm {
+        border-radius: 25px;
+        height: 34px;
+        padding: 3px 10px;
+        text-align: center;
+        width: 34px;
+    }
+</style>
+<div class="card bg-secondary">
+    <div class="card-header">
+        <h4 class="card-title">Upgrade Completed</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <h4 class="card-title">Upgrade Completed</h4>
+                <p>
+                    Please complete the next steps:
+                </p>
+                <ul>
+                    <li> After upgrade is applied, make sure all publishers and other editors for this website are using the latest version.</li>
+                    <li>Stop then restart all editors and publishers deployed for this website.</li>
+                    <li>
+                        If this upgrade has been applied to a copy of the production system (recommended), then
+                        test this site to make sure it functions properly.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

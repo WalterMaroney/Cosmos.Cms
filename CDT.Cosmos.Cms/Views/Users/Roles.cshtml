@@ -1,0 +1,88 @@
+﻿@using Kendo.Mvc.UI
+@model List<RoleItemViewModel>
+@{
+    ViewData["Title"] = "Roles ";
+}
+
+<main class="main-primary">
+    <div class="container">
+        <h2>Publisher Roles</h2>
+        <p>
+            The roles listed here are used by the &quot;Publisher&quot; to limit access to one or more pages. Add or remove users
+            to these roles by clicking the &quot;Users&quot; button.
+        </p>
+        <a class="btn btn-sm btn-primary" asp-action="Index">User List</a>
+        @(Html.Kendo().Grid<RoleItemViewModel>().Name("grid")
+            .BindTo(Model)
+            .Columns(col =>
+            {
+                col.Command(custom => custom.Custom("MgeUsers").Click("manageUsers").Text("Users")).Width(150);
+                col.Bound(b => b.Id).Hidden();
+                col.Bound(b => b.RoleName);
+                col.Command(command => { command.Destroy(); }).Width(150);
+            })
+            .ToolBar(toolbar =>
+            {
+                toolbar.Create();
+                toolbar.Save();
+            })
+            .Editable(editable => editable.Mode(GridEditMode.InCell).ConfirmDelete("Delete role?").DisplayDeleteConfirmation(true))
+            .Pageable()
+            .Navigatable()
+            .Sortable()
+            .Scrollable()
+            .Events(events => events.Sort("onSort"))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(20)
+                .ServerOperation(false)
+                .Events(events => events.Error("error_handler"))
+                .Model(model => model.Id(p => p.Id))
+                .Create("Roles_Create", "Users")
+                .Read("Read_Roles", "Users")
+                .Update("Roles_Update", "Users")
+                .Destroy("Roles_Destroy", "Users")
+            ))
+    </div>
+</main>
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors,
+                function(key, value) {
+                    if ('errors' in value) {
+                        $.each(value.errors,
+                            function() {
+                                message += this + "\n";
+                            });
+                    }
+                });
+            alert(message);
+        }
+    }
+
+    // Prevent sorting when new record without Product Name is added
+    function onSort(e) {
+        var gridData = e.sender.dataSource.data();
+        gridData.forEach(function(element) {
+            if (!element.Name) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    function manageUsers(e) {
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        if (dataItem.RoleName !== "") {
+            if (dataItem.Id !== "") {
+                window.location = "@Url.Action("UsersAndRoles")/" + dataItem.Id;
+            } else {
+                alert("Please save role before adding users.");
+            }
+        } else {
+            alert("Role must have a name before adding users.");
+        }
+    }
+</script>

@@ -1,0 +1,29 @@
+﻿@using Kendo.Mvc.UI
+@model SelectListItem
+@(Html.Kendo().DropDownListFor(m => m)
+    .DataTextField("Text")
+    .DataValueField("Value")
+    .OptionLabel("Redis provider...")
+    .Template("<span style='min-width:200px'>#: data.Text # (#: data.Value #)</span>")
+    .HtmlAttributes(new {style = "width: 100%"})
+    .AutoBind(true)
+    .Filter(FilterType.Contains)
+    .BindTo(new List<SelectListItem>
+    {
+        new()
+        {
+            Text = "Azure Cache for Redis",
+            Value = "azure"
+        },
+        new()
+        {
+            Text = "AWS ElastiCache Redis",
+            Value = "amazon"
+        },
+        new()
+        {
+            Text = "Redis Labs",
+            Value = "redlabs"
+        }
+    })
+    )

@@ -1,0 +1,147 @@
+﻿@using Kendo.Mvc.UI
+@model SetupViewModel
+
+@{
+    ViewData["Title"] = "Install Database";
+    var hasConfig = (bool) ViewData["HasConfig"];
+}
+<div class="row">
+    <div class="col">
+        <form id="frm">
+            <input type="hidden" id="dropDatabase" name="dropDatabase" value="true"/>
+            <div class="card  bg-secondary">
+                <div class="card-header">
+                    <span class="h3">@ViewData["Title"]</span>
+                    <a class="btn btn-sm btn-primary float-right" asp-action="Index">Setup Center</a>
+                </div>
+                <div class="card-body">
+                    <h5><span class="badge bg-warning text-dark">WARNING: </span> POSSIBLE DATA LOSS MAY OCCUR!</h5>
+
+                    <p>
+                        Please back up your databases before running this install as any <span style="text-decoration: underline">existing databases will be overwritten</span>.
+                    </p>
+                    <hr/>
+                    <p></p>
+                    <p>
+                        This page installs the C/CMS database. If more than one database is configured, it will also
+                        automatically install database synchronization.
+                    </p>
+                    @if (hasConfig)
+                    {
+                        <div class="form-group">
+                            <label>When ready, enable installation:</label>
+                            @(
+                            Html.Kendo()
+                                .Switch()
+                                .Name("enableInstall")
+                                .Messages(m =>
+                                    m.Checked("Enabled").Unchecked("Disabled"))
+                                .Events(eve => eve.Change("onSwitch")).Width(100)
+                                )
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="bg-light bg-gradient text-dark p-2">
+                            <p>A database connection was not detected. Please check the following:</p>
+                            <p>After running the Configuration Wizard and installing the boot configuration:</p>
+                            <ul>
+                                <li>
+                                    Stop the website for 15 seconds.
+                                </li>
+                                <li>
+                                    Restart the website, and wait for website to fully start.
+                                </li>
+                                <li>
+                                    Refresh this web page.
+                                </li>
+                            </ul>
+                            <p>
+                                If a restart does not resolve this issue, check the boot configuration
+                                to ensure all required settings are correct.
+                            </p>
+                        </div>
+                        <br/>
+                        <br/>
+                    }
+                    <div id="instDialog" style="display: none">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="btn btn-lg bg-primary text-light">
+                                    Installing...
+                                    <div id="loader1"></div>
+                                </div>
+                            </div>
+                            <div class="col-8">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p class="font-italic">Please be patient as this process may take several minutes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="instResults" style="display: none">
+                    </div>
+                    <button id="btnRunInstall" onclick="btnRunInstall_OnClick(event)" class="btn btn-sm btn-success" disabled>Run Install</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function onSwitch(e) {
+        var btn = $("#btnRunInstall");
+        if (e.checked) {
+            btn.removeAttr("disabled");
+        } else {
+            btn.attr("disabled", true);
+        }
+    }
+
+    function btnRunInstall_OnClick(e) {
+        e.preventDefault();
+        var btn = $("#btnRunInstall");
+        var data = $("#frm").serialize();
+        var url = "@Url.Action("InstallDatabase")";
+        var dialog = $("#instDialog");
+        var results = $("#instResults");
+        btn.hide();
+        results.hide();
+        dialog.show();
+        var loader = $('#loader1').kendoLoader({
+            themeColor: 'primary'
+        }).data("kendoLoader");
+        loader.setOptions({ type: "converging-spinner" });
+        loader.show();
+
+        $.ajax({
+            async: true,
+            type: "POST",
+            url: url,
+            data: data,
+            success: function(response) {
+                dialog.hide();
+                loader.hide();
+                btn.show();
+                results.show();
+                if (response.IsValid === true) {
+                    results.html("<p>Install succeeded.</p>");
+                } else {
+                    var errors = "<p>Install encountered errors:</p>";
+                    errors += "<ul>";
+                    $.each(response.Errors,
+                        function(index, value) {
+                            errors += "<li>" + value + "</li>";
+                        });
+                    errors += "</ul>";
+                    results.html(errors);
+                }
+                loader.hide();
+            },
+            dataType: "json"
+        });
+    }
+</script>

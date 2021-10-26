@@ -1,0 +1,107 @@
+﻿@addTagHelper *, Kendo.Mvc
+
+@{
+    ViewData["Title"] = "Cosmos Setup";
+}
+<style>
+    .btn-circle.btn-sm {
+        border-radius: 25px;
+        height: 34px;
+        padding: 3px 10px;
+        text-align: center;
+        width: 34px;
+    }
+</style>
+<div class="card bg-secondary">
+    <div class="card-header">
+        <h4 class="card-title">Setup Cosmos CMS (C/CMS)</h4> <a class="btn btn-sm btn-primary float-right" asp-action="Index">Setup Center</a>
+    </div>
+    <div class="card-body">
+        <p>
+            Begin by installing the components shown below and saving the connection information for each. Notice that a SQL server and file storage accounts
+            are required. For higher performance, it is recommended to install a CDN and/or a Redis Cache.
+        </p>
+        <p>
+            After component installation is complete, then step through the configuration setup tasks below.
+        </p>
+        <hr/>
+        <div class="row">
+            <div class="col">
+                <h4 class="card-title">Component Installation</h4>
+                <div class="mb-md-4">
+                    <span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">1</span>&nbsp;&nbsp; <span class=" font-weight-bold">Install SQL Server</span>.<br/>
+                    <div class="ml-5 font-italic">
+                        C/CMS needs a SQL sever connection with permissions to create a database:
+                        <a class="text-success badge badge-pill badge-light" href="https://docs.microsoft.com/en-us/azure/azure-sql/database/single-database-create-quickstart?tabs=azure-portal" target="_blank">Azure SQL</a> | <a target="_blank" class="text-success badge badge-pill badge-light" href="https://aws.amazon.com/getting-started/hands-on/create-microsoft-sql-db/">Amazon RDS</a>.
+                    </div>
+                </div>
+                <div class="mb-md-4">
+                    <span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">2</span>&nbsp;&nbsp; <span class=" font-weight-bold">Install file storage</span>.<br/>
+                    <div class="ml-5 font-italic">
+                        Storage accounts must be enabled with a public website, and <span style="text-decoration: underline">not</span> configured with &quot;soft delete&quot;:
+                        <a class="text-success badge badge-pill badge-light" href="https://docs.microsoft.com/en-us/azure/storage/common/storage-account-create?tabs=azure-portal" target="_blank">Azure Storage</a> |
+                        <a class="text-success badge badge-pill badge-light" href="https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website-how-to?tabs=azure-portal" target="_blank">Azure Storage Website</a><br/>
+                        <a target="_blank" class="text-success badge badge-pill badge-light" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/creating-bucket.html">Amazon S3</a> |
+                        <a target="_blank" class="text-success badge badge-pill badge-light" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteHosting.html">S3 Website</a>.
+                    </div>
+                </div>
+                <div class="mb-md-4">
+                    <span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">3</span>&nbsp;&nbsp; <span class=" font-weight-bold">SendGrid Account</span>.<br/>
+                    <div class="ml-5 font-italic">
+                        C/CMS needs the ability to send email to users, especially during account setup. C/CMS uses SendGrid:
+                        <a class="text-success badge badge-pill badge-light" href="https://docs.microsoft.com/en-us/azure/sendgrid-dotnet-how-to-send-email" target="_blank">SendGrid</a>.
+                    </div>
+                </div>
+                <div class="mb-md-4">
+                    <span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">4</span>&nbsp;&nbsp; <span class="text-white font-weight-bold">Install CDN</span> (optional).<br/>
+                    <div class="ml-5 font-italic">
+                        Content Distribution Networks, or &quot;CDN&quot;s, improve website performance:
+                        <a class="text-success badge badge-pill badge-light" href="https://docs.microsoft.com/en-us/azure/cdn/cdn-create-new-endpoint#:~:text=1%20In%20the%20Azure%20portal%2C%20select%20Create%20a,...%204%20Select%20Create%20to%20create%20the%20profile." target="_blank">Azure CDN</a> |
+                        <a class="text-success badge badge-pill badge-light" href="https://www.akamai.com/us/en/resources/cloud-cdn.jsp" target="_blank">Akamai CDN</a>
+                    </div>
+                </div>
+                <div class="mb-md-4">
+                    <span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">5</span>&nbsp;&nbsp; <span class="text-white font-weight-bold">Install Redis</span> (optional).<br/>
+                    <div class="ml-5 font-italic">
+                        Redis Cache is another service that improves website performance:
+                        <a class="text-success badge badge-pill badge-light" href="https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/quickstart-create-redis" target="_blank">Azure Redis</a> |
+                        <a class="text-success badge badge-pill badge-light" href="https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/set-up.html" target="_blank">Amazon Redis</a> |
+                        <a class="text-success badge badge-pill badge-light" href="https://developer.redislabs.com/?original_campaign=brand&converting_campaign=%2Fredis-enterprise-cloud%2Foverview%2F&original_content=getstarted&converting_content=&original_term=%2Bredis%20%2Bcache&converting_term=&original_medium=cpc&converting_medium=direct&original_source=bing&converting_source=direct&original_timestamp=5%2F29%2F2021%2011%3A20%3A31&converting_timestamp=7%2F4%2F2021%206%3A12%3A42&original_landing_page=https%3A%2F%2Fredislabs.com%2F%3Futm_source%3Dbing%26utm_medium%3Dcpc%26utm_term%3D%252Bredis%2520%252Bcache%26utm_content%3Dgetstarted%26utm_campaign%3Dbrand%26utm_source%3Dbing%26utm_medium%3Dppc%26utm_campaign%3D409377166%26utm_content%3D1274334671094941%26utm_term%3D%252Bredis%2520%252Bcache%26msclkid%3D27ecdb4893d11f4ca755bbfa163023be&converting_landing_page=https%3A%2F%2Fredislabs.com%2Fredis-enterprise-cloud%2Foverview%2F%3F_ga%3D2.22580275.942223529.1625404285-1821607276.1625404285&gclid=&original_referrer=undefined&converting_referrer=https%3A%2F%2Fredis.io%2F&finger_print=07c7c1f3d8fcf3730a1548fde926d243" target="_blank">Redis Labs</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <h4 class="card-title">Configure and Setup</h4>
+                <div class="mb-md-4">
+                    <a class="text-white font-weight-bold" href="@Url.Action("ConfigWizard")"><span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">5</span>&nbsp;&nbsp; Run Configuration Wizard</a>.<br/>
+                    <div class="ml-5 font-italic">
+                        C/CMS stores its settings as a <a target="_blank" class="text-light" href="https://en.wikipedia.org/wiki/JSON">JSON string</a> which is built using the configuration wizard.
+                        When done with the wizard paste the result into your website configuration.
+                    </div>
+                </div>
+                <div class="mb-md-4">
+                    <a class="text-white font-weight-bold" href="@Url.Action("BootConfig")"><span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">6</span>&nbsp;&nbsp; Boot Configuration</a>.<br/>
+                    <div class="ml-5 font-italic">
+                        Paste the configuration wizard information into your website settings and add other application settings.
+                    </div>
+                </div>
+                <div class="mb-md-4">
+                    <a class="text-white font-weight-bold" href="@Url.Action("InstallDatabase")"><span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">7</span>&nbsp;&nbsp; Install Database</a>.<br/>
+                    <div class="ml-5 font-italic">After the boot config is installed, then install the database along with starter layouts, themes and other items.</div>
+                </div>
+                <div class="mb-md-4">
+                    <a class="text-white font-weight-bold" href="@Url.Action("SetupAdmin")"><span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">8</span>&nbsp;&nbsp; Create Administrator Account</a>.<br/>
+                    <div class="ml-5 font-italic">Create the first administrator account, and take first steps to setup your website.</div>
+                </div>
+                <div class="mb-md-4">
+                    <a class="text-white font-weight-bold" href=""><span class="btn btn-primary btn-circle btn-sm" style="font-size: 14pt">9</span>&nbsp;&nbsp; Install Publisher Website</a>.<br/>
+                    <div class="ml-5 font-italic">Lastly, install the &quot;Publisher Website.&quot;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
