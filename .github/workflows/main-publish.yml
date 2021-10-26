@@ -21,6 +21,9 @@ jobs:
       with:
         dotnet-version: '5.0.x'
         
+    - name: Adding Nuget.org
+      run: dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+        
     - name: Adding Telerik NuGet
       run: dotnet nuget add source --username ${{ secrets.TELERIK_USER }} --password ${{ secrets.TELERIK_PASSWORD }} --store-password-in-clear-text --name telerik.com "https://nuget.telerik.com/nuget"
    
