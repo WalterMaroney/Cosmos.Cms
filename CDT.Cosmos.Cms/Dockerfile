@@ -6,5 +6,5 @@ EXPOSE 80
 EXPOSE 443
 FROM base AS final
 WORKDIR /app
-COPY --from=cosmoseditor /app/cosmoseditor .
+COPY --from=toiyabe/cosmoseditor /app/cosmoseditor .
 ENTRYPOINT ["dotnet", "CDT.Cosmos.Cms.dll"]
