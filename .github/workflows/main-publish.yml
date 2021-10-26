@@ -47,3 +47,9 @@ jobs:
       with:
         name: Cosmos Publisher Artifact
         path: ${{env.DOTNET_ROOT}}/CosmosPublisher
+        
+    - name: Build Editor Docker Image
+      run: docker build ${{env.DOTNET_ROOT}}/CosmosEditor
+
+    - name: Build Publisher Docker Image
+      run: docker build ${{env.DOTNET_ROOT}}/CosmosPublisher
