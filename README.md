@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml)
 
-Cosmos HL/CMS (C/CMS) is a dynamic, high performance "headless" [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). Tests have shown that it serves HTML pages two and a half times faster than a static website with blob storage.
+Cosmos HL/CMS is a dynamic, high performance "headless" [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). Tests have shown that it serves HTML pages two and a half times faster than a static website with blob storage.
 
 It is a "[hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))"  because of its open architecture allows you to "mashup," or combine the functionality of this CMS with your own web application.
 
