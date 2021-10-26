@@ -40,4 +40,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/Dockerfile --tag cosmoseditor:$(date +%s)
     - name: Docker image push
-      run: docker image push --all-tags
+      run: docker image push --all-tags cosmoseditor
