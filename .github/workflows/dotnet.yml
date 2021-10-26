@@ -1,0 +1,27 @@
+name: ubunto build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x      
+    - name: Adding Telerik NuGet
+      run: dotnet nuget add source --username ${{ secrets.TELERIK_USER }} --password ${{ secrets.TELERIK_PASSWORD }} --store-password-in-clear-text --name telerik.com "https://nuget.telerik.com/nuget"
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    #- name: Test
+    #  run: dotnet test --no-build --verbosity normal
