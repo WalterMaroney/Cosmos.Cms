@@ -2,14 +2,14 @@
 
 [![Build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml) [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml)
 
+Cosmos HL/CMS is a dynamic, high performance "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)" [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). Tests have shown that it serves HTML pages two and a half times faster than a static website with blob storage--and it does this without the use of a CDN or  Redis or other third party cache systems.
+
 Key features:
 
 * High performance, "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)" design.
 * Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
 * Built for web developers, also includes a rich WSYWIG editor for the non-technical users.
 * "[Hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" design allows you to combine Cosmos HL with your own functionality.
-
-Cosmos HL/CMS is a dynamic, high performance "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)" [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). Tests have shown that it serves HTML pages two and a half times faster than a static website with blob storage--and it does this without the use of a CDN or  Redis or other third party cache systems.
 
 It is also a "[hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" application because of its open architecture that allows you to "mashup," or combine the functionality of this CMS with your own web application.
 
