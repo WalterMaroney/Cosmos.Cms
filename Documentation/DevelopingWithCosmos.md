@@ -39,7 +39,6 @@ Here is a complete list of items needed to run all the unit tests:
     * AWS Elastic Beanstalk
    * Storage
      * Amazon RDS for SQL Server
-     * Amazon ElastiCache for Redis
      * Simple Storage Service (S3)
     * AWS Secrets Manager
 
@@ -48,7 +47,6 @@ Here is a complete list of items needed to run all the unit tests:
     * App Services
   * Storage
     * Azure SQL Database
-    * Azure Cache for Redis
     * Storage Account
   * Communications
     * SendGrid Account
