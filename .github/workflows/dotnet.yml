@@ -40,7 +40,7 @@ jobs:
               # Password or personal access token used to log against the Docker registry
               password: ${{ secrets.DOCKERPASSWORD }}
     - name: Build the Docker image
-      run: docker build . --file /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/Dockerfile --tag cosmoseditor:${TAGNAME}
-    - name: Create Docker tag
+      run: docker build . --file /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/Dockerfile --tag toiyabe/cosmoseditor:${TAGNAME}
+    - name: Docker push
       run:  docker push toiyabe/cosmoseditor:${TAGNAME}
 
