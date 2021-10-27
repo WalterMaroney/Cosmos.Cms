@@ -1,12 +1,21 @@
 # [Cosmos Content Management Platform](https://cosmos.azureedge.net)
 
-[![Build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml)
+[![Build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml) [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml)
 
-Cosmos HL/CMS is a dynamic, high performance "headless" [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). Tests have shown that it serves HTML pages two and a half times faster than a static website with blob storage.
+Key features:
 
-It is a "[hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))"  because of its open architecture allows you to "mashup," or combine the functionality of this CMS with your own web application.
+* High performance, "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)" design.
+* Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
+* Built for web developers, also includes a rich WSYWIG editor for the non-technical users.
+* "[Hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" design allows you to combine Cosmos HL with your own functionality.
 
-Each Cosmos instance has at least two websites, a database and blob or file storage. One website is the "publisher," and it's job is to host the public website.  The second is the "Editor," and it's role is to create and maintain content for the website.  The two are split out so that the "publisher" isn't burdened with the heavy load associated with content management--which ranges from editing HTML and other code, to uploading files such as images, videos, or JavaScript files or Cascading Style Sheet files.
+Cosmos HL/CMS is a dynamic, high performance "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)" [web content management platform](https://en.wikipedia.org/wiki/Web_content_management_system). Tests have shown that it serves HTML pages two and a half times faster than a static website with blob storage--and it does this without the use of a CDN or  Redis or other third party cache systems.
+
+It is also a "[hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" application because of its open architecture that allows you to "mashup," or combine the functionality of this CMS with your own web application.
+
+At a minimum each Cosmos instance consists of two websites, a database and blob or file storage. The first is the "Editor." It's role is to create and maintain content for the website.  The second is the "Publisher." It is the website that "publishes" web content either by JSON feeds or as HTML web pages.
+
+This split design means that the "Publisher" isn't burdened with the heavy load associated with content management.
 
 Two repositories are associated with this procject:
 
