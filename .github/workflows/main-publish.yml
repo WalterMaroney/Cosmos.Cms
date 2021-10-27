@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build
+name: windows build
 
 on:
   push:
@@ -77,7 +77,7 @@ jobs:
         context: /home/runner/app/cosmoseditor
         file: ./Dockerfile
         push: true
-        tags: toiyabe/cosmoseditor:latest
+        tags: toiyabe/cosmoseditor:windows-latest
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
