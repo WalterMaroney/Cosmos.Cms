@@ -1,6 +1,14 @@
 "use strict";
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -42,12 +50,14 @@ var ITransport_1 = require("./ITransport");
 var Utils_1 = require("./Utils");
 /** @private */
 var ServerSentEventsTransport = /** @class */ (function () {
-    function ServerSentEventsTransport(httpClient, accessTokenFactory, logger, logMessageContent, eventSourceConstructor) {
+    function ServerSentEventsTransport(httpClient, accessTokenFactory, logger, logMessageContent, eventSourceConstructor, withCredentials, headers) {
         this.httpClient = httpClient;
         this.accessTokenFactory = accessTokenFactory;
         this.logger = logger;
         this.logMessageContent = logMessageContent;
+        this.withCredentials = withCredentials;
         this.eventSourceConstructor = eventSourceConstructor;
+        this.headers = headers;
         this.onreceive = null;
         this.onclose = null;
     }
@@ -80,12 +90,16 @@ var ServerSentEventsTransport = /** @class */ (function () {
                             }
                             var eventSource;
                             if (Utils_1.Platform.isBrowser || Utils_1.Platform.isWebWorker) {
-                                eventSource = new _this.eventSourceConstructor(url, { withCredentials: true });
+                                eventSource = new _this.eventSourceConstructor(url, { withCredentials: _this.withCredentials });
                             }
                             else {
                                 // Non-browser passes cookies via the dictionary
                                 var cookies = _this.httpClient.getCookieString(url);
-                                eventSource = new _this.eventSourceConstructor(url, { withCredentials: true, headers: { Cookie: cookies } });
+                                var headers = {};
+                                headers.Cookie = cookies;
+                                var _a = Utils_1.getUserAgentHeader(), name_1 = _a[0], value = _a[1];
+                                headers[name_1] = value;
+                                eventSource = new _this.eventSourceConstructor(url, { withCredentials: _this.withCredentials, headers: __assign({}, headers, _this.headers) });
                             }
                             try {
                                 eventSource.onmessage = function (e) {
@@ -131,7 +145,7 @@ var ServerSentEventsTransport = /** @class */ (function () {
                 if (!this.eventSource) {
                     return [2 /*return*/, Promise.reject(new Error("Cannot send until the transport is connected"))];
                 }
-                return [2 /*return*/, Utils_1.sendMessage(this.logger, "SSE", this.httpClient, this.url, this.accessTokenFactory, data, this.logMessageContent)];
+                return [2 /*return*/, Utils_1.sendMessage(this.logger, "SSE", this.httpClient, this.url, this.accessTokenFactory, data, this.logMessageContent, this.withCredentials, this.headers)];
             });
         });
     };

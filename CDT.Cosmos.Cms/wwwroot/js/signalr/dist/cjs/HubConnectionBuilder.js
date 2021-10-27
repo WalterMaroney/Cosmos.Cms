@@ -61,6 +61,7 @@ var HubConnectionBuilder = /** @class */ (function () {
     };
     HubConnectionBuilder.prototype.withUrl = function (url, transportTypeOrOptions) {
         Utils_1.Arg.isRequired(url, "url");
+        Utils_1.Arg.isNotEmpty(url, "url");
         this.url = url;
         // Flow-typing knows where it's at. Since HttpTransportType is a number and IHttpConnectionOptions is guaranteed
         // to be an object, we know (as does TypeScript) this comparison is all we need to figure out which overload was called.

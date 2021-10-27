@@ -13,8 +13,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Errors_1 = require("./Errors");
+var FetchHttpClient_1 = require("./FetchHttpClient");
 var HttpClient_1 = require("./HttpClient");
-var NodeHttpClient_1 = require("./NodeHttpClient");
+var Utils_1 = require("./Utils");
 var XhrHttpClient_1 = require("./XhrHttpClient");
 /** Default implementation of {@link @microsoft/signalr.HttpClient}. */
 var DefaultHttpClient = /** @class */ (function (_super) {
@@ -22,11 +23,14 @@ var DefaultHttpClient = /** @class */ (function (_super) {
     /** Creates a new instance of the {@link @microsoft/signalr.DefaultHttpClient}, using the provided {@link @microsoft/signalr.ILogger} to log messages. */
     function DefaultHttpClient(logger) {
         var _this = _super.call(this) || this;
-        if (typeof XMLHttpRequest !== "undefined") {
+        if (typeof fetch !== "undefined" || Utils_1.Platform.isNode) {
+            _this.httpClient = new FetchHttpClient_1.FetchHttpClient(logger);
+        }
+        else if (typeof XMLHttpRequest !== "undefined") {
             _this.httpClient = new XhrHttpClient_1.XhrHttpClient(logger);
         }
         else {
-            _this.httpClient = new NodeHttpClient_1.NodeHttpClient(logger);
+            throw new Error("No usable HttpClient found.");
         }
         return _this;
     }

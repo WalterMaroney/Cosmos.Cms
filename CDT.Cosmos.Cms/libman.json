@@ -4,15 +4,15 @@
   "libraries": [
     {
       "provider": "unpkg",
-      "library": "@microsoft/signalr@latest",
+      "library": "@microsoft/signalr@5.0.11",
       "destination": "wwwroot/js/signalr/"
     },
     {
-      "library": "monaco-editor@0.21.2",
+      "library": "monaco-editor@0.29.1",
       "destination": "wwwroot/lib/monaco-editor/"
     },
     {
-      "library": "jquery@3.5.1",
+      "library": "jquery@3.6.0",
       "destination": "wwwroot/jquery/"
     }
   ]

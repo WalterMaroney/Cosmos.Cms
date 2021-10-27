@@ -1,5 +1,13 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -39,16 +47,18 @@ import { AbortController } from "./AbortController";
 import { HttpError, TimeoutError } from "./Errors";
 import { LogLevel } from "./ILogger";
 import { TransferFormat } from "./ITransport";
-import { Arg, getDataDetail, sendMessage } from "./Utils";
+import { Arg, getDataDetail, getUserAgentHeader, sendMessage } from "./Utils";
 // Not exported from 'index', this type is internal.
 /** @private */
 var LongPollingTransport = /** @class */ (function () {
-    function LongPollingTransport(httpClient, accessTokenFactory, logger, logMessageContent) {
+    function LongPollingTransport(httpClient, accessTokenFactory, logger, logMessageContent, withCredentials, headers) {
         this.httpClient = httpClient;
         this.accessTokenFactory = accessTokenFactory;
         this.logger = logger;
         this.pollAbort = new AbortController();
         this.logMessageContent = logMessageContent;
+        this.withCredentials = withCredentials;
+        this.headers = headers;
         this.running = false;
         this.onreceive = null;
         this.onclose = null;
@@ -63,9 +73,9 @@ var LongPollingTransport = /** @class */ (function () {
     });
     LongPollingTransport.prototype.connect = function (url, transferFormat) {
         return __awaiter(this, void 0, void 0, function () {
-            var pollOptions, token, pollUrl, response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, _b, name, value, headers, pollOptions, token, pollUrl, response;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         Arg.isRequired(url, "url");
                         Arg.isRequired(transferFormat, "transferFormat");
@@ -77,23 +87,26 @@ var LongPollingTransport = /** @class */ (function () {
                             (typeof XMLHttpRequest !== "undefined" && typeof new XMLHttpRequest().responseType !== "string")) {
                             throw new Error("Binary protocols over XmlHttpRequest not implementing advanced features are not supported.");
                         }
+                        _b = getUserAgentHeader(), name = _b[0], value = _b[1];
+                        headers = __assign((_a = {}, _a[name] = value, _a), this.headers);
                         pollOptions = {
                             abortSignal: this.pollAbort.signal,
-                            headers: {},
+                            headers: headers,
                             timeout: 100000,
+                            withCredentials: this.withCredentials,
                         };
                         if (transferFormat === TransferFormat.Binary) {
                             pollOptions.responseType = "arraybuffer";
                         }
                         return [4 /*yield*/, this.getAccessToken()];
                     case 1:
-                        token = _a.sent();
+                        token = _c.sent();
                         this.updateHeaderToken(pollOptions, token);
                         pollUrl = url + "&_=" + Date.now();
                         this.logger.log(LogLevel.Trace, "(LongPolling transport) polling: " + pollUrl + ".");
                         return [4 /*yield*/, this.httpClient.get(pollUrl, pollOptions)];
                     case 2:
-                        response = _a.sent();
+                        response = _c.sent();
                         if (response.statusCode !== 200) {
                             this.logger.log(LogLevel.Error, "(LongPolling transport) Unexpected response code: " + response.statusCode + ".");
                             // Mark running as false so that the poll immediately ends and runs the close logic
@@ -222,38 +235,42 @@ var LongPollingTransport = /** @class */ (function () {
                 if (!this.running) {
                     return [2 /*return*/, Promise.reject(new Error("Cannot send until the transport is connected"))];
                 }
-                return [2 /*return*/, sendMessage(this.logger, "LongPolling", this.httpClient, this.url, this.accessTokenFactory, data, this.logMessageContent)];
+                return [2 /*return*/, sendMessage(this.logger, "LongPolling", this.httpClient, this.url, this.accessTokenFactory, data, this.logMessageContent, this.withCredentials, this.headers)];
             });
         });
     };
     LongPollingTransport.prototype.stop = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var deleteOptions, token;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var headers, _a, name_1, value, deleteOptions, token;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         this.logger.log(LogLevel.Trace, "(LongPolling transport) Stopping polling.");
                         // Tell receiving loop to stop, abort any current request, and then wait for it to finish
                         this.running = false;
                         this.pollAbort.abort();
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        _a.trys.push([1, , 5, 6]);
+                        _b.trys.push([1, , 5, 6]);
                         return [4 /*yield*/, this.receiving];
                     case 2:
-                        _a.sent();
+                        _b.sent();
                         // Send DELETE to clean up long polling on the server
                         this.logger.log(LogLevel.Trace, "(LongPolling transport) sending DELETE request to " + this.url + ".");
+                        headers = {};
+                        _a = getUserAgentHeader(), name_1 = _a[0], value = _a[1];
+                        headers[name_1] = value;
                         deleteOptions = {
-                            headers: {},
+                            headers: __assign({}, headers, this.headers),
+                            withCredentials: this.withCredentials,
                         };
                         return [4 /*yield*/, this.getAccessToken()];
                     case 3:
-                        token = _a.sent();
+                        token = _b.sent();
                         this.updateHeaderToken(deleteOptions, token);
                         return [4 /*yield*/, this.httpClient.delete(this.url, deleteOptions)];
                     case 4:
-                        _a.sent();
+                        _b.sent();
                         this.logger.log(LogLevel.Trace, "(LongPolling transport) DELETE request sent.");
                         return [3 /*break*/, 6];
                     case 5:

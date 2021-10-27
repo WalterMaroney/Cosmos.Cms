@@ -7,22 +7,22 @@ import { SubjectSubscription } from "./Utils";
 /** Stream implementation to stream items to the server. */
 export class Subject<T> implements IStreamResult<T> {
     /** @internal */
-    observers: Array<IStreamSubscriber<T>>;
+    public observers: Array<IStreamSubscriber<T>>;
 
     /** @internal */
-    cancelCallback?: () => Promise<void>;
+    public cancelCallback?: () => Promise<void>;
 
     constructor() {
         this.observers = [];
     }
 
-    next(item: T): void {
+    public next(item: T): void {
         for (const observer of this.observers) {
             observer.next(item);
         }
     }
 
-    error(err: any): void {
+    public error(err: any): void {
         for (const observer of this.observers) {
             if (observer.error) {
                 observer.error(err);
@@ -30,7 +30,7 @@ export class Subject<T> implements IStreamResult<T> {
         }
     }
 
-    complete(): void {
+    public complete(): void {
         for (const observer of this.observers) {
             if (observer.complete) {
                 observer.complete();
@@ -38,7 +38,7 @@ export class Subject<T> implements IStreamResult<T> {
         }
     }
 
-    subscribe(observer: IStreamSubscriber<T>): ISubscription<T> {
+    public subscribe(observer: IStreamSubscriber<T>): ISubscription<T> {
         this.observers.push(observer);
         return new SubjectSubscription(this, observer);
     }

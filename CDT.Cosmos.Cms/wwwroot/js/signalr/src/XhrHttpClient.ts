@@ -14,7 +14,7 @@ export class XhrHttpClient extends HttpClient {
     }
 
     /** @inheritDoc */
-    send(request: HttpRequest): Promise<HttpResponse> {
+    public send(request: HttpRequest): Promise<HttpResponse> {
         // Check that abort was not signaled before calling send
         if (request.abortSignal && request.abortSignal.aborted) {
             return Promise.reject(new AbortError());
@@ -31,7 +31,7 @@ export class XhrHttpClient extends HttpClient {
             const xhr = new XMLHttpRequest();
 
             xhr.open(request.method!, request.url!, true);
-            xhr.withCredentials = true;
+            xhr.withCredentials = request.withCredentials === undefined ? true : request.withCredentials;
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             // Explicitly setting the Content-Type header for React Native on Android platform.
             xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");

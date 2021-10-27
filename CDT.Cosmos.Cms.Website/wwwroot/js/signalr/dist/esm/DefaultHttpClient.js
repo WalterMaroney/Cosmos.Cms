@@ -11,8 +11,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 import { AbortError } from "./Errors";
+import { FetchHttpClient } from "./FetchHttpClient";
 import { HttpClient } from "./HttpClient";
-import { NodeHttpClient } from "./NodeHttpClient";
+import { Platform } from "./Utils";
 import { XhrHttpClient } from "./XhrHttpClient";
 /** Default implementation of {@link @microsoft/signalr.HttpClient}. */
 var DefaultHttpClient = /** @class */ (function (_super) {
@@ -20,11 +21,14 @@ var DefaultHttpClient = /** @class */ (function (_super) {
     /** Creates a new instance of the {@link @microsoft/signalr.DefaultHttpClient}, using the provided {@link @microsoft/signalr.ILogger} to log messages. */
     function DefaultHttpClient(logger) {
         var _this = _super.call(this) || this;
-        if (typeof XMLHttpRequest !== "undefined") {
+        if (typeof fetch !== "undefined" || Platform.isNode) {
+            _this.httpClient = new FetchHttpClient(logger);
+        }
+        else if (typeof XMLHttpRequest !== "undefined") {
             _this.httpClient = new XhrHttpClient(logger);
         }
         else {
-            _this.httpClient = new NodeHttpClient(logger);
+            throw new Error("No usable HttpClient found.");
         }
         return _this;
     }

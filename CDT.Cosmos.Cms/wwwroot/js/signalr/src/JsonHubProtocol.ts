@@ -1,32 +1,31 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-import { CompletionMessage, HubMessage, IHubProtocol, InvocationMessage, MessageType, StreamItemMessage } from
-    "./IHubProtocol";
+import { CompletionMessage, HubMessage, IHubProtocol, InvocationMessage, MessageType, StreamItemMessage } from "./IHubProtocol";
 import { ILogger, LogLevel } from "./ILogger";
 import { TransferFormat } from "./ITransport";
 import { NullLogger } from "./Loggers";
 import { TextMessageFormat } from "./TextMessageFormat";
 
-const JSON_HUB_PROTOCOL_NAME = "json";
+const JSON_HUB_PROTOCOL_NAME: string = "json";
 
 /** Implements the JSON Hub Protocol. */
 export class JsonHubProtocol implements IHubProtocol {
 
     /** @inheritDoc */
-    readonly name = JSON_HUB_PROTOCOL_NAME;
+    public readonly name: string = JSON_HUB_PROTOCOL_NAME;
     /** @inheritDoc */
-    readonly version = 1;
+    public readonly version: number = 1;
 
     /** @inheritDoc */
-    readonly transferFormat = TransferFormat.Text;
+    public readonly transferFormat: TransferFormat = TransferFormat.Text;
 
     /** Creates an array of {@link @microsoft/signalr.HubMessage} objects from the specified serialized representation.
      *
      * @param {string} input A string containing the serialized representation.
      * @param {ILogger} logger A logger that will be used to log messages that occur during parsing.
      */
-    parseMessages(input: string, logger: ILogger): HubMessage[] {
+    public parseMessages(input: string, logger: ILogger): HubMessage[] {
         // The interface does allow "ArrayBuffer" to be passed in, but this implementation does not. So let's throw a useful error.
         if (typeof input !== "string") {
             throw new Error("Invalid input for JSON hub protocol. Expected a string.");
@@ -50,25 +49,25 @@ export class JsonHubProtocol implements IHubProtocol {
                 throw new Error("Invalid payload.");
             }
             switch (parsedMessage.type) {
-            case MessageType.Invocation:
-                this.isInvocationMessage(parsedMessage);
-                break;
-            case MessageType.StreamItem:
-                this.isStreamItemMessage(parsedMessage);
-                break;
-            case MessageType.Completion:
-                this.isCompletionMessage(parsedMessage);
-                break;
-            case MessageType.Ping:
-                // Single value, no need to validate
-                break;
-            case MessageType.Close:
-                // All optional values, no need to validate
-                break;
-            default:
-                // Future protocol changes can add message types, old clients can ignore them
-                logger.log(LogLevel.Information, `Unknown message type '${parsedMessage.type}' ignored.`);
-                continue;
+                case MessageType.Invocation:
+                    this.isInvocationMessage(parsedMessage);
+                    break;
+                case MessageType.StreamItem:
+                    this.isStreamItemMessage(parsedMessage);
+                    break;
+                case MessageType.Completion:
+                    this.isCompletionMessage(parsedMessage);
+                    break;
+                case MessageType.Ping:
+                    // Single value, no need to validate
+                    break;
+                case MessageType.Close:
+                    // All optional values, no need to validate
+                    break;
+                default:
+                    // Future protocol changes can add message types, old clients can ignore them
+                    logger.log(LogLevel.Information, "Unknown message type '" + parsedMessage.type + "' ignored.");
+                    continue;
             }
             hubMessages.push(parsedMessage);
         }
@@ -81,7 +80,7 @@ export class JsonHubProtocol implements IHubProtocol {
      * @param {HubMessage} message The message to write.
      * @returns {string} A string containing the serialized representation of the message.
      */
-    writeMessage(message: HubMessage): string {
+    public writeMessage(message: HubMessage): string {
         return TextMessageFormat.write(JSON.stringify(message));
     }
 

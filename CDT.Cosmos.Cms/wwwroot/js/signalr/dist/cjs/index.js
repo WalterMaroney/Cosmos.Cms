@@ -2,9 +2,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 Object.defineProperty(exports, "__esModule", { value: true });
-// Version token that will be replaced by the prepack command
-/** The version of the SignalR client. */
-exports.VERSION = "3.1.8";
 var Errors_1 = require("./Errors");
 exports.AbortError = Errors_1.AbortError;
 exports.HttpError = Errors_1.HttpError;
@@ -32,4 +29,6 @@ var JsonHubProtocol_1 = require("./JsonHubProtocol");
 exports.JsonHubProtocol = JsonHubProtocol_1.JsonHubProtocol;
 var Subject_1 = require("./Subject");
 exports.Subject = Subject_1.Subject;
+var Utils_1 = require("./Utils");
+exports.VERSION = Utils_1.VERSION;
 //# sourceMappingURL=index.js.map

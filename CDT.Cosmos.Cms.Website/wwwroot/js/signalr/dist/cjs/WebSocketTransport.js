@@ -1,6 +1,14 @@
 "use strict";
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -42,7 +50,7 @@ var ITransport_1 = require("./ITransport");
 var Utils_1 = require("./Utils");
 /** @private */
 var WebSocketTransport = /** @class */ (function () {
-    function WebSocketTransport(httpClient, accessTokenFactory, logger, logMessageContent, webSocketConstructor) {
+    function WebSocketTransport(httpClient, accessTokenFactory, logger, logMessageContent, webSocketConstructor, headers) {
         this.logger = logger;
         this.accessTokenFactory = accessTokenFactory;
         this.logMessageContent = logMessageContent;
@@ -50,6 +58,7 @@ var WebSocketTransport = /** @class */ (function () {
         this.httpClient = httpClient;
         this.onreceive = null;
         this.onclose = null;
+        this.headers = headers;
     }
     WebSocketTransport.prototype.connect = function (url, transferFormat) {
         return __awaiter(this, void 0, void 0, function () {
@@ -75,12 +84,16 @@ var WebSocketTransport = /** @class */ (function () {
                             var webSocket;
                             var cookies = _this.httpClient.getCookieString(url);
                             var opened = false;
-                            if (Utils_1.Platform.isNode && cookies) {
-                                // Only pass cookies when in non-browser environments
+                            if (Utils_1.Platform.isNode) {
+                                var headers = {};
+                                var _a = Utils_1.getUserAgentHeader(), name_1 = _a[0], value = _a[1];
+                                headers[name_1] = value;
+                                if (cookies) {
+                                    headers["Cookie"] = "" + cookies;
+                                }
+                                // Only pass headers when in non-browser environments
                                 webSocket = new _this.webSocketConstructor(url, undefined, {
-                                    headers: {
-                                        Cookie: "" + cookies,
-                                    },
+                                    headers: __assign({}, headers, _this.headers),
                                 });
                             }
                             if (!webSocket) {
@@ -111,7 +124,13 @@ var WebSocketTransport = /** @class */ (function () {
                             webSocket.onmessage = function (message) {
                                 _this.logger.log(ILogger_1.LogLevel.Trace, "(WebSockets transport) data received. " + Utils_1.getDataDetail(message.data, _this.logMessageContent) + ".");
                                 if (_this.onreceive) {
-                                    _this.onreceive(message.data);
+                                    try {
+                                        _this.onreceive(message.data);
+                                    }
+                                    catch (error) {
+                                        _this.close(error);
+                                        return;
+                                    }
                                 }
                             };
                             webSocket.onclose = function (event) {
@@ -165,13 +184,19 @@ var WebSocketTransport = /** @class */ (function () {
         }
         this.logger.log(ILogger_1.LogLevel.Trace, "(WebSockets transport) socket closed.");
         if (this.onclose) {
-            if (event && (event.wasClean === false || event.code !== 1000)) {
+            if (this.isCloseEvent(event) && (event.wasClean === false || event.code !== 1000)) {
                 this.onclose(new Error("WebSocket closed with status code: " + event.code + " (" + event.reason + ")."));
+            }
+            else if (event instanceof Error) {
+                this.onclose(event);
             }
             else {
                 this.onclose();
             }
         }
+    };
+    WebSocketTransport.prototype.isCloseEvent = function (event) {
+        return event && typeof event.wasClean === "boolean" && typeof event.code === "number";
     };
     return WebSocketTransport;
 }());

@@ -1,6 +1,14 @@
 "use strict";
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -39,6 +47,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ILogger_1 = require("./ILogger");
 var Loggers_1 = require("./Loggers");
+// Version token that will be replaced by the prepack command
+/** The version of the SignalR client. */
+exports.VERSION = "5.0.11";
 /** @private */
 var Arg = /** @class */ (function () {
     function Arg() {
@@ -46,6 +57,11 @@ var Arg = /** @class */ (function () {
     Arg.isRequired = function (val, name) {
         if (val === null || val === undefined) {
             throw new Error("The '" + name + "' argument is required.");
+        }
+    };
+    Arg.isNotEmpty = function (val, name) {
+        if (!val || val.match(/^\s*$/)) {
+            throw new Error("The '" + name + "' argument should not be empty.");
         }
     };
     Arg.isIn = function (val, values, name) {
@@ -126,32 +142,36 @@ function isArrayBuffer(val) {
 }
 exports.isArrayBuffer = isArrayBuffer;
 /** @private */
-function sendMessage(logger, transportName, httpClient, url, accessTokenFactory, content, logMessageContent) {
+function sendMessage(logger, transportName, httpClient, url, accessTokenFactory, content, logMessageContent, withCredentials, defaultHeaders) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, headers, token, responseType, response;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var _a, headers, token, _b, name, value, responseType, response;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
+                    headers = {};
                     if (!accessTokenFactory) return [3 /*break*/, 2];
                     return [4 /*yield*/, accessTokenFactory()];
                 case 1:
-                    token = _b.sent();
+                    token = _c.sent();
                     if (token) {
                         headers = (_a = {},
                             _a["Authorization"] = "Bearer " + token,
                             _a);
                     }
-                    _b.label = 2;
+                    _c.label = 2;
                 case 2:
+                    _b = getUserAgentHeader(), name = _b[0], value = _b[1];
+                    headers[name] = value;
                     logger.log(ILogger_1.LogLevel.Trace, "(" + transportName + " transport) sending data. " + getDataDetail(content, logMessageContent) + ".");
                     responseType = isArrayBuffer(content) ? "arraybuffer" : "text";
                     return [4 /*yield*/, httpClient.post(url, {
                             content: content,
-                            headers: headers,
+                            headers: __assign({}, headers, defaultHeaders),
                             responseType: responseType,
+                            withCredentials: withCredentials,
                         })];
                 case 3:
-                    response = _b.sent();
+                    response = _c.sent();
                     logger.log(ILogger_1.LogLevel.Trace, "(" + transportName + " transport) request complete. Response status: " + response.statusCode + ".");
                     return [2 /*return*/];
             }
@@ -220,4 +240,68 @@ var ConsoleLogger = /** @class */ (function () {
     return ConsoleLogger;
 }());
 exports.ConsoleLogger = ConsoleLogger;
+/** @private */
+function getUserAgentHeader() {
+    var userAgentHeaderName = "X-SignalR-User-Agent";
+    if (Platform.isNode) {
+        userAgentHeaderName = "User-Agent";
+    }
+    return [userAgentHeaderName, constructUserAgent(exports.VERSION, getOsName(), getRuntime(), getRuntimeVersion())];
+}
+exports.getUserAgentHeader = getUserAgentHeader;
+/** @private */
+function constructUserAgent(version, os, runtime, runtimeVersion) {
+    // Microsoft SignalR/[Version] ([Detailed Version]; [Operating System]; [Runtime]; [Runtime Version])
+    var userAgent = "Microsoft SignalR/";
+    var majorAndMinor = version.split(".");
+    userAgent += majorAndMinor[0] + "." + majorAndMinor[1];
+    userAgent += " (" + version + "; ";
+    if (os && os !== "") {
+        userAgent += os + "; ";
+    }
+    else {
+        userAgent += "Unknown OS; ";
+    }
+    userAgent += "" + runtime;
+    if (runtimeVersion) {
+        userAgent += "; " + runtimeVersion;
+    }
+    else {
+        userAgent += "; Unknown Runtime Version";
+    }
+    userAgent += ")";
+    return userAgent;
+}
+exports.constructUserAgent = constructUserAgent;
+function getOsName() {
+    if (Platform.isNode) {
+        switch (process.platform) {
+            case "win32":
+                return "Windows NT";
+            case "darwin":
+                return "macOS";
+            case "linux":
+                return "Linux";
+            default:
+                return process.platform;
+        }
+    }
+    else {
+        return "";
+    }
+}
+function getRuntimeVersion() {
+    if (Platform.isNode) {
+        return process.versions.node;
+    }
+    return undefined;
+}
+function getRuntime() {
+    if (Platform.isNode) {
+        return "NodeJS";
+    }
+    else {
+        return "Browser";
+    }
+}
 //# sourceMappingURL=Utils.js.map

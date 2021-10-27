@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 import { AbortSignal } from "./AbortController";
+import { MessageHeaders } from "./IHubProtocol";
 
 /** Represents an HTTP request. */
 export interface HttpRequest {
@@ -15,7 +16,7 @@ export interface HttpRequest {
     content?: string | ArrayBuffer;
 
     /** An object describing headers to apply to the request. */
-    headers?: { [key: string]: string };
+    headers?: MessageHeaders;
 
     /** The XMLHttpRequestResponseType to apply to the request. */
     responseType?: XMLHttpRequestResponseType;
@@ -25,6 +26,9 @@ export interface HttpRequest {
 
     /** The time to wait for the request to complete before throwing a TimeoutError. Measured in milliseconds. */
     timeout?: number;
+
+    /** This controls whether credentials such as cookies are sent in cross-site requests. */
+    withCredentials?: boolean;
 }
 
 /** Represents an HTTP response. */
@@ -57,6 +61,14 @@ export class HttpResponse {
      * @param {ArrayBuffer} content The content of the response.
      */
     constructor(statusCode: number, statusText: string, content: ArrayBuffer);
+
+    /** Constructs a new instance of {@link @microsoft/signalr.HttpResponse} with the specified status code, message and binary content.
+     *
+     * @param {number} statusCode The status code of the response.
+     * @param {string} statusText The status message of the response.
+     * @param {string | ArrayBuffer} content The content of the response.
+     */
+    constructor(statusCode: number, statusText: string, content: string | ArrayBuffer);
     constructor(
         public readonly statusCode: number,
         public readonly statusText?: string,
@@ -74,7 +86,7 @@ export abstract class HttpClient {
      * @param {string} url The URL for the request.
      * @returns {Promise<HttpResponse>} A Promise that resolves with an {@link @microsoft/signalr.HttpResponse} describing the response, or rejects with an Error indicating a failure.
      */
-    get(url: string): Promise<HttpResponse>;
+    public get(url: string): Promise<HttpResponse>;
 
     /** Issues an HTTP GET request to the specified URL, returning a Promise that resolves with an {@link @microsoft/signalr.HttpResponse} representing the result.
      *
@@ -82,8 +94,8 @@ export abstract class HttpClient {
      * @param {HttpRequest} options Additional options to configure the request. The 'url' field in this object will be overridden by the url parameter.
      * @returns {Promise<HttpResponse>} A Promise that resolves with an {@link @microsoft/signalr.HttpResponse} describing the response, or rejects with an Error indicating a failure.
      */
-    get(url: string, options: HttpRequest): Promise<HttpResponse>;
-    get(url: string, options?: HttpRequest): Promise<HttpResponse> {
+    public get(url: string, options: HttpRequest): Promise<HttpResponse>;
+    public get(url: string, options?: HttpRequest): Promise<HttpResponse> {
         return this.send({
             ...options,
             method: "GET",
@@ -96,7 +108,7 @@ export abstract class HttpClient {
      * @param {string} url The URL for the request.
      * @returns {Promise<HttpResponse>} A Promise that resolves with an {@link @microsoft/signalr.HttpResponse} describing the response, or rejects with an Error indicating a failure.
      */
-    post(url: string): Promise<HttpResponse>;
+    public post(url: string): Promise<HttpResponse>;
 
     /** Issues an HTTP POST request to the specified URL, returning a Promise that resolves with an {@link @microsoft/signalr.HttpResponse} representing the result.
      *
@@ -104,8 +116,8 @@ export abstract class HttpClient {
      * @param {HttpRequest} options Additional options to configure the request. The 'url' field in this object will be overridden by the url parameter.
      * @returns {Promise<HttpResponse>} A Promise that resolves with an {@link @microsoft/signalr.HttpResponse} describing the response, or rejects with an Error indicating a failure.
      */
-    post(url: string, options: HttpRequest): Promise<HttpResponse>;
-    post(url: string, options?: HttpRequest): Promise<HttpResponse> {
+    public post(url: string, options: HttpRequest): Promise<HttpResponse>;
+    public post(url: string, options?: HttpRequest): Promise<HttpResponse> {
         return this.send({
             ...options,
             method: "POST",
@@ -118,7 +130,7 @@ export abstract class HttpClient {
      * @param {string} url The URL for the request.
      * @returns {Promise<HttpResponse>} A Promise that resolves with an {@link @microsoft/signalr.HttpResponse} describing the response, or rejects with an Error indicating a failure.
      */
-    delete(url: string): Promise<HttpResponse>;
+    public delete(url: string): Promise<HttpResponse>;
 
     /** Issues an HTTP DELETE request to the specified URL, returning a Promise that resolves with an {@link @microsoft/signalr.HttpResponse} representing the result.
      *
@@ -126,8 +138,8 @@ export abstract class HttpClient {
      * @param {HttpRequest} options Additional options to configure the request. The 'url' field in this object will be overridden by the url parameter.
      * @returns {Promise<HttpResponse>} A Promise that resolves with an {@link @microsoft/signalr.HttpResponse} describing the response, or rejects with an Error indicating a failure.
      */
-    delete(url: string, options: HttpRequest): Promise<HttpResponse>;
-    delete(url: string, options?: HttpRequest): Promise<HttpResponse> {
+    public delete(url: string, options: HttpRequest): Promise<HttpResponse>;
+    public delete(url: string, options?: HttpRequest): Promise<HttpResponse> {
         return this.send({
             ...options,
             method: "DELETE",
@@ -140,7 +152,7 @@ export abstract class HttpClient {
      * @param {HttpRequest} request An {@link @microsoft/signalr.HttpRequest} describing the request to send.
      * @returns {Promise<HttpResponse>} A Promise that resolves with an HttpResponse describing the response, or rejects with an Error indicating a failure.
      */
-    abstract send(request: HttpRequest): Promise<HttpResponse>;
+    public abstract send(request: HttpRequest): Promise<HttpResponse>;
 
     /** Gets all cookies that apply to the specified URL.
      *
@@ -148,7 +160,7 @@ export abstract class HttpClient {
      * @returns {string} A string containing all the key-value cookie pairs for the specified URL.
      */
     // @ts-ignore
-    getCookieString(url: string): string {
+    public getCookieString(url: string): string {
         return "";
     }
 }

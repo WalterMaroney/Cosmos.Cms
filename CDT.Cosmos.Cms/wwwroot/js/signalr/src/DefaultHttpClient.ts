@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 import { AbortError } from "./Errors";
+import { FetchHttpClient } from "./FetchHttpClient";
 import { HttpClient, HttpRequest, HttpResponse } from "./HttpClient";
 import { ILogger } from "./ILogger";
-import { NodeHttpClient } from "./NodeHttpClient";
+import { Platform } from "./Utils";
 import { XhrHttpClient } from "./XhrHttpClient";
 
 /** Default implementation of {@link @microsoft/signalr.HttpClient}. */
@@ -15,15 +16,17 @@ export class DefaultHttpClient extends HttpClient {
     public constructor(logger: ILogger) {
         super();
 
-        if (typeof XMLHttpRequest !== "undefined") {
+        if (typeof fetch !== "undefined" || Platform.isNode) {
+            this.httpClient = new FetchHttpClient(logger);
+        } else if (typeof XMLHttpRequest !== "undefined") {
             this.httpClient = new XhrHttpClient(logger);
         } else {
-            this.httpClient = new NodeHttpClient(logger);
+            throw new Error("No usable HttpClient found.");
         }
     }
 
     /** @inheritDoc */
-    send(request: HttpRequest): Promise<HttpResponse> {
+    public send(request: HttpRequest): Promise<HttpResponse> {
         // Check that abort was not signaled before calling send
         if (request.abortSignal && request.abortSignal.aborted) {
             return Promise.reject(new AbortError());
@@ -39,7 +42,7 @@ export class DefaultHttpClient extends HttpClient {
         return this.httpClient.send(request);
     }
 
-    getCookieString(url: string): string {
+    public getCookieString(url: string): string {
         return this.httpClient.getCookieString(url);
     }
 }

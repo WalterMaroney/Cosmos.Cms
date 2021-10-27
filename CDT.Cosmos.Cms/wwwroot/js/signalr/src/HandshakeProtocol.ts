@@ -19,11 +19,11 @@ export interface HandshakeResponseMessage {
 /** @private */
 export class HandshakeProtocol {
     // Handshake request is always JSON
-    writeHandshakeRequest(handshakeRequest: HandshakeRequestMessage): string {
+    public writeHandshakeRequest(handshakeRequest: HandshakeRequestMessage): string {
         return TextMessageFormat.write(JSON.stringify(handshakeRequest));
     }
 
-    parseHandshakeResponse(data: any): [any, HandshakeResponseMessage] {
+    public parseHandshakeResponse(data: any): [any, HandshakeResponseMessage] {
         let responseMessage: HandshakeResponseMessage;
         let messageData: string;
         let remainingData: any;
