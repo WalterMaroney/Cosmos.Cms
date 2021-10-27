@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     env:
-      TAGNAME: $(date +%s)
+      TAGNAME: latest
       
     runs-on: ubuntu-latest
     
