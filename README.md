@@ -44,7 +44,7 @@ Cosmos HL is built for the cloud and can integrate with services such as:
 This documentation is still under development, so check back for more topics as they become available.
 
 * Installation
-  * Docker container
+  * Docker containers [Editor](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor) | Publisher
   * Code deployment
 * [Developing with Cosmos](/Documentation/DevelopingWithCosmos.md)
 
