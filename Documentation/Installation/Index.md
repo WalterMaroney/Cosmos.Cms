@@ -43,17 +43,10 @@ Step 2: In the "Basics" dialog, make sure the choice for "Publish" is set to "Do
 
 ![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp02.jpg)
 
-Step 3: Now pick the App Service Plan tier.  Choose the one based on your expected load and performance, and budget.  Any will do even the "free" tier, but "B1" is recommenended as the minimum for good performance.
+Step 3: Now pick the App Service Plan tier.  Choose the one based on your expected load and performance, and budget.  Any will do even the "free" tier, but "B1" is recommenended as the minimum for good performance.  Finish the installation, and once complete open the website.
 
 ![Image of Spec Picker](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03.jpg)
 
-
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp04.jpg)
-
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp05.jpg)
-
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp06.jpg)
-
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp08.jpg)
+Step 4: Open the website and you should see the setup screen as shown below.
 
 ![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp07.jpg)
