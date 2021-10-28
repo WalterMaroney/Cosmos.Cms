@@ -40,4 +40,3 @@ What was needed was a _dynamic_ content management system that achieved the foll
 * Very light weight, required little or no extra configuration to serve hundreds of thousands or millions of users.
 * As reliable as a state website, perhaps even more resiliant.
 
-
