@@ -63,12 +63,6 @@ namespace CDT.Cosmos.Cms
             //
             if (cosmosStartup.TryRun(out var cosmosOptions))
             {
-                //
-                // Cosmos startup was successful.  Continue with startup
-                //
-                // Add the configuration to services here.
-                services.AddSingleton(cosmosOptions);
-
                 var primary = cosmosOptions.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
 
                 if (primary != null)
@@ -223,9 +217,6 @@ namespace CDT.Cosmos.Cms
             }
             else
             {
-                // Still add what we can from cosmos options.
-                // Add the configuration to services here.
-                services.AddSingleton(cosmosOptions);
                 //
                 // Cosmos Startup was not successful.
                 // Load what is necessary to show diagnostic
@@ -262,7 +253,11 @@ namespace CDT.Cosmos.Cms
                 });
             }
 
-
+            //
+            // Cosmos startup was successful.  Continue with startup
+            //
+            // Add the configuration to services here.
+            services.AddSingleton(cosmosOptions);
 
             services.ConfigureApplicationCookie(options =>
             {
