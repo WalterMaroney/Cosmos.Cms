@@ -5,6 +5,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 EXPOSE 80
 EXPOSE 443
 FROM base AS final
-COPY /home/runner/work/app/cosmoseditor/ App/
+COPY /home/runner/work/Cosmos.Cms/Cosmos.Cms/app/editor/ App/
 WORKDIR /App
 ENTRYPOINT ["dotnet", "CDT.Cosmos.Cms.dll"]
