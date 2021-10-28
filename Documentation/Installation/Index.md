@@ -52,3 +52,7 @@ Step 4: Now pick the App Service Plan tier.  Choose the one based on your expect
 Step 5: Open the website and you should see the setup screen as shown below.
 
 ![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp07.jpg)
+
+### Cosmos Editor Installation - Amazon Web Services
+
+Instructions for AWS are in development.
