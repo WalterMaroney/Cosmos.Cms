@@ -35,6 +35,8 @@ jobs:
     #  run: dotnet test --no-build --verbosity normal
     - name: dotnet publish Cosmos Editor
       run: dotnet publish /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/CDT.Cosmos.Cms.csproj -c Release
+    - name: List files
+      run: ls /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/bin/Release/net5.0/publish
     - name: dotnet publish Cosmos Publisher
       run: dotnet publish /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms.Website/CDT.Cosmos.Cms.Website.csproj -c Release
     - name: Docker Login
