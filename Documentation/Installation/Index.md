@@ -33,6 +33,22 @@ A [SendGrid account](https://docs.sendgrid.com/for-developers/partners/microsoft
 
 The following describes how to setup the editor and publisher web applications.
 
-#### Azure Installation
+### Web Azure Installation
 
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp01.jpg)
 
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp02.jpg)
+
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03.jpg)
+
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03b.jpg)
+
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp04.jpg)
+
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp05.jpg)
+
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp06.jpg)
+
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp08.jpg)
+
+![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp07.jpg)
