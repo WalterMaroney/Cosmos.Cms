@@ -33,7 +33,7 @@ without the need of developers.
 
 This requires a dynamic website, able to update with user input. Problem is that dynamic sites have vulnerabilities. They break, don't perform well, and place strains on infrastructure.
 
-What was needed was a content management system that achieved the following:
+What was needed was a _dynamic_ content management system that achieved the following:
 
 * Performed as well as a state website in terms of speed and load.
 * Simplisitc in nature, allowing a non-techical person with little or no training update content.
