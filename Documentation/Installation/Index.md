@@ -13,14 +13,14 @@ that show how to install these resources in Amazon Web Services (AWS) and Micros
 
 ### Database
 
-Cosmos uses MS SQL Server as it's database. Any SQL server database will do so long as the Editor and Publisher websites can connect. Below are links that show how to deploy a database to AWS and Azure:
+Cosmos uses MS SQL Server as it's database. Below are links that show how to deploy a database to AWS and Azure:
 
 * [Amazon RDS For SQL Server](https://aws.amazon.com/rds/sqlserver/)
 * [Azure SQL Server](https://azure.microsoft.com/en-us/products/azure-sql/database/)
 
 ### File Storage
 
-Currently Cosmos will store files in AWS S3 or Azure Storage accounts. Make sure each is accessible to the "Editor" and each as the public website enabled.
+Files are stored in either AWS S3 or Azure Storage accounts. Make sure each is accessible to the "Editor" and each as the public website enabled.
 
 * [AWS S3 with public website](https://docs.aws.amazon.com/AmazonS3/latest/userguide/HostingWebsiteOnS3Setup.html). Note you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/).
 * [Azure Storage with public website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
@@ -31,34 +31,8 @@ A [SendGrid account](https://docs.sendgrid.com/for-developers/partners/microsoft
 
 ### Web Applications
 
-You will need to install two web applications. The first is the Publisher and the second is the Editor.
+The following describes how to setup the editor and publisher web applications.
 
-* [AWS Elastic Beanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/dotnet-core-tutorial.html)
+#### Azure Installation
 
-There are two options for installing the websites.  You can download executable packages for Publisher and Editor from the links shown below:
-
-* Publisher Zip File
-* Editor Zip File
-
-Here are links to documentation on how to deploy the zip files to each cloud:
-
-* [AWS Elastic Beanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/dotnet-core-tutorial.html#dotnet-core-tutorial-deploy)
-
-Cosmos is also distributed as Linux containers.  They can be obtained from the links below:
-
-* Publisher Container
-* Editor Container
-
-
-
-* AWS
-  * 
-
-## Redis Option
-
-## CDN Options
-
-## Single Cloud-Multi Region Option
-
-## Multi-cloud Installation Option
 
