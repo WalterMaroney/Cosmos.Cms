@@ -15,8 +15,6 @@ At a minimum each Cosmos instance consists of two websites, a database and blob 
 
 A more robust installation can have multiple instances running simulateously in AWS and Azure, and can support very high loads and be highly available.
 
-
-
 Two repositories are associated with this procject:
 
 * The [Cosmos](https://github.com/CosmosSoftware/Cosmos.Cms) repository contains the "Editor" and the "Publisher" and all the frameworks common to each.
@@ -24,6 +22,9 @@ Two repositories are associated with this procject:
 
 The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos.Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
 
+## Origin
+
+If you would like to know why Cosmos HL was created, read [the origin story](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Origin.md).
 
 ## Cloud-first Design
 
