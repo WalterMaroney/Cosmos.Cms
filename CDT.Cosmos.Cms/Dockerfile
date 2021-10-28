@@ -14,7 +14,7 @@ COPY ["CDT.Akamai.EdgeAuth/CDT.Akamai.EdgeAuth.csproj", "CDT.Akamai.EdgeAuth/"]
 COPY ["CDT.Cosmos.BlobService/CDT.Cosmos.BlobService.csproj", "CDT.Cosmos.BlobService/"]
 COPY . .
 WORKDIR "/src/CDT.Cosmos.Cms"
-RUN dotnet build "CDT.Cosmos.Cms.csproj" -c Release -o /app/build
+# RUN dotnet build "CDT.Cosmos.Cms.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "CDT.Cosmos.Cms.csproj" -c Release -o /app/publish
@@ -22,4 +22,6 @@ RUN dotnet publish "CDT.Cosmos.Cms.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN rm -rf /src/CDT.Cosmos.Cms
+
 ENTRYPOINT ["dotnet", "CDT.Cosmos.Cms.dll"]
