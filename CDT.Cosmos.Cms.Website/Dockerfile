@@ -7,6 +7,9 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
+
+COPY ["packages/", "packages/"]
+RUN ls packages/
 COPY ["CDT.Cosmos.Cms.Website/nuget.config", "CDT.Cosmos.Cms.Website/"]
 COPY ["nuget.config", "."]
 COPY ["CDT.Cosmos.Cms.Website/CDT.Cosmos.Cms.Website.csproj", "CDT.Cosmos.Cms.Website/"]
