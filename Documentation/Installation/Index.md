@@ -39,11 +39,13 @@ Step 1: Use the "Create a resource" to create a new Web App the dialog is shown 
 
 ![Image of New Resource Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp01.jpg)
 
-Step 2: In the "Basic" dialog, make sure the choice for "Publish" is set to "Docker Container" and the "Operating System" is set to "Linux" as shown below.
+Step 2: In the "Basics" dialog, make sure the choice for "Publish" is set to "Docker Container" and the "Operating System" is set to "Linux" as shown below.
 
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp02.jpg)
+![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp02.jpg)
 
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03.jpg)
+Step 3: Now pick the App Service Plan tier.  Choose the one based on your expected load and performance, and budget.  Any will do even the "free" tier, but "B1" is recommenended as the minimum for good performance.
+
+![Image of Spec Picker](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03.jpg)
 
 ![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03b.jpg)
 
