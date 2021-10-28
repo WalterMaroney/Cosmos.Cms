@@ -17,7 +17,8 @@ WORKDIR "/src/CDT.Cosmos.Cms"
 RUN dotnet build "CDT.Cosmos.Cms.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "CDT.Cosmos.Cms.csproj" -c Release -o /app/publish
+# RUN dotnet publish "CDT.Cosmos.Cms.csproj" -c Release -o /app/publish
+COPY ["/home/runner/app/cosmoseditor", "/app/publish/"]
 
 FROM base AS final
 WORKDIR /app
