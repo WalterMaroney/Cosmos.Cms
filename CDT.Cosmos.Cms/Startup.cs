@@ -223,6 +223,9 @@ namespace CDT.Cosmos.Cms
             }
             else
             {
+                // Still add what we can from cosmos options.
+                // Add the configuration to services here.
+                services.AddSingleton(cosmosOptions);
                 //
                 // Cosmos Startup was not successful.
                 // Load what is necessary to show diagnostic

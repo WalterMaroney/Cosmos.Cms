@@ -251,7 +251,7 @@ namespace CDT.Cosmos.Cms.Controllers
         [ResponseCache(NoStore = true)]
         public IActionResult ConfigWizard(ConfigureIndexViewModel model)
         {
-            model.PrimaryCloud = _options.Value.PrimaryCloud.ToLower();
+            model.PrimaryCloud = string.IsNullOrEmpty(_options.Value.PrimaryCloud) ? "" : _options.Value.PrimaryCloud.ToLower();
             if (CanUseConfigWizard())
             {
                 if (!string.IsNullOrEmpty(model.ImportJson))
