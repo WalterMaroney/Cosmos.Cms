@@ -39,14 +39,18 @@ Step 1: Use the "Create a resource" to create a new Web App the dialog is shown 
 
 ![Image of New Resource Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp01.jpg)
 
-Step 2: In the "Basics" dialog, make sure the choice for "Publish" is set to "Docker Container" and the "Operating System" is set to "Linux" as shown below.
+Step 2: In the "Basics" dialog, make sure the choice for "Publish" is set to "Docker Container" and the "Operating System" is set to "Linux" as shown below.  Continue to the Docker tab.
+
+![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp01b.jpg)
+
+Step 3: For the docker settings, make sure that "Image source" is set to "Docker Hub" and the "Image and tag" is set to "toiyabe/cosmoseditor:latest" as shown below.
 
 ![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp02.jpg)
 
-Step 3: Now pick the App Service Plan tier.  Choose the one based on your expected load and performance, and budget.  Any will do even the "free" tier, but "B1" is recommenended as the minimum for good performance.  Finish the installation, and once complete open the website.
+Step 4: Now pick the App Service Plan tier.  Choose the one based on your expected load and performance, and budget.  Any will do even the "free" tier, but "B1" is recommenended as the minimum for good performance.  Finish the installation, and once complete open the website.
 
 ![Image of Spec Picker](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03.jpg)
 
-Step 4: Open the website and you should see the setup screen as shown below.
+Step 5: Open the website and you should see the setup screen as shown below.
 
 ![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp07.jpg)
