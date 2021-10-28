@@ -29,11 +29,9 @@ Files are stored in either AWS S3 or Azure Storage accounts. Make sure each is a
 
 A [SendGrid account](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021#create-a-twilio-sendgrid-account) is needed by the Cosmos Editor for sending Emails related to user account management services.
 
-### Web Applications
+### Cosmos Editor Installation - Azure
 
-The following describes how to setup the editor and publisher web applications.
-
-_Cosmos Editor Installation - Azure_
+The following describes how to setup the editor and publisher web applications in Azure.
 
 Step 1: Use the "Create a resource" to create a new Web App the dialog is shown below.
 
