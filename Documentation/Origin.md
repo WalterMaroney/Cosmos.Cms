@@ -1,18 +1,18 @@
 # Cosmos HL Origin Story
 
-The 2018 California fire season was the worst in that state's history. Almost 2 million acres burned, and tens of thousands of
-damanged or lost structures, and over 25 billion of of dollars in property damange. Strong winds and downed power lines contributed to
-the confligration. By the end 97 citizens and 6 fire fighters lost thier lives. 85 of the fatalities were from the Camp Fire--which
-burned the Butte County town of Paridise to the ground.
+The 2018 California fire season was the worst in that state's history.vWinds and downed power lines cause fire to spread across 2 million acres, and tens of thousands of
+structures damaged or lost, and and over 25 billion of dollars worth in property damange.  Nity seven citizens and six fire fighters lost thier lives that year. And 85 fatalities were due to a single fire, called the the "Camp Fire."  The Butte County town of Paridise burnt to the ground. Thousands of people needed information. Most on cell phones over low-bandwidth connections.  Up until then state websites assumed people would access websites at home--and with high bandwidth connections.
+
+With thousands of people with cell phones competing with limited bandwidth over streatched cell phone towers, existing state websites where not built with that in mind.
 
 ## Fall 2019 - Necessity
 
-October 2019 the winds and high fire danger were back. To prevent downed powerlines from igniting more fires, utilities shut off power to
-some three million customers. In mid October, the Kincade Fire ignited near Geyserville in Sonoma County. It would eventually force large
-scale evacuations of Healdsburg, Windsor and parts of Santa Rosa as strong winds drove the fire south and west. Getting near-realtime information
-about power shut off areas, fires, evacuations, and shelter locations out to the public became an imperative.
+Then in October 2019 the winds and high fire danger were back. This time to prevent downed powerlines from igniting more fires utilities cut power to
+some three million customers. But things got worse.
 
-In response the Governors office with the Government Operations agency tasked the Department of Technology (CDT) to setup a
+Mid October the Kincade Fire ignited near Geyserville in Sonoma County. It forced mass evacuations of Healdsburg, Windsor and parts of Santa Rosa as strong winds drove the fire south and west. Tens of thousands of people were on the move and getting near-realtime information about power shut off areas, fires, evacuations, and shelter locations out to the public became an imperative.
+
+In response the Governors office along with the Government Operations agency tasked the Department of Technology (CDT) to setup a
 website that consolidated important public information on a single website that performed well on low-bandwidth cell connections.
 Moreover the site was built to sustain sizable bursts of demand in the hundreds of thousands of users per hour.
 
