@@ -47,7 +47,6 @@ Step 3: Now pick the App Service Plan tier.  Choose the one based on your expect
 
 ![Image of Spec Picker](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03.jpg)
 
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03b.jpg)
 
 ![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp04.jpg)
 
