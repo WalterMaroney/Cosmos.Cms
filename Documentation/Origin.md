@@ -24,10 +24,20 @@ Innovation manly involved in the implementation of cloud infrastructure.
 Because this was a static website, CDT had to schedule shifts of developers to be on call 24x7 to make changes to the website regardless
 of what time of day or night it was.
 
-## 2020 Something Lightweight and Fast
+## 2020 - COVID 19
 
-The new year began with a new charge. In 2019 the website required around the clock teams of developers to make changes to the website.
+The website built in 2019 was fast, efficient and reliable.  In 2019 the website required around the clock teams of developers to make changes to the website. This required a high degree of labor.  Public information officers would send information to developers who would then write HTML, CSS and JavaScript to make the content appear on the website.
+
 Long term this is not sustainable, so the task was to create a website where public relations staff could update the site on thier own
-without the need of developers.
+without the need of developers. 
 
-This requires a dynamic website, able to update with user input. Problem is that dynamic sites tend to not perform as well as static websites. The objective handed down in early 2020 is to create a dynamic website that performs as the original.
+This requires a dynamic website, able to update with user input. Problem is that dynamic sites have vulnerabilities. They break, don't perform well, and place strains on infrastructure.
+
+What was needed was a content management system that achieved the following:
+
+* Performed as well as a state website in terms of speed and load.
+* Simplisitc in nature, allowing a non-techical person with little or no training update content.
+* Very light weight, required little or no extra configuration to serve hundreds of thousands or millions of users.
+* As reliable as a state website, perhaps even more resiliant.
+
+
