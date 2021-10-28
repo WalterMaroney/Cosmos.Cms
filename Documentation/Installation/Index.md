@@ -43,7 +43,7 @@ Step 2: In the "Basics" dialog, make sure the choice for "Publish" is set to "Do
 
 ![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp01b.jpg)
 
-Step 3: For the docker settings, make sure that "Image source" is set to "Docker Hub" and the "Image and tag" is set to "toiyabe/cosmoseditor:latest" as shown below.
+Step 3: For the docker settings, make sure "Options" is set to "Single Container" and that "Image source" is set to "Docker Hub," and "Image and tag" is set to "toiyabe/cosmoseditor:latest" as shown below.
 
 ![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp02.jpg)
 
