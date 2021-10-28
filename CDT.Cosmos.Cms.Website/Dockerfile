@@ -17,7 +17,7 @@ COPY ["CDT.Cosmos.Cms.Common/CDT.Cosmos.Cms.Common.csproj", "CDT.Cosmos.Cms.Comm
 RUN dotnet restore "CDT.Cosmos.Cms.Website/CDT.Cosmos.Cms.Website.csproj"
 COPY . .
 WORKDIR "/src/CDT.Cosmos.Cms.Website"
-# RUN dotnet build "CDT.Cosmos.Cms.Website.csproj" -c Release -o /app/build
+RUN dotnet build "CDT.Cosmos.Cms.Website.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "CDT.Cosmos.Cms.Website.csproj" -c Release -o /app/publish
@@ -25,6 +25,6 @@ RUN dotnet publish "CDT.Cosmos.Cms.Website.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN rm -rf /src/CDT.Cosmos.Cms
+# RUN rm -rf /src/CDT.Cosmos.Cms
 
 ENTRYPOINT ["dotnet", "CDT.Cosmos.Cms.Website.dll"]
