@@ -2,14 +2,14 @@
 
 [![windows build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/main-publish.yml) [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml)
 
-Cosmos HL/CMS is a dynamic, high performance "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)"  [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system). It is also a hybrid system that is part static website--part dynamic.  Tests have shown that it serves dynamic HTML pages up to two and a half times faster than a static website alone--and it does this without the use of a CDN or third party cache systems.
+Cosmos HL/CMS is a dynamic, high performance "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)"  [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system). It is also a hybrid system that is part static website--part dynamic.  Tests have shown that it serves dynamic HTML pages up to two and a half times faster than a static website alone.
 
 Key features:
 
 * High performance, "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)" design.
 * Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
 * Built for web developers, also includes a rich WSYWIG editor for the non-technical users.
-* "[Hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" design allows you to combine Cosmos HL with your own functionality.
+* "[Hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" results in improved reliability and performance.
 
 At a minimum each Cosmos instance consists of two websites, a database and blob or file storage. The first is the "Editor." It's role is to create and maintain content for the website.  The second is the "Publisher." It is the website that "publishes" web content either by JSON feeds or as HTML web pages.  This minimulist design can run very inexpensively in either AWS or Azure for lightweight loads.
 
