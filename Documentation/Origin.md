@@ -3,11 +3,11 @@
 The 2018 fire season was the worst in California history.  Wind-driven fires ignited by downed power lines cause fire to spread across 2 million acres, and tens of thousands of
 structures damaged or lost, and and over 25 billion of dollars worth in property damange.  Ninety seven citizens and six fire fighters lost thier lives that year. And 85 fatalities were due to a single fire, called the the "Camp Fire."  The Butte County town of Paridise burnt to the ground.
 
-## Fall 2019 - Necessity
+## Fall 2019
 
-Then in October 2019 it happend again and it was worse.  This time utilities tried to prevent fires by cutting power to three million customers. And yet fires ignited again.
+Then in October 2019 it happend again and it was worse.  This time utilities tried to prevent fires by cutting power to three million customers. And yet fires spread again.
 
-In mid October the Kincade Fire flares near Geyserville in Sonoma County.  Strong north winds drives it south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and tens of thousands more worried that they might be next.  Friends and family from throughout California and beyond wanted to know what was happening.
+In mid October a new fire stated near the town Geyserville in Sonoma County.  It became known as the Kincade Fire.  Strong north winds drives it south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and tens of thousands more worried that they might be next.  Friends and family from throughout California and beyond wanted to know what was happening.
 
 A majority of people were trying to access State of California websites for information, and most were using cell phone.  For many they were doing so over cell phone networks in rural areas or conjested urban areas--all competing for limited network bandwidth.  People were looking to state websites for information.
 
@@ -15,7 +15,7 @@ Early on three problems were recognized. First, the majority of websites were de
 
 California needed a single website that consolidated information and is designed for low-bandwidth connections and able to sustain high user loads.
 
-# Built Overnight - Simple Design
+## Simple Design
 
 In response the Governors Office and Government Operations agency tasked the Department of Technology (CDT) to setup a website capabile of doing this, and the deadline was to do this overnight.  And this website could not got down, so it had to be highly reliable and available.
 
