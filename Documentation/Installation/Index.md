@@ -1,4 +1,4 @@
-# Cosmos Installation
+# Installation
 
 The type of Cosmos installation depends on what your needs my be. For many situations a basic installation may suffice,
 but if higher performance or higher availablility is required then Redis, CDN and other options might be considered.
