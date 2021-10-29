@@ -2,7 +2,7 @@
 
 [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml)
 
- Cosmos HL/CMS is a dynamic, high performance "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)"  [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system).  It hybrid design combines a static website to handle the bulk of the load with HTML pages served through a high performance dynamic website.  Tests have shown that it serves dynamic HTML pages up to two and a half times faster than a static website alone.
+ Cosmos HL/CMS is a dynamic, high performance "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)"  [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) whose hybrid design combines a static website with a dynamic one.  The static website hosts CSS, JavaScript, images and other files that are static in nature while the dynamic website hosts HTML pages that can change at any time.
  
 Key features:
 
