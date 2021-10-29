@@ -1,28 +1,32 @@
 # Cosmos HL Origin Story
 
-The 2018 California fire season was the worst in that state's history.vWinds and downed power lines cause fire to spread across 2 million acres, and tens of thousands of
-structures damaged or lost, and and over 25 billion of dollars worth in property damange.  Nity seven citizens and six fire fighters lost thier lives that year. And 85 fatalities were due to a single fire, called the the "Camp Fire."  The Butte County town of Paridise burnt to the ground.
+The 2018 fire season was the worst in California history.  Wind-driven fires ignited by downed power lines cause fire to spread across 2 million acres, and tens of thousands of
+structures damaged or lost, and and over 25 billion of dollars worth in property damange.  Ninety seven citizens and six fire fighters lost thier lives that year. And 85 fatalities were due to a single fire, called the the "Camp Fire."  The Butte County town of Paridise burnt to the ground.
 
 ## Fall 2019 - Necessity
 
-Then in October 2019 it happend again.  Utilities tried to prevent harm by cutting power to
-some three million customers. It wasn't enough. High winds and downed powerlines ignited fires again.  
+Then in October 2019 it happend again and it was worse.  This time utilities tried to prevent fires by cutting power to three million customers. And yet fires ignited again.
 
-Mid October the Kincade Fire ignited near Geyserville in Sonoma County. It forced mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Strong winds drove the fire south and west. Tens of thousands of people were on the move and getting near-realtime information about power shut off areas, fires, evacuations, and shelter locations out to the public became an imperative.  California needed a website that would be extremely reliable and perform extremely well under low bandwidth connections.
+In mid October the Kincade Fire flares near Geyserville in Sonoma County.  Strong north winds drives it south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and tens of thousands more worried that they might be next.  Friends and family from throughout California and beyond wanted to know what was happening.
 
-In response the Governors Office and Government Operations agency tasked the Department of Technology (CDT) to setup a
-website that consolidated important public information on a single website that performed well on low-bandwidth cell connections--and was highly available as it must not fail.
+A majority of people were trying to access State of California websites for information, and most were using cell phone.  For many they were doing so over cell phone networks in rural areas or conjested urban areas--all competing for limited network bandwidth.  People were looking to state websites for information.
 
-Moreover the site was built to sustain sizable bursts of demand in the hundreds of thousands of users per hour.
+Early on three problems were recognized. First, the majority of websites were designed for high-badwidth connections--which was not the case now.  Second, most of the websites were not built to sustain extremely high user demands, and third people had to visit multiple websites to get information.
 
-Drawing on previous experience in similar circumstances, overnight CDT built a high performance website that took advange for cloud-based
-services that included Content Delivery Networks and high availability PaaS services.
+California needed a single website that consolidated information and is designed for low-bandwidth connections and able to sustain high user loads.
 
-In this first iteration--the website itself was a simple HTML, CSS and JavaScript based site--also known as a "static" website.
-Innovation manly involved in the implementation of cloud infrastructure.
+# Built Overnight - Simple Design
 
-Because this was a static website, CDT had to schedule shifts of developers to be on call 24x7 to make changes to the website regardless
-of what time of day or night it was.
+In response the Governors Office and Government Operations agency tasked the Department of Technology (CDT) to setup a website capabile of doing this, and the deadline was to do this overnight.  And this website could not got down, so it had to be highly reliable and available.
+
+At first CDT staff considered using WordPress or another content management system.  But these websites historically were not high performers. Their complexity also meant there was more that can go wrong, and setting these systems up to sustain a high load would take time and testing.  Moreover, CDT wanted the website to be hosted simultaeously in multiple regions--and keeping these websites in sync dynamically would not likely happen overnight.
+
+Drawing on previous experience in similar circumstances, overnight CDT built a high performance website that took advange for cloud-based services that included Content Delivery Networks and high availability PaaS services.
+
+
+CDT assembled a "static" website hosted simultaeously in multiple geographic regions in the cloud.  The web pages were designed without the use of unecessary graphics or other assets, making the number of bytes sent over the wire for each page was kept to a minimum.  In addition, CDT installed a Content Distribution Network or CDN to support high user loads.
+
+This static website design offered several advantages.  It was highly reliable and very fast at serving web pages.
 
 ## 2020 - COVID 19
 
