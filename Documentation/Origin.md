@@ -5,7 +5,7 @@ structures damaged or lost, and and over 25 billion of dollars worth in property
 
 ## Fall 2019
 
-In mid October 2019 a new fire stated near the town Geyserville in Sonoma County.  It became known as the Kincade Fire.  Strong north winds drives it south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and tens of thousands more worried that they might be next.  Friends and family from throughout California and beyond wanted to know what was happening.
+Summer and fall of 2019 saw a new round of fires, and in mid October 2019 a new fire stated near the town Geyserville in Sonoma County that eventually became very big.  It was called the Kincade Fire.  Strong north winds drives it south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and tens of thousands more worried that they might be next.  Friends and family from throughout California and beyond wanted to know what was happening.
 
 A majority of people were trying to access State of California websites for information, and most were using cell phone.  For many they were doing so over cell phone networks in rural areas or n conjested urban areas.  Everyone with a cell phone was competing for limited network bandwidth.  People were looking to state websites for information.
 
