@@ -40,7 +40,13 @@ What was needed was something in between a static website and a dynamic CMS such
 
 That winter work began on a new system that would perform as well as a static website yet offered the benefits of a CMS.  What was needed was a _dynamic_ content management system that achieved the following objectives:
 
-* Performed as well as a static website in terms of speed, load and reliability.
+* Performed as well as a static website.
 * Simplisitc in nature, allowing a non-techical person with little or no training update content.
-* Very light weight, required little or no extra configuration to serve hundreds of thousands or millions of users.
+* Did not require teams of developers and DevOps engineers to staff to maintain content.
+
+From the outset it was decided to build something that was a cross between a static website and a CMS.  In other words, design something that was a little of both--build a hybrid.
+
+### Hybrid Design
+
+
 
