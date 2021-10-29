@@ -60,5 +60,7 @@ The Editor also comes with two editors.  The first for use by developers is the 
 
 Keeping the Editor separate from the other two has advantages.  The overhead and complexity of content management is isolated from the two websites that host web content. This keeps content hosting fast and reliable.
 
+An architectual diagram of Cosmos HL is shown below.
 
+![Image of Cosmos Architecture](https://github.com/CosmosSoftware)
 
