@@ -10,6 +10,7 @@ Key features:
 * Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
 * Built for web developers, also includes a rich WSYWIG editor for the non-technical users.
 * "[Hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" design results in improved reliability and performance.
+* Optionally integrates with CDNs to handle very high user demain.
 
 At a minimum each Cosmos instance consists of two websites, a database and blob or file storage. The first is the "Editor." It's role is to create and maintain content for the website.  The second is the "Publisher." It is the website that "publishes" web content either by JSON feeds or as HTML web pages.  This minimulist design can run very inexpensively in either AWS or Azure for lightweight loads.
 
