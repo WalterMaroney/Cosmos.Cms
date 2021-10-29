@@ -10,18 +10,17 @@ Key features:
 * Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
 * Built for web developers, also includes a rich WSYWIG editor for the non-technical users.
 * "[Hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" design results in improved reliability and performance.
-* Optionally integrates with CDNs to handle very high user demain.
 
 At a minimum each Cosmos instance consists of two websites, a database and blob or file storage. The first is the "Editor." It's role is to create and maintain content for the website.  The second is the "Publisher." It is the website that "publishes" web content either by JSON feeds or as HTML web pages.  This minimulist design can run very inexpensively in either AWS or Azure for lightweight loads.
 
-A more robust installation can have multiple instances running simulateously in AWS and Azure, and can support very high loads and be highly available.
+A more robust installation can have multiple instances running simulateously in AWS and Azure, and can optionally integrate with a number of CDNs to handle high website demand.
 
 Two repositories are associated with this procject:
 
 * The [Cosmos](https://github.com/CosmosSoftware/Cosmos.Cms) repository contains the "Editor" and the "Publisher" and all the frameworks common to each.
 * The "[Cosmos Publisher](https://github.com/CosmosSoftware/Cosmos.Cms.Publisher)" repository contains a stand alone "Publisher" website.
 
-The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos.Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
+The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
 
 ## Origin
 
