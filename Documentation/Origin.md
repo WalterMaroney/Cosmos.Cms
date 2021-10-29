@@ -19,7 +19,7 @@ California needed a single website that consolidated information and is designed
 
 In response the Governors Office and Government Operations agency tasked the Department of Technology (CDT) to setup a new website that would consolidate information about the fires and work well over limited bandwidth and on cell phones.  The deadline was to do this overnight.  Moreover this website _could not got down_ once launched.
 
-At first CDT staff considered using WordPress or another content management system.  But these websites historically were not high performers. Their complexity also meant there was more that can go wrong, and setting these systems up to sustain a high load would take time and testing.  Moreover, CDT wanted the website to be hosted simultaeously in multiple regions--and keeping these websites in sync dynamically would not likely happen overnight.
+At first CDT staff considered using WordPress or another content management system.  But these websites historically were not high performers. Their complexity also meant there was more that can go wrong, and setting these systems up to sustain a high load would take time and testing.  Moreover, CDT wanted the website to be hosted simultaeously in multiple regions--and keeping these websites in sync in real time would not likely happen overnight.
 
 The decisions was to build something simple so it would be fast and less vulnerable to errors and more likely to stay up and running.
 
