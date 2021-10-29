@@ -5,11 +5,13 @@ structures damaged or lost, and and over 25 billion of dollars worth in property
 
 ## Fall 2019
 
-Summer and fall of 2019 saw a new round of fires, and in mid October 2019 a new fire stated near the town Geyserville in Sonoma County that eventually became very big.  It was called the Kincade Fire.  Strong north winds drives it south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and tens of thousands more worried that they might be next.  Friends and family from throughout California and beyond wanted to know what was happening.
+Summer and fall of 2019 saw a new round of fires.  In mid October 2019 a new fire stated near the town Geyserville in Sonoma County that eventually became among the biggest in state history.  It became known as the Kincade Fire.
 
-A majority of people were trying to access State of California websites for information, and most were using cell phone.  For many they were doing so over cell phone networks in rural areas or n conjested urban areas.  Everyone with a cell phone was competing for limited network bandwidth.  People were looking to state websites for information.
+Strong winds drove the fire south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and thousands more worried that they might need to evacuate at any time.  Friends and family from throughout California and beyond wanted to know what was happening.
 
-Early on three problems were recognized. First, the majority of websites were designed for high-badwidth connections--which was not the case now.  Second, most of the websites were not built to sustain extremely high user demands, and third people had to visit multiple websites to get information.
+People were accessing State of California websites for information and most were using cell phone.  Everyone with a cell phone was competing for limited network bandwidth--especially in rural areas.  Web pages were slow to load and bits of information were to be found on more than one website.
+
+Early-on three problems were recognized. First, the majority of State websites were designed for high-badwidth connections--which was not the case now.  Second, most of the websites were not built to sustain extremely high user demands, and third people had to visit multiple websites to get information.
 
 California needed a single website that consolidated information and is designed for low-bandwidth connections and able to sustain high user loads.
 
