@@ -56,7 +56,9 @@ The static website and the dynamic website can have separate URLs, or, they can 
 
 A third website called the "Editor" maintains content for both websites.  It contains a file manager that allows users to upload and manage files on the Storage Website.  The file manager is capabile of keeping more than one blob storage accounts in synch in real time--and across both Amazon Web Services and Microsoft Azure.
 
-The Editor also comes with two editors.  The first for use by developers is the Monaco editor. It is the editor used in Visual Studio Code, but in this case it is running in a web browser.  HTML, JavaScript and CSS all can be edited with this editor.  The second 
+The Editor also comes with two editors.  The first for use by developers is the Monaco editor. It is the editor used in Visual Studio Code, but in this case it is running in a web browser.  HTML, JavaScript and CSS all can be edited with this editor.  The second editor is the Kendo Editor. It is known as a WYSIWYG editor, and it is for use by non-technical personnel.
+
+Keeping the Editor separate from the other two has some advantages--mainly that the overhead and complexity of content management is isolated from the two websites that host web content.
 
 
 
