@@ -48,5 +48,15 @@ From the outset it was decided to build something that was a cross between a sta
 
 ### Hybrid Design
 
+Cosmos is a hybrid website in the sense that it is part "static" website and part "dynamic."  The design uses two websites to do this.  The first is the "static" website.  It is used to host content that does not change very often like JavaScript files, or CSS, images and other asset files.  This website is nothing more that BLOB storage with a public website serving content.  Most content of websites is static, so most of the load sustained by Cosmos is handled by this website.  In a way, the static website mimics the simplicity, performance and reliability of the website built in 2019.
+
+The second website hosts the HTML web pages that can change at any time.  While it is dynamic, it is extremely simplistic in design therefore less error prone.  It also makes use of short term memory cache (lasting seconds).  The result is that the dynamic site can serve HTML web pages 2 1/2 times faster as the static website.  It also means that web page content can also be changed on a moment's notice.
+
+The static website and the dynamic website can have separate URLs, or, they can be configured to appear as one.  They do work as one unit either way.  The dynamic website is called the "Publisher" and the other is called the "Storage Website."
+
+A third website called the "Editor" maintains content for both websites.  It contains a file manager that allows users to upload and manage files on the Storage Website.  The file manager is capabile of keeping more than one blob storage accounts in synch in real time--and across both Amazon Web Services and Microsoft Azure.
+
+The Editor also comes with two editors.  The first for use by developers is the Monaco editor. It is the editor used in Visual Studio Code, but in this case it is running in a web browser.  HTML, JavaScript and CSS all can be edited with this editor.  The second 
+
 
 
