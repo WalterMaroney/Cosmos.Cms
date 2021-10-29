@@ -15,7 +15,7 @@ Early-on three problems were recognized. First, the majority of State websites w
 
 California needed a single website that consolidated information and is designed for low-bandwidth connections and able to sustain high user loads.
 
-## Simple Design
+## Lessons of Simplicity
 
 In response the Governors Office and Government Operations agency tasked the Department of Technology (CDT) to setup a new website that would consolidate information about the fires and work well over limited bandwidth and on cell phones.  The deadline was to do this overnight.  Moreover this website _could not got down_ once launched.
 
