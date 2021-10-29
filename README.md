@@ -6,7 +6,7 @@ Cosmos is a dynamic, high performance [web content management system](https://en
  
 Key features:
 
-* A dynamic website that performs like a state website.
+* A dynamic website that performs like a static website.
 * Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
 * Code editor for web developers and a WSYWIG editor for the non-technical.
 * Cost effective to run.
