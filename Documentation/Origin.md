@@ -29,16 +29,19 @@ CDT created a "static" website hosted simultaeously in multiple geographic regio
 
 This static website design offered advantages as it was highly reliable and was very fast at serving web pages, it can even sustain high user loads.
 
+And it worked.  Overnight the site was created.  It never went down during the 2019 fire season, and it handled extremely high bursts of demand and performed very well over low bandwidth connections used by cell phones.
+
 ## Labor Intensive
 
-The website built in 2019 was fast, efficient and reliable.  Public information officers would send information to developers who would then update web pages on the website.  Changes were pushed to the website instances using a DevOps pipleline.  To make this work teams of developers and DevOps engineers needed to work around the clock.  In the short term this worked, but long term this is not sustainable. The realization came that some kind of a CMS would be needed in the future.  Something as reliable and as fast as a state website was needed that didn't need around the clock staffing of technical staff.
+While the website was fast, efficient and reliable, it did require a large number of people to maintain it around the clock.  Public information officers were the source of content and they would send information to developers who would then update web pages on the website.  Changes were pushed to the website instances using a DevOps pipleline.  To make this work teams of developers and DevOps engineers needed to work around the clock with public information officers.  In the short term this worked, but long term this was not sustainable. The realization came that some kind of a CMS would be needed in the future.  Something as reliable and as fast as a static website was needed that didn't require around the clock staffing by technical staff.
 
-What was needed was something that was a cross between a static website and a dynamic CMS.
- 
-What was needed was a _dynamic_ content management system that achieved the following:
+What was needed was something in between a static website and a dynamic CMS such as WordPress.
 
-* Performed as well as a state website in terms of speed and load.
+## Build Something Fast
+
+That winter work began on a new system that would perform as well as a static website yet offered the benefits of a CMS.  What was needed was a _dynamic_ content management system that achieved the following objectives:
+
+* Performed as well as a static website in terms of speed, load and reliability.
 * Simplisitc in nature, allowing a non-techical person with little or no training update content.
 * Very light weight, required little or no extra configuration to serve hundreds of thousands or millions of users.
-* As reliable as a state website, perhaps even more resiliant.
 
