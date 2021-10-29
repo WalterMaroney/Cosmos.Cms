@@ -19,7 +19,7 @@ A more robust installation can have multiple instances running simulateously in 
 Two repositories are associated with this procject:
 
 * The [Cosmos](https://github.com/CosmosSoftware/Cosmos.Cms) repository contains the "Editor" and the "Publisher" and all the frameworks common to each.
-* The "[Cosmos.Publisher](https://github.com/CosmosSoftware/Cosmos.Cms.Publisher)" repository contains a stand alone "Publisher" website.
+* The "[Cosmos Publisher](https://github.com/CosmosSoftware/Cosmos.Cms.Publisher)" repository contains a stand alone "Publisher" website.
 
 The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos.Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
 
