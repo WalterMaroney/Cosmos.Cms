@@ -62,5 +62,5 @@ Keeping the Editor separate from the other two has advantages.  The overhead and
 
 An architectual diagram of Cosmos HL is shown below.
 
-![Image of Cosmos Architecture](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Cosmos%20HL%20Design.svg)
+![Image of Cosmos Architecture](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Cosmos%20HL%20Design.png)
 
