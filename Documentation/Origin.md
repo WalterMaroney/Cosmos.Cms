@@ -29,7 +29,7 @@ CDT created a "static" website hosted simultaeously in multiple geographic regio
 
 This static website design offered advantages as it was highly reliable and was very fast at serving web pages, it can even sustain high user loads.
 
-And it worked.  Overnight the site was created.  It never went down during the 2019 fire season, and it handled extremely high bursts of demand and performed very well over low bandwidth connections used by cell phones.
+And it worked.  Overnight the site was created.  It never went down during the 2019 fire season, and it handled extremely high demand and performed very well over low bandwidth connections used by cell phones.
 
 ## Labor Intensive
 
