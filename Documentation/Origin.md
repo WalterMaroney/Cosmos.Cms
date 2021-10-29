@@ -23,7 +23,7 @@ The decisions was to build something simple so it would be fast and less vulnera
 
 CDT created a "static" website hosted simultaeously in multiple geographic regions in the cloud.  Web pages were designed without the use of unecessary graphics or other assets, making the number of bytes sent over the wire for each page was kept to a minimum.  In addition, CDT installed a Content Distribution Network or CDN to support high user loads.
 
-This static website design offered several advantages.  It was highly reliable and very fast at serving web pages.
+This static website design offered advantages as it was highly reliable and very fast at serving web pages.
 
 ## Labor Intensive
 
