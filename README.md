@@ -6,14 +6,11 @@
  
 Key features:
 
-* High performance, "[headless](https://en.wikipedia.org/wiki/Headless_content_management_system)" design.
+* A dynamic website that performs like a state website.
 * Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
 * Code editor for web developers and a WSYWIG editor for the non-technical.
-* "[Hybrid](https://en.wikipedia.org/wiki/Mashup_(web_application_hybrid))" design results in improved reliability and performance.
-
-At a minimum each Cosmos instance consists of two websites, a database and blob or file storage. The first is the "Editor." It's role is to create and maintain content for the website.  The second is the "Publisher." It is the website that "publishes" web content either by JSON feeds or as HTML web pages.  This minimulist design can run very inexpensively in either AWS or Azure for lightweight loads.
-
-A more robust installation can have multiple instances running simulateously in AWS and Azure, and can optionally integrate with a number of CDNs to handle high website demand.
+* Cost effective to run.
+* Optionally integrates with Akamai, Microsoft, and Verizon CDNs.
 
 Two repositories are associated with this procject:
 
@@ -24,21 +21,7 @@ The publisher repository is a "stock" out of the box Visual Studio application. 
 
 ## Origin
 
-If you would like to know why Cosmos HL was created, read [the origin story](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Origin.md).
-
-## Cloud-first Design
-
-Cosmos HL is built for the cloud and can integrate with services such as:
-
-* Content Distribution Networks 
-  * Akamai
-  * Microsoft
-  * Verizon
-* Blob storage for static files (CSS, JavaScript, images, etc.)
-* Google Translate (v3)
-* OAuth
-  * Google
-  * Microsoft
+If you would like to know why Cosmos HL was created and how it was architected, please read [the origin story](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Origin.md).
 
 ## Getting Started
 
