@@ -2,16 +2,16 @@
 
 [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml)
 
-Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) website with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) one.  The static website hosts CSS, JavaScript, images and other files that change infrequently while the dynamic site hosts HTML web pages that do.
+Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) website with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) site.  The result is a content management system that performes as well as a static website.
 
-A third website, called the "Editor," handles content.  It manages the files on the static website and edits made to web pages on the dynamic website.  It also schedules when changes appear. Optiobally it manage integration with CDNs and synchronizes content among Cosmos instances in real time.
+Content is managed by a third website, called the "Editor."  It maintains the files on the static website and makes edits to web pages on the dynamic website.  It also schedules when new content can appear, and optionally manages integration with CDNs.  Moreover it can synchronize content between Cosmos instances in real time.
 
 Performance-wise Cosmos HL can match or slightly exceed that of static websites backed with either Amazon S3 or Azure Storage accounts.
  
 Key features:
 
 * A dynamic website that performs like a static one.
-* Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
+* Can host a single website simultaneously in AWS and Azure clouds with realtime-synchronization.
 * Code editor for web developers and a WSYWIG editor for the non-technical.
 * Cost effective to run.
 * Optionally integrates with Akamai, Microsoft, and Verizon CDNs.
