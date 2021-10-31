@@ -1,12 +1,10 @@
 # Cosmos HL Origin Story
 
-The 2018 fire season was the worst in California history.  Wind-driven fires ignited by downed power lines caused fires to spread across 2 million acres, and tens of thousands of structures damaged or lost, and and over 25 billion of dollars worth in property damange.  Ninety seven citizens and six fire fighters lost thier lives that year. And 85 fatalities were due to a single fire, called the the "Camp Fire" suring which the Butte County town of Paridise burnt to the ground.
+The 2018 fire season was the worst in California history.  Wind-driven fires ignited by downed power lines caused fires to spread across 2 million acres. Ninety seven citizens and six fire fighters lost thier lives that year, and the fires caused over 25 billion of dollars worth in property damange.  Eighty five fatalities were due to a single fire, called the the "Camp Fire," during which the Butte County town of Paridise burnt to the ground.
 
 ## Fall 2019
 
-Summer and fall of 2019 saw a new round of fires.  In mid October 2019 a new fire stated near the town Geyserville in Sonoma County that eventually became among the biggest in state history.  It became known as the Kincade Fire.
-
-Strong winds drove the fire south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and thousands more worried that they might need to evacuate at any time.  Friends and family from throughout California and beyond wanted to know what was happening.
+Summer and fall of 2019 saw a new round of fires. Among the largest occured in mid October 2019 called the Kincade Fire. It stated near the town Geyserville in Sonoma County.  Strong winds drove the fire south forcing mass evacuations of Healdsburg, Windsor and parts of Santa Rosa. Tens of thousands of people were suddenly on the move, and thousands more worried that they might need to evacuate at any time.  Friends and family from throughout California and beyond wanted to know what was happening.
 
 People were accessing State of California websites for information and most were using cell phone.  Everyone with a cell phone was competing for limited network bandwidth--especially in rural areas.  Web pages were slow to load and bits of information were to be found on more than one website.
 
