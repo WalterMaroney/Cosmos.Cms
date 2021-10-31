@@ -6,7 +6,7 @@ Cosmos is a high performance [web content management system](https://en.wikipedi
 
 Content is managed by a third website called the "Editor."  It maintains files on the static website and makes edits to web pages on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally it can synchronize content between Cosmos instances in real time.
 
-Performance-wise Cosmos CMS can match or slightly exceed that of static websites backed with either Amazon S3 or Azure Storage accounts.
+Performance-wise Cosmos CMS can match or slightly exceed that of a static website backed with either Amazon S3 or Azure Storage accounts.
  
 Other Key features:
 
