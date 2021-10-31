@@ -2,7 +2,7 @@
 
 [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml)
 
-Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a static website with a dynamic one.  The static website hosts CSS, JavaScript, images and other files that change infrequently while the dynamic website hosts HTML web pages that do.
+Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) website with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) one.  The static website hosts CSS, JavaScript, images and other files that change infrequently while the dynamic website hosts HTML web pages that do.
 
 A third website, called the "Editor," handles content.  It manages static website files and edits to web pages on the dynamic website.  It also can schedule when changes appear, and, orchestrates real time content syncrhonization between Cosmos instances.
  
