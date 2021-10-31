@@ -5,6 +5,8 @@
 Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) website with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) one.  The static website hosts CSS, JavaScript, images and other files that change infrequently while the dynamic site hosts HTML web pages that do.
 
 A third website, called the "Editor," handles content.  It manages the files on the static website and edits made to web pages on the dynamic website.  It also schedules when changes appear. Optiobally it manage integration with CDNs and synchronizes content among Cosmos instances in real time.
+
+Performance-wise Cosmos HL can match or slightly exceed that of static websites backed with either Amazon S3 or Azure Storage accounts.
  
 Key features:
 
