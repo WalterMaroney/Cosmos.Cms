@@ -8,9 +8,8 @@ Content is managed by a third website, called the "Editor."  It maintains the fi
 
 Performance-wise Cosmos HL can match or slightly exceed that of static websites backed with either Amazon S3 or Azure Storage accounts.
  
-Key features:
+Other Key features:
 
-* A dynamic website that performs like a static one.
 * Can host a single website simultaneously in AWS and Azure clouds with realtime-synchronization.
 * Code editor for web developers and a WSYWIG editor for the non-technical.
 * Cost effective to run.
