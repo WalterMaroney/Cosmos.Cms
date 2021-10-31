@@ -25,7 +25,7 @@ The publisher repository is a "stock" out of the box Visual Studio application. 
 
 ## Origin
 
-If you would like to know why Cosmos HL was created and how it was architected, please read [the origin story](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Origin.md).
+If you would like to know why Cosmos HL was built the way it is now, please read [the origin story](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Origin.md).
 
 ## Getting Started
 
