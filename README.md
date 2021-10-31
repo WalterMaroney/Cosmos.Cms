@@ -2,13 +2,13 @@
 
 [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml)
 
-Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) website with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) one.  The static website hosts CSS, JavaScript, images and other files that change infrequently while the dynamic website hosts HTML web pages that do.
+Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) website with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) one.  The static website hosts CSS, JavaScript, images and other files that change infrequently while the dynamic site hosts HTML web pages that change frequently.
 
-A third website, called the "Editor," handles content.  It manages static website files and edits to web pages on the dynamic website.  It also can schedule when changes appear, and, orchestrates real time content syncrhonization between Cosmos instances.
+A third website, called the "Editor," handles content.  It manages the files on the static website and edits made to web pages on the dynamic website.  It also can schedule when changes appear, manage integration with CDNs, and synchronize Cosmos instances in real time.
  
 Key features:
 
-* A dynamic website that performs like a static website.
+* A dynamic website that performs like a static one.
 * Can host a single website simultaneously in AWS and Azure with realtime-synchronization.
 * Code editor for web developers and a WSYWIG editor for the non-technical.
 * Cost effective to run.
