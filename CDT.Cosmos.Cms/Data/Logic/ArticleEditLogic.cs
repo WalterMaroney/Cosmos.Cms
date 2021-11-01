@@ -423,6 +423,15 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             Article article;
 
+            if (!string.IsNullOrEmpty(model.Content))
+            {
+                //// When we save to the database, remove content editable attribute.
+                model.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
+                    StringComparison.CurrentCultureIgnoreCase).Replace("\u200B", "");
+                //// strip out unicode characters - https://stackoverflow.com/questions/123336/how-can-you-strip-non-ascii-characters-from-a-string-in-c
+                model.Content = Regex.Replace(model.Content, @"[^\u001F-\u007F]", string.Empty);
+            }
+
             if (!await DbContext.Users.AnyAsync(a => a.Id == userId))
                 throw new Exception($"User ID: {userId} not found!");
 
@@ -631,11 +640,8 @@ namespace CDT.Cosmos.Cms.Data.Logic
             article.Title = model.Title.Trim();
 
             //// When we save to the database, remove content editable attribute.
-            article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
-                StringComparison.CurrentCultureIgnoreCase).Replace("\u200B", "");
-
-            //// strip out unicode characters - https://stackoverflow.com/questions/123336/how-can-you-strip-non-ascii-characters-from-a-string-in-c
-            article.Content = Regex.Replace(article.Content, @"[^\u001F-\u007F]", string.Empty);
+            //article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
+            //    StringComparison.CurrentCultureIgnoreCase).Replace("\u200B", "");
 
             if (model.Content == null || model.Content == "")
             {

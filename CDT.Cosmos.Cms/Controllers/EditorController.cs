@@ -783,6 +783,13 @@ namespace CDT.Cosmos.Cms.Controllers
                     return Unauthorized();
             }
 
+            // When we save to the database, remove content editable attribute.
+            if (!string.IsNullOrEmpty(model.Content))
+            {
+                model.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
+                            StringComparison.CurrentCultureIgnoreCase);
+            }
+
             // Strip Byte Order Marks (BOM)
             model.Content = StripBOM(model.Content);
             model.HeaderJavaScript = StripBOM(model.HeaderJavaScript);
@@ -811,6 +818,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 try
                 {
                     // If no HTML errors were thrown, save here.
+                    
                     await _dbContext.SaveChangesAsync();
                     //
                     // Pull back out of the database, so user can see exactly what was saved.
@@ -825,6 +833,12 @@ namespace CDT.Cosmos.Cms.Controllers
                     ModelState.AddModelError("Save", e, provider.GetMetadataForType(typeof(string)));
                 }
 
+            // Now, prior to sending model back, re-enable the content editable attribute.
+            if (!string.IsNullOrEmpty(article.Content))
+            {
+                article.Content = article.Content.Replace(" crx=\"", " contenteditable=\"",
+                    StringComparison.CurrentCultureIgnoreCase);
+            }
 
             // ReSharper disable once PossibleNullReferenceException
             ViewData["Version"] = article.VersionNumber;
