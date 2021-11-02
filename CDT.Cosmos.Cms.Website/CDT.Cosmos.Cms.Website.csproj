@@ -21,6 +21,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Views\Shared\Components\**" />
+	  <Content Remove="Views\Shared\Components\**" />
+	  <EmbeddedResource Remove="Views\Shared\Components\**" />
+	  <None Remove="Views\Shared\Components\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Content Include="wwwroot\.well-known\microsoft-identity-association.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
@@ -71,10 +78,6 @@
 		<Content Update="Views\Home\Index.cshtml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Views\Shared\Components\ArticleComponent\" />
 	</ItemGroup>
 
 </Project>
