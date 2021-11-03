@@ -20,7 +20,7 @@ Cosmos uses MS SQL Server as it's database. Below are links that show how to dep
 
 ### File Storage
 
-Files are stored in either AWS S3 or Azure Storage accounts. Make sure each is accessible to the "Editor" and each as the public website enabled.
+Files are stored in either AWS S3 or Azure Storage accounts. Make sure each is accessible to the "Editor" and each is setup with a public website enabled.
 
 * [AWS S3 with public website](https://docs.aws.amazon.com/AmazonS3/latest/userguide/HostingWebsiteOnS3Setup.html). Note you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/).
 * [Azure Storage with public website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
