@@ -327,6 +327,13 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
                 }
 
             }
+            else
+            {
+                if (config == null)
+                {
+                    config = Options.Create(new CosmosConfig());
+                }
+            }
 
             // If there are no errors, we have success.
             return HasErrors == false;
