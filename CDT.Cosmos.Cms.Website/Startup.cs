@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
@@ -67,11 +68,6 @@ namespace CDT.Cosmos.Cms.Website
                     ServiceType = "Startup.cs",
                     Success = true
                 });
-                //
-                // Cosmos startup was successful.  Continue with startup
-                //
-                // Add the configuration to services here.
-                services.AddSingleton(cosmosOptions);
 
                 cosmosStartup.Diagnostics.Add(new Diagnostic()
                 {
@@ -87,8 +83,6 @@ namespace CDT.Cosmos.Cms.Website
                 {
                     options.EnableForHttps = true;
                 });
-
-                services.AddSingleton(cosmosOptions);
 
                 var primary = cosmosOptions.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
 
@@ -172,6 +166,20 @@ namespace CDT.Cosmos.Cms.Website
                     ServiceType = "Startup.cs",
                     Success = false
                 });
+            }
+
+            //
+            // Cosmos startup was successful.  Continue with startup
+            //
+            // Add the configuration to services here.
+            if (cosmosOptions == null || cosmosOptions.Value == null)
+            {
+                // Cosmos not yet configured
+                cosmosOptions = Options.Create(new CosmosConfig());
+            }
+            else
+            {
+                services.AddSingleton(cosmosOptions);
             }
 
             services.AddResponseCompression();
