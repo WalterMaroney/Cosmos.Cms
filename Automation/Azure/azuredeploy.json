@@ -1,0 +1,305 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account Name"
+            },
+            "maxLength": 24,
+            "minLength": 3,
+            "defaultValue": "[concat('files', uniquestring(resourceGroup().id))]"
+        },
+        "sqlServerName": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Server Name"
+            },
+            "defaultValue": "[concat('sqlserver', uniquestring(resourceGroup().id))]"
+        },
+        "sqlDatabaseName": {
+            "type": "string",
+            "metadata": {
+                "description": "Cosmos Database Name"
+            },
+            "defaultValue": "cosmosdb"
+        },
+        "sqlServerAdminName": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Admin Name"
+            }
+        },
+        "sqlServerPassword": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Admin Password"
+            },
+            "maxLength": 24,
+            "minLength": 12
+        },
+        "appServicePlanName": {
+            "type": "string",
+            "metadata": {
+                "description": "App Service Plan Name"
+            },
+            "defaultValue": "[concat('appplan', uniquestring(resourceGroup().id))]"
+        },
+        "editorName": {
+            "type": "string",
+            "metadata": {
+                "description": "Editor Website Name"
+            },
+            "defaultValue": "[concat('editor-', uniquestring(resourceGroup().id))]"
+        },
+        "publisherName": {
+            "type": "string",
+            "metadata": {
+                "description": "Publisher Website Name"
+            },
+            "defaultValue": "[concat('publisher-', uniquestring(resourceGroup().id))]"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('storageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "tags": {
+                "displayName": "storage20201023"
+            },
+            "location": "[parameters('location')]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[parameters('sqlServerName')]",
+            "location": "[parameters('location')]",
+            "kind": "v12.0",
+            "properties": {
+                "administratorLogin": "[parameters('sqlServerAdminName')]",
+                "version": "12.0",
+                "minimalTlsVersion": "1.2",
+                "publicNetworkAccess": "Enabled",
+                "restrictOutboundNetworkAccess": "Disabled",
+                "administratorLoginPassword": "[parameters('sqlServerPassword')]"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[concat(parameters('sqlServerName'), '/', parameters('sqlDatabaseName'))]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+            ],
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic",
+                "capacity": 5
+            },
+            "kind": "v12.0,user",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 2147483648,
+                "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "requestedBackupStorageRedundancy": "Geo",
+                "maintenanceConfigurationId": "/subscriptions/aec61f6c-81f1-4589-b4a5-c743876b4847/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default",
+                "isLedgerOn": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2020-12-01",
+            "name": "[parameters('appServicePlanName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "B1",
+                "tier": "Basic",
+                "size": "B1",
+                "family": "B",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-12-01",
+            "name": "[parameters('editorName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+            ],
+            "kind": "app,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('editorName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('editorName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOCKER|toiyabe/cosmoseditor:latest",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "71DF7368D34D8605D1D7F387DD51E6E6317809B42D2951DF103C65F44E7ABD62",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            },
+            "resources": [
+                {
+                    "name": "appsettings",
+                    "type": "config",
+                    "apiVersion": "2020-12-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('editorName'))]"
+                    ],
+                    "tags": {
+                        "displayName": "appsettings"
+                    },
+                    "properties": {
+                        "CosmosAllowConfigEdit": "true",
+                        "CosmosAllowSetup": "true",
+                        "CosmosPrimaryCloud": "azure",
+                        "CosmosSecretName": "CosmosConfig",
+                        "CosmosConfig": "",
+                        "DOCKER_REGISTRY_SERVER_PASSWORD": "",
+                        "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
+                        "DOCKER_REGISTRY_SERVER_USERNAME": "",
+                        "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+                        "COSMOS_STORAGE_ENDPOINTS" : "[reference(parameters('storageAccountName')).primaryEndpoints]",
+                        "COSMOS_STORAGE_CONNECTION" : "[reference(parameters('storageAccountName'))]"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2020-12-01",
+            "name": "[parameters('publisherName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+            ],
+            "kind": "app,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('publisherName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('publisherName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOCKER|toiyabe/cosmospublisher:latest",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            },
+            "resources": [
+                {
+                    "name": "appsettings",
+                    "type": "config",
+                    "apiVersion": "2020-12-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', parameters('publisherName'))]"
+                    ],
+                    "tags": {
+                        "displayName": "appsettings"
+                    },
+                    "properties": {
+                        "CosmosAllowConfigEdit": "true",
+                        "CosmosAllowSetup": "true",
+                        "CosmosPrimaryCloud": "azure",
+                        "CosmosSecretName": "CosmosConfig",
+                        "CosmosConfig": "",
+                        "DOCKER_REGISTRY_SERVER_PASSWORD": "",
+                        "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
+                        "DOCKER_REGISTRY_SERVER_USERNAME": "",
+                        "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false"
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": { }
+}
