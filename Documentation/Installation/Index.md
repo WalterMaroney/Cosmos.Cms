@@ -6,7 +6,7 @@ but if higher performance or higher availablility is required then Redis, CDN an
 Begin your installation by following our basic installation instructions. This will install a database, file storage and
 two web applications--one for the "Publisher" and another for the "Editor."
 
-## Basic Installation
+## Manual Installation
 
 The basic install requires four resources to be deloployed: a database, blob storage account, and a web application for the publisher and the editor.  Shown below are links
 that show how to install these resources in Amazon Web Services (AWS) and Microsoft Azure.
