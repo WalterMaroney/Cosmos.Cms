@@ -9,22 +9,6 @@
                 "description": "Location for all resources."
             }
         },
-        "storageAccountName": {
-            "type": "string",
-            "metadata": {
-                "description": "Storage Account Name"
-            },
-            "maxLength": 24,
-            "minLength": 3,
-            "defaultValue": "[concat('files', uniquestring(resourceGroup().id))]"
-        },
-        "sqlServerName": {
-            "type": "string",
-            "metadata": {
-                "description": "SQL Server Name"
-            },
-            "defaultValue": "[concat('sqlserver', uniquestring(resourceGroup().id))]"
-        },
         "sqlDatabaseName": {
             "type": "string",
             "metadata": {
@@ -45,34 +29,19 @@
             },
             "maxLength": 24,
             "minLength": 12
-        },
-        "appServicePlanName": {
-            "type": "string",
-            "metadata": {
-                "description": "App Service Plan Name"
-            },
-            "defaultValue": "[concat('appplan', uniquestring(resourceGroup().id))]"
-        },
-        "editorName": {
-            "type": "string",
-            "metadata": {
-                "description": "Editor Website Name"
-            },
-            "defaultValue": "[concat('editor-', uniquestring(resourceGroup().id))]"
-        },
-        "publisherName": {
-            "type": "string",
-            "metadata": {
-                "description": "Publisher Website Name"
-            },
-            "defaultValue": "[concat('publisher-', uniquestring(resourceGroup().id))]"
         }
     },
     "functions": [],
-    "variables": {},
+    "variables": {
+        "storageAccountName": "[concat('files', uniquestring(resourceGroup().id))]",
+        "sqlServerName" : "[concat('sqlserver', uniquestring(resourceGroup().id))]",
+        "appServicePlanName" : "[concat('appplan', uniquestring(resourceGroup().id))]",
+        "editorName" : "[concat('editor-', uniquestring(resourceGroup().id))]",
+        "publisherName" : "[concat('publisher-', uniquestring(resourceGroup().id))]"
+    },
     "resources": [
         {
-            "name": "[parameters('storageAccountName')]",
+            "name": "[variables('storageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2021-04-01",
             "tags": {
@@ -88,7 +57,7 @@
         {
             "type": "Microsoft.Sql/servers",
             "apiVersion": "2021-02-01-preview",
-            "name": "[parameters('sqlServerName')]",
+            "name": "[variables('sqlServerName')]",
             "location": "[parameters('location')]",
             "kind": "v12.0",
             "properties": {
@@ -103,10 +72,10 @@
         {
             "type": "Microsoft.Sql/servers/databases",
             "apiVersion": "2021-02-01-preview",
-            "name": "[concat(parameters('sqlServerName'), '/', parameters('sqlDatabaseName'))]",
+            "name": "[concat(variables('sqlServerName'), '/', parameters('sqlDatabaseName'))]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+                "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
             ],
             "sku": {
                 "name": "Basic",
@@ -128,7 +97,7 @@
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2020-12-01",
-            "name": "[parameters('appServicePlanName')]",
+            "name": "[variables('appServicePlanName')]",
             "location": "[parameters('location')]",
             "sku": {
                 "name": "B1",
@@ -154,27 +123,27 @@
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2020-12-01",
-            "name": "[parameters('editorName')]",
+            "name": "[variables('editorName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
             ],
             "kind": "app,linux,container",
             "properties": {
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(parameters('editorName'), '.azurewebsites.net')]",
+                        "name": "[concat(variables('editorName'), '.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "[concat(parameters('editorName'), '.scm.azurewebsites.net')]",
+                        "name": "[concat(variables('editorName'), '.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
                 ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
                 "reserved": true,
                 "isXenon": false,
                 "hyperV": false,
@@ -206,7 +175,7 @@
                     "type": "config",
                     "apiVersion": "2020-12-01",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites', parameters('editorName'))]"
+                        "[resourceId('Microsoft.Web/sites', variables('editorName'))]"
                     ],
                     "tags": {
                         "displayName": "appsettings"
@@ -220,9 +189,7 @@
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",
-                        "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
-                        "COSMOS_STORAGE_ENDPOINTS" : "[reference(parameters('storageAccountName')).primaryEndpoints]",
-                        "COSMOS_STORAGE_CONNECTION" : "[reference(parameters('storageAccountName'))]"
+                        "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false"
                     }
                 }
             ]
@@ -230,27 +197,27 @@
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2020-12-01",
-            "name": "[parameters('publisherName')]",
+            "name": "[variables('publisherName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]"
             ],
             "kind": "app,linux,container",
             "properties": {
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(parameters('publisherName'), '.azurewebsites.net')]",
+                        "name": "[concat(variables('publisherName'), '.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "[concat(parameters('publisherName'), '.scm.azurewebsites.net')]",
+                        "name": "[concat(variables('publisherName'), '.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
                 ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
                 "reserved": true,
                 "isXenon": false,
                 "hyperV": false,
@@ -281,7 +248,7 @@
                     "type": "config",
                     "apiVersion": "2020-12-01",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites', parameters('publisherName'))]"
+                        "[resourceId('Microsoft.Web/sites', variables('publisherName'))]"
                     ],
                     "tags": {
                         "displayName": "appsettings"
