@@ -260,7 +260,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
         public IOptions<CosmosConfig> GetCosmosConfig()
         {
             CosmosConfig model;
-            if (_cosmosConfigSection == null || _cosmosConfigSection.Value == null)
+            if (_cosmosConfigSection == null || string.IsNullOrEmpty(_cosmosConfigSection.Value) || string.IsNullOrWhiteSpace(_cosmosConfigSection.Value))
             {
                 model = new CosmosConfig();
                 model.SiteSettings.AllowSetup = true;
