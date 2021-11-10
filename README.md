@@ -28,6 +28,10 @@ If you would like to know why Cosmos HL was built the way it is now, please read
 
 ## Getting Started
 
+You can deploy Cosmos to Azure by clicking the following button.
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FCosmosSoftware%2FCosmos.Cms%2Fmain%2FAutomation%2FAzure%2Fazuredeploy.json)
+
 This documentation is still under development, so check back for more topics as they become available.
 
 * Setup Help
