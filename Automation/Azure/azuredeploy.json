@@ -1,7 +1,16 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "Installs the Cosmos CMS in Microsoft Azure."
+    },
     "parameters": {
+        "sendGridApiKey": {
+            "type": "string",
+            "metadata": {
+                "description": "SendGrid account API Key for this application."
+            }
+        },
         "sqlServerAdminName": {
             "type": "string",
             "metadata": {
@@ -19,13 +28,13 @@
     },
     "functions": [],
     "variables": {
-        "location" : "[resourceGroup().location]",
+        "location": "[resourceGroup().location]",
         "storageAccountName": "[concat('files', uniquestring(resourceGroup().id))]",
-        "sqlDatabaseName" : "cosmosdb",
-        "sqlServerName" : "[concat('sqlserver', uniquestring(resourceGroup().id))]",
-        "appServicePlanName" : "[concat('appplan', uniquestring(resourceGroup().id))]",
-        "editorName" : "[concat('editor-', uniquestring(resourceGroup().id))]",
-        "publisherName" : "[concat('publisher-', uniquestring(resourceGroup().id))]"
+        "sqlDatabaseName": "cosmosdb",
+        "sqlServerName": "[concat('sqlserver', uniquestring(resourceGroup().id))]",
+        "appServicePlanName": "[concat('appplan', uniquestring(resourceGroup().id))]",
+        "editorName": "[concat('editor-', uniquestring(resourceGroup().id))]",
+        "publisherName": "[concat('publisher-', uniquestring(resourceGroup().id))]"
     },
     "resources": [
         {
@@ -81,6 +90,18 @@
                 "maintenanceConfigurationId": "/subscriptions/aec61f6c-81f1-4589-b4a5-c743876b4847/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default",
                 "isLedgerOn": false
             }
+        },
+        {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[format('{0}/{1}', variables('sqlserverName'), 'AllowAllWindowsAzureIps')]",
+            "properties": {
+                "endIpAddress": "0.0.0.0",
+                "startIpAddress": "0.0.0.0"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]"
+            ]
         },
         {
             "type": "Microsoft.Web/serverfarms",
@@ -174,10 +195,29 @@
                         "CosmosPrimaryCloud": "azure",
                         "CosmosSecretName": "CosmosConfig",
                         "CosmosConfig": "",
+                        "CosmosSendGridApiKey" : "[parameters('sendGridApiKey')]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",
                         "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false"
+                    }
+                },
+                {
+                    "name": "connectionStrings",
+                    "type": "config",
+                    "apiVersion": "2020-12-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('editorName'))]"
+                    ],
+                    "properties": {
+                        "BlobConnection": {
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',concat(listKeys(concat(resourceGroup().id,'/providers/Microsoft.Storage/storageAccounts/', variables('storageAccountName')),'2015-05-01-preview').key1))]",
+                            "type": "Custom"
+                        },
+                        "DefaultConnection": {
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, parameters('sqlServerPassword'))]",
+                            "type": "SQLAzure"
+                        }
                     }
                 }
             ]
@@ -247,14 +287,29 @@
                         "CosmosPrimaryCloud": "azure",
                         "CosmosSecretName": "CosmosConfig",
                         "CosmosConfig": "",
+                        "CosmosSendGridApiKey" : "[parameters('sendGridApiKey')]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",
                         "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false"
                     }
+                },
+                {
+                    "name": "connectionStrings",
+                    "type": "config",
+                    "apiVersion": "2020-12-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('publisherName'))]"
+                    ],
+                    "properties": {
+                        "DefaultConnection": {
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, parameters('sqlServerPassword'))]",
+                            "type": "SQLAzure"
+                        }
+                    }
                 }
             ]
         }
     ],
-    "outputs": { }
+    "outputs": {}
 }
