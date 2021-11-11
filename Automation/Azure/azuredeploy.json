@@ -47,9 +47,17 @@
             "location": "[variables('location')]",
             "kind": "StorageV2",
             "sku": {
-                "name": "Premium_LRS",
+                "name": "Standard_RAGRS",
                 "tier": "Standard"
             }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-04-01",
+            "name": "[format('{0}/default/{1}', variables('storageAccountName'), '$web')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            ]
         },
         {
             "type": "Microsoft.Sql/servers",
@@ -195,7 +203,10 @@
                         "CosmosPrimaryCloud": "azure",
                         "CosmosSecretName": "CosmosConfig",
                         "CosmosConfig": "",
-                        "CosmosSendGridApiKey" : "[parameters('sendGridApiKey')]",
+                        "CosmosSendGridApiKey": "[parameters('sendGridApiKey')]",
+                        "CosmosPublisherUrl": "[concat(variables('publisherName'), '.azurewebsites.net')]",
+                        "CosmosEditorUrl": "[concat(variables('editorName'), '.azurewebsites.net')]",
+                        "CosmosStorageUrl": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2018-07-01').primaryEndpoints.web]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",
@@ -287,7 +298,7 @@
                         "CosmosPrimaryCloud": "azure",
                         "CosmosSecretName": "CosmosConfig",
                         "CosmosConfig": "",
-                        "CosmosSendGridApiKey" : "[parameters('sendGridApiKey')]",
+                        "CosmosSendGridApiKey": "[parameters('sendGridApiKey')]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",

@@ -2,32 +2,14 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "storageAccountName": {
-            "value": "cosmos"
-        },
-        "sqlServerName" :{
-            "value": "cosmosdb12345"
+        "sendGridApiKey": {
+            "value": ""
         },
         "sqlServerPassword": {
             "value": "9k2oS-13oojowo3-dJWDF"
         },
         "sqlServerAdminName": {
             "value": "cosmosdbadmin"
-        },
-        "appServicePlanName": {
-            "value": "cosmosappplan"
-        },
-        "location": {
-            "value": "West US"
-        },
-        "editorName": {
-            "value": "cosmoseditor123"
-        },
-        "publisherName": {
-            "value": "cosmospublisher123"
-        },
-        "sqlDatabaseName": {
-            "value": "cosmosdb"
         }
     }
 }
