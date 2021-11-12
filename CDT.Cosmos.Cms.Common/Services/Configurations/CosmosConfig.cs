@@ -19,6 +19,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             EditorUrls = new List<EditorUrl>();
             SiteSettings = new SiteSettings();
             StorageConfig = new StorageConfig();
+            SendGridConfig = new SendGridConfig();
         }
 
         /// <summary>

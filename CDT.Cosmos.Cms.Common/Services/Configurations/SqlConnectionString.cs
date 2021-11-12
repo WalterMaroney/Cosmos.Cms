@@ -9,6 +9,29 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
     public class SqlConnectionString
     {
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public SqlConnectionString()
+        {
+        }
+        /// <summary>
+        /// Constructor that deconstructs a connection string.
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <param name="cloudName"></param>
+        /// <param name="isPrimary"></param>
+        public SqlConnectionString(string connectionString, string cloudName, bool isPrimary)
+        {
+            CloudName = cloudName;
+            IsPrimary = isPrimary;
+            var builder = new SqlConnectionStringBuilder(connectionString);
+            Hostname = builder.DataSource;
+            InitialCatalog = builder.InitialCatalog;
+            UserId = builder.UserID;
+            Password = builder.Password;
+        }
+
+        /// <summary>
         ///     Cloud provider
         /// </summary>
         [Required]

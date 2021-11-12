@@ -108,7 +108,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
                     catch (Exception e)
                     {
                         AddDiagnostic("Failed creating secret client with error: " + e.Message, false, "Secret Client");
-                     }
+                    }
                 }
                 else
                 {
@@ -202,7 +202,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             try
             {
                 AddDiagnostic("Attempting to load configuration.", true, "Cosmos Config");
-                var configOptions = GetCosmosConfig();
+                var configOptions = GetCosmosConfig(configuration);
                 AddDiagnostic("Successfully loaded configuration.", true, "Cosmos Config");
 
                 return configOptions;
@@ -256,15 +256,67 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
         /// <summary>
         ///     Gets the Cosmos Configuration model
         /// </summary>
+        /// <param name="configuration">Used when a vault is not being used.</param>
         /// <returns></returns>
-        public IOptions<CosmosConfig> GetCosmosConfig()
+        public IOptions<CosmosConfig> GetCosmosConfig(IConfiguration configuration)
         {
             CosmosConfig model;
             if (_cosmosConfigSection == null || string.IsNullOrEmpty(_cosmosConfigSection.Value) || string.IsNullOrWhiteSpace(_cosmosConfigSection.Value))
             {
+                //"properties": {
+                //    "CosmosAllowConfigEdit": "true",
+                //        "CosmosAllowSetup": "true",
+                //        "CosmosPrimaryCloud": "azure",
+                //        "CosmosSecretName": "CosmosConfig",
+                //        "CosmosConfig": "",
+                //        "CosmosSendGridApiKey": "[parameters('sendGridApiKey')]",
+                //        "CosmosPublisherUrl": "[concat(variables('publisherName'), '.azurewebsites.net')]",
+                //        "CosmosEditorUrl": "[concat(variables('editorName'), '.azurewebsites.net')]",
+                //        "CosmosStorageUrl": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2018-07-01').primaryEndpoints.web]",
+                //        "DOCKER_REGISTRY_SERVER_PASSWORD": "",
+                //        "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
+                //        "DOCKER_REGISTRY_SERVER_USERNAME": "",
+                //        "WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false"
+                //    }
+
                 model = new CosmosConfig();
-                model.SiteSettings.AllowSetup = true;
-                model.SiteSettings.AllowReset = false;
+
+                model.SiteSettings.AllowSetup = configuration.GetValue<bool?>("CosmosAllowSetup");
+                model.PrimaryCloud = configuration.GetValue<string>("CosmosPrimaryCloud");
+                model.SendGridConfig.EmailFrom = configuration.GetValue<string>("CosmosAdminEmail");
+                model.SendGridConfig.SendGridKey = configuration.GetValue<string>("CosmosSendGridApiKey");
+                model.SecretKey = configuration.GetValue<string>("CosmosSecretKey");
+                model.SiteSettings.PublisherUrl = configuration.GetValue<string>("CosmosPublisherUrl");
+                model.SiteSettings.BlobPublicUrl = configuration.GetValue<string>("CosmosStorageUrl");
+                var editorUrl = configuration.GetValue<string>("CosmosEditorUrl");
+                if (!string.IsNullOrEmpty(editorUrl))
+                {
+                    model.EditorUrls.Add(new EditorUrl() { CloudName = model.PrimaryCloud, Url = editorUrl });
+                };
+
+                var dbConnection = configuration.GetConnectionString("DefaultConnection");
+                if (!string.IsNullOrEmpty(dbConnection))
+                {
+                    var sqlConnectionString = new SqlConnectionString(dbConnection, model.PrimaryCloud, true);
+                    model.SqlConnectionStrings.Add(sqlConnectionString);
+                }
+
+                if (model.PrimaryCloud.Equals("azure", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var blobConnStr = configuration.GetConnectionString("BlobConnection");
+                    var container = configuration.GetValue<string>("CosmosBlobContainer");
+
+                    if (!string.IsNullOrEmpty(blobConnStr) && !string.IsNullOrEmpty(container))
+                    {
+                        model.StorageConfig.AzureConfigs.Add(new Storage.AzureStorageConfig()
+                        {
+                            AzureBlobStorageConnectionString = blobConnStr,
+                            AzureBlobStorageContainerName = container,
+                            AzureBlobStorageEndPoint = model.SiteSettings.BlobPublicUrl
+                        });
+                    }
+                }
+
             }
             else
             {

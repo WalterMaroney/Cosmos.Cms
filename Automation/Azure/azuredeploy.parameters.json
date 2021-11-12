@@ -10,6 +10,12 @@
         },
         "sqlServerAdminName": {
             "value": "cosmosdbadmin"
+        },
+        "adminEmailAddress": {
+            "value": "yourname@yourdomain.com"
+        },
+        "installId": {
+            "value": "d242da59-3d49-46c2-a523-5ebdb61108dd"
         }
     }
 }

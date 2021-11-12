@@ -5,6 +5,19 @@
         "description": "Installs the Cosmos CMS in Microsoft Azure."
     },
     "parameters": {
+        "installId": {
+            "type":"string",
+            "defaultValue": "[newGuid()]",
+            "metadata":{
+                "description": "Unique ID of this install."
+            }
+        },
+        "adminEmailAddress" : {
+            "type": "string",
+            "metadata": {
+                "description": "Email address of this site's system administrator."
+            }
+        },
         "sendGridApiKey": {
             "type": "string",
             "metadata": {
@@ -203,10 +216,13 @@
                         "CosmosPrimaryCloud": "azure",
                         "CosmosSecretName": "CosmosConfig",
                         "CosmosConfig": "",
+                        "CosmosAdminEmail": "[parameters('adminEmailAddress')]",
                         "CosmosSendGridApiKey": "[parameters('sendGridApiKey')]",
                         "CosmosPublisherUrl": "[concat(variables('publisherName'), '.azurewebsites.net')]",
                         "CosmosEditorUrl": "[concat(variables('editorName'), '.azurewebsites.net')]",
                         "CosmosStorageUrl": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2018-07-01').primaryEndpoints.web]",
+                        "CosmosBlobContainer" : "$web",
+                        "CosmosSecretKey" : "[concat('CSK-', uniqueString(resourceGroup().id, parameters('installId')), uniqueString(parameters('installId')), '#', '!')]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",
@@ -298,6 +314,7 @@
                         "CosmosPrimaryCloud": "azure",
                         "CosmosSecretName": "CosmosConfig",
                         "CosmosConfig": "",
+                        "CosmosAdminEmail": "[parameters('adminEmailAddress')]",
                         "CosmosSendGridApiKey": "[parameters('sendGridApiKey')]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
