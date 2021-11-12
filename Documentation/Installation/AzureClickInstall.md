@@ -7,10 +7,10 @@ Before clicking the button below please [create a SendGrid account](https://docs
 This button installs the following:
 
 * Azure SQL Server and Database (SKU Basic 5)
-* Storage Account (Premium LRS)
+* Storage Account ([Standard RA-GRS](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview)
 * Linux App Plan (SKU B1)
-  * Cosmos Editor Website (container from Docker Hub)
-  * Cosmos Publisher Website (container from Docker Hub)
+  * Cosmos Editor Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor))
+  * Cosmos Publisher Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmospublisher))
 
 # Required Post Installation Steps
 
