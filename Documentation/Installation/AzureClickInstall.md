@@ -1,16 +1,16 @@
 # Azure Automated Install
 
-Before clicking the button below please [create a SendGrid account](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021) and [create an API key](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021#api-keys) and save it. You will need it later.
+Before clicking the button below please [create a SendGrid account](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021) and [create an API key](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021#api-keys) and save it. You will need it during the install.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FCosmosSoftware%2FCosmos.Cms%2Fmain%2FAutomation%2FAzure%2Fazuredeploy.json)
 
 This button installs the following:
 
 * Azure SQL Server and Database (SKU Basic 5)
-* Storage Account (Premium LRS)
+* Storage Account ([Standard RA-GRS](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview)
 * Linux App Plan (SKU B1)
-  * Cosmos Editor Website (container from Docker Hub)
-  * Cosmos Publisher Website (container from Docker Hub)
+  * Cosmos Editor Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor))
+  * Cosmos Publisher Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmospublisher))
 
 # Required Post Installation Steps
 
