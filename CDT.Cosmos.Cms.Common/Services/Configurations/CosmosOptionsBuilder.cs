@@ -281,14 +281,14 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
 
                 model = new CosmosConfig();
 
-                model.SiteSettings.AllowSetup = configuration.GetValue<bool?>("CosmosAllowSetup");
-                model.PrimaryCloud = configuration.GetValue<string>("CosmosPrimaryCloud");
-                model.SendGridConfig.EmailFrom = configuration.GetValue<string>("CosmosAdminEmail");
-                model.SendGridConfig.SendGridKey = configuration.GetValue<string>("CosmosSendGridApiKey");
-                model.SecretKey = configuration.GetValue<string>("CosmosSecretKey");
-                model.SiteSettings.PublisherUrl = configuration.GetValue<string>("CosmosPublisherUrl");
-                model.SiteSettings.BlobPublicUrl = configuration.GetValue<string>("CosmosStorageUrl");
-                var editorUrl = configuration.GetValue<string>("CosmosEditorUrl");
+                model.SiteSettings.AllowSetup = GetValue<bool?>(configuration, "CosmosAllowSetup");
+                model.PrimaryCloud = GetValue<string>(configuration, "CosmosPrimaryCloud");
+                model.SendGridConfig.EmailFrom = GetValue<string>(configuration, "CosmosAdminEmail");
+                model.SendGridConfig.SendGridKey = GetValue<string>(configuration, "CosmosSendGridApiKey");
+                model.SecretKey = GetValue<string>(configuration, "CosmosSecretKey");
+                model.SiteSettings.PublisherUrl = GetValue<string>(configuration, "CosmosPublisherUrl");
+                model.SiteSettings.BlobPublicUrl = GetValue<string>(configuration, "CosmosStorageUrl");
+                var editorUrl = GetValue<string>(configuration, "CosmosEditorUrl");
                 if (!string.IsNullOrEmpty(editorUrl))
                 {
                     model.EditorUrls.Add(new EditorUrl() { CloudName = model.PrimaryCloud, Url = editorUrl });
@@ -351,6 +351,31 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             return Options.Create(model);
         }
 
+        private T GetValue<T>(IConfiguration configuration, string keyName)
+        {
+            object outputValue = null;
+
+            var value = configuration.GetValue<string>(keyName);
+
+            if (string.IsNullOrEmpty(value))
+            {
+                // Try upper case
+                value = configuration.GetValue<string>(keyName.ToUpper());
+            }
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                if (bool.TryParse(value, out var b))
+                {
+                    outputValue = b;
+                }
+                else
+                {
+                    outputValue = value;
+                }
+            }
+            return (T)outputValue;
+        }
         #endregion
     }
 }
