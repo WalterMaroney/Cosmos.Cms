@@ -145,19 +145,35 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (_options.Value.SiteSettings.AllowSetup ?? false)
             {
+                var model = new SetupIndexViewModel();
+
+                // Fail if no database connection found.
+                if (_options.Value.SqlConnectionStrings == null || !_options.Value.SqlConnectionStrings.Any())
+                {
+                    return RedirectToAction("Instructions");
+                }
+
+                //
+                // Check for any migrations or empty tables.
+                var primary = _options.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
+                var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+                builder.UseSqlServer(primary.ToString());
+
+                using var dbContext = new ApplicationDbContext(builder.Options);
+
+                // Are there any applied migrations?
+                var appliedMigrations = await dbContext.Database.GetAppliedMigrationsAsync();
+                // Are there any pending migrations? (Upgrade)
+                var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
+
                 // If there is a database connection, see if there are no administrators yet.
                 if (_options.Value.SqlConnectionStrings != null &&
                     _options.Value.SqlConnectionStrings.Any(a => a.IsPrimary))
                 {
-                    var primary = _options.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
-                    var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-                    builder.UseSqlServer(primary.ToString());
-
-                    using var dbContext = new ApplicationDbContext(builder.Options);
 
                     if (!dbContext.Database.GetPendingMigrations().Any())
                     {
@@ -177,7 +193,64 @@ namespace CDT.Cosmos.Cms.Controllers
 
             _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
 
-            return View("Instructions.cshtml");
+            return Unauthorized();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(SetupIndexViewModel model)
+        {
+
+            if (_options.Value.SiteSettings.AllowSetup ?? false)
+            {
+                if (model != null && ModelState.IsValid)
+                {
+                    //
+                    // Check for any migrations or empty tables.
+                    var primary = _options.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
+                    var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+                    builder.UseSqlServer(primary.ToString());
+
+                    using var dbContext = new ApplicationDbContext(builder.Options);
+                    using var userStore = new UserStore<IdentityUser>(dbContext);
+                    using var userManager = new UserManager<IdentityUser>(userStore, null,
+                        new PasswordHasher<IdentityUser>(), null,
+                        null, null, null, null, null);
+
+                    var user = new IdentityUser { UserName = model.AdminEmail, Email = model.AdminEmail, EmailConfirmed = true };
+                    var result = await userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("NextSteps");
+                    }
+                    else
+                    {
+                        foreach(var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", $"Error: ({error.Code}) {error.Description}");
+                        }
+                    }
+                }
+                return View(model);
+            }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
+            return Unauthorized();
+        }
+
+        [AllowAnonymous]
+        public IActionResult NextSteps()
+        {
+            if (_options.Value.SiteSettings.AllowSetup ?? false)
+            {
+                return View();
+            }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
+            return Unauthorized();
         }
 
         [AllowAnonymous]

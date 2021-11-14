@@ -82,7 +82,13 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
 
             if (typeof(T) == typeof(bool))
             {
-                if (bool.TryParse(val, out bool parsedValue))
+                // default to false
+                if (string.IsNullOrEmpty(val))
+                {
+                    AddDiagnostic($"INFORMATIONAL: Boot variable {valueName} set to false.", true);
+                    outputValue = false;
+                }
+                else if (bool.TryParse(val, out bool parsedValue))
                 {
                     AddDiagnostic($"INFORMATIONAL: Boot variable {valueName} successfully parsed as {parsedValue}.", true);
                     outputValue = parsedValue;

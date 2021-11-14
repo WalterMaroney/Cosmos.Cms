@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Next Steps";
+}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>Almost Done!</h2>
+            <p>Before using your website please complete the following tasks:</p>
+            <ul>
+                <li>Remove the configuration variable &quot;CosmosAllowSetup&quot; from your Editor website.</li>
+                <li>Configure SendGrid to allow your website to send Email (<a href="https://sendgrid.com/blog/introducing-ip-access-management/" target="_blank">IP address management</a>).</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h4>Notes:</h4>
+            <ol>
+                <li>Removing &quot;CosmosAllowSetup&quot; protects your website by disabling website setup.</li>
+                <li>If email fails to send check to see if the IP address of your website <a href="https://sendgrid.com/blog/introducing-ip-access-management/" target="_blank">is being blocked by SendGrid</a>.</li>
+            </ol>
+        </div>
+    </div>
+</div>

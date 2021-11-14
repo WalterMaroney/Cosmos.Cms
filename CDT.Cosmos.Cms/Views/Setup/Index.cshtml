@@ -1,50 +1,48 @@
-﻿@using CDT.Cosmos.Cms.Common.Services.Configurations
-@model CosmosConfigStatus
+﻿@using CDT.Cosmos.Cms.Models
+@model SetupIndexViewModel
 @{
     ViewData["Title"] = "Cosmos Setup";
 }
-<div class="row">
-    <div class="col">
-        <div class="mb-5">
-            <h1><i class="fa fa-puzzle-piece"></i> Setup Center</h1>
+<div class="container">
+    @if (Model.SetupState == SetupState.NewInstall)
+    {
+        <div class="row">
+            <div class="col">
+                <div class="mb-5">
+                    <h1><i class="fa fa-puzzle-piece"></i> New Install</h1>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-<div class="row">
-    <div class="card-group">
-        <a class="card text-white bg-success text-decoration-none" asp-action="Instructions">
-            <h4 class="card-header"><i class="fa fa-info-circle" aria-hidden="true"></i> Setup Instructions</h4>
-            <div class="card-body">
-                <h5 class="card-title">Documentation</h5>
-                <p class="card-text">Select this card to view the steps necessary for setting up Cosmos.</p>
-                <div class="btn btn-dark">
-                    Get Started
+        <div class="row">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Setup Administrator Account</h3>
+                </div>
+                <div class="card-body">
+                    <p>Please use the form below to register an administrator account for this website.</p>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form asp-action="Index" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label asp-for="AdminEmail"></label>
+                            <input asp-for="AdminEmail" class="form-control" />
+                            <span asp-validation-for="AdminEmail" class="badge badge-primary"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="badge badge-primary"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="badge badge-primary"></span>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Register</button>
+                    </form>
+                    <div asp-validation-summary="All" class="text-danger"></div>
                 </div>
             </div>
-        </a>
-        <a class="card text-white bg-primary text-decoration-none" asp-action="Diagnostics">
-            <h4 class="card-header"><i class="fa fa-medkit"></i> Diagnostics</h4>
-            <div class="card-body">
-                <h5 class="card-title">Startup Validation</h5>
-                <p class="card-text">Click on this card to view startup diagnostic and validation reports.</p>
-                <div class="btn btn-dark position-relative">
-                    Diagnostics
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        @Model.Diagnostics.Count(c => c.Success == false)
-                        <span class="visually-hidden">Errors</span>
-                    </span>
-                </div>
-            </div>
-        </a>
-        <a class="card text-white bg-secondary text-decoration-none" asp-action="ConfigWizard">
-            <h4 class="card-header"><i class="fa fa-cog"></i> Configuration</h4>
-            <div class="card-body">
-                <h5 class="card-title">Step by Step</h5>
-                <p class="card-text">Use this tool to build a Cosmos configuration that connects to resources.</p>
-                <div class="btn btn-dark">
-                    Build
-                </div>
-            </div>
-        </a>
-    </div>
+        </div>
+    }
 </div>
