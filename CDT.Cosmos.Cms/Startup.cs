@@ -2,6 +2,7 @@ using CDT.Cosmos.BlobService;
 using CDT.Cosmos.Cms.Common.Data;
 using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
+using CDT.Cosmos.Cms.Data;
 using CDT.Cosmos.Cms.Data.Logic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -316,7 +317,8 @@ namespace CDT.Cosmos.Cms
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env,
-            CosmosConfigStatus cosmosStatus)
+            CosmosConfigStatus cosmosStatus,
+            IOptions<CosmosConfig> options)
         {
             if (env.IsDevelopment())
             {
@@ -349,7 +351,7 @@ namespace CDT.Cosmos.Cms
                     "MyArea",
                     "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-                if (cosmosStatus.ReadyToRun)
+                if (cosmosStatus.ReadyToRun && (options.Value.SiteSettings.AllowSetup ?? false) == false)
                 {
                     endpoints.MapControllerRoute(
                         "default",

@@ -5,6 +5,7 @@ using CDT.Cosmos.Cms.Common.Data;
 using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Common.Services.Configurations.Storage;
+using CDT.Cosmos.Cms.Data;
 using CDT.Cosmos.Cms.Data.Logic;
 using CDT.Cosmos.Cms.Models;
 using CDT.Cosmos.Cms.Services;
@@ -14,7 +15,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -24,8 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Security.Authentication;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Controllers
@@ -66,26 +64,6 @@ namespace CDT.Cosmos.Cms.Controllers
             }
 
             return _options.Value.SiteSettings.AllowSetup ?? false;
-        }
-
-        /// <summary>
-        ///     Installs the database
-        /// </summary>
-        /// <param name="connectionString"></param>
-        /// <param name="dropDatabase"></param>
-        /// <returns></returns>
-        /// <remarks>Drops database if AllowReset set to true.</remarks>
-        private async Task DropAndInstallDb(string connectionString, bool? dropDatabase)
-        {
-            using var dbContext = GetDbContext(connectionString);
-
-            // Drop database if requested
-            if ((_options.Value.SiteSettings.AllowSetup ?? false) &&
-                (_options.Value.SiteSettings.AllowReset ?? false) &&
-                (dropDatabase ?? false)) await dbContext.Database.EnsureDeletedAsync();
-
-            // Create database if it does not exist, and schema
-            await dbContext.Database.MigrateAsync();
         }
 
         /// <summary>
@@ -157,38 +135,45 @@ namespace CDT.Cosmos.Cms.Controllers
                     return RedirectToAction("Instructions");
                 }
 
-                //
-                // Check for any migrations or empty tables.
-                var primary = _options.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
-                var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-                builder.UseSqlServer(primary.ToString());
-
-                using var dbContext = new ApplicationDbContext(builder.Options);
-
-                // Are there any applied migrations?
-                var appliedMigrations = await dbContext.Database.GetAppliedMigrationsAsync();
-                // Are there any pending migrations? (Upgrade)
-                var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
-
-                // If there is a database connection, see if there are no administrators yet.
+                // If there is a database connection, see if there any users.
+                // If not it is OK to setup admin.
                 if (_options.Value.SqlConnectionStrings != null &&
                     _options.Value.SqlConnectionStrings.Any(a => a.IsPrimary))
                 {
+                    // Setup or update the database schema
+                    var setupDatabase = new SetupDatabase(_options);
+                    var migrationsApplied = await setupDatabase.CreateOrUpdateSchema();
+                    // Seed the database with data needed for operations.
+                    await setupDatabase.SeedDatabase();
 
-                    if (!dbContext.Database.GetPendingMigrations().Any())
+                    var connectionString = _options.Value.SqlConnectionStrings.FirstOrDefault();
+                    using var dbContext = GetDbContext(connectionString.ToString());
+                    var sqlSyncContext = new SqlDbSyncContext(_options);
+                    dbContext.LoadSyncContext(sqlSyncContext);
+
+                    using var userStore = new UserStore<IdentityUser>(dbContext);
+                    using var userManager = new UserManager<IdentityUser>(userStore, null,
+                        new PasswordHasher<IdentityUser>(), null,
+                        null, null, null, null, null);
+
+                    var results = await userManager.GetUsersInRoleAsync("Administrators");
+
+                    if (results.Count == 0)
                     {
-                        using var userStore = new UserStore<IdentityUser>(dbContext);
-                        using var userManager = new UserManager<IdentityUser>(userStore, null,
-                            new PasswordHasher<IdentityUser>(), null,
-                            null, null, null, null, null);
-
-                        var results = userManager.GetUsersInRoleAsync("Administrators").Result;
-
-                        if (results.Count == 0) return RedirectToAction("SetupAdmin");
+                        // No administrators, setup one now.
+                        model.SetupState = SetupState.SetupAdmin;
+                    }
+                    else if (migrationsApplied > 0)
+                    {
+                        model.SetupState = SetupState.Upgrade;
+                    }
+                    else
+                    {
+                        model.SetupState = SetupState.UpToDate;
                     }
                 }
 
-                return View(_cosmosStatus);
+                return View(model);
             }
 
             _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
@@ -201,7 +186,6 @@ namespace CDT.Cosmos.Cms.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(SetupIndexViewModel model)
         {
-
             if (_options.Value.SiteSettings.AllowSetup ?? false)
             {
                 if (model != null && ModelState.IsValid)
@@ -213,6 +197,7 @@ namespace CDT.Cosmos.Cms.Controllers
                     builder.UseSqlServer(primary.ToString());
 
                     using var dbContext = new ApplicationDbContext(builder.Options);
+
                     using var userStore = new UserStore<IdentityUser>(dbContext);
                     using var userManager = new UserManager<IdentityUser>(userStore, null,
                         new PasswordHasher<IdentityUser>(), null,
@@ -222,7 +207,17 @@ namespace CDT.Cosmos.Cms.Controllers
                     var result = await userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("NextSteps");
+                        var roleResult = await userManager.AddToRoleAsync(user, "Administrators");
+                        
+                        if (roleResult.Succeeded)
+                        {
+                            return RedirectToAction("NextSteps");
+                        }
+
+                        foreach (var error in roleResult.Errors)
+                        {
+                            ModelState.AddModelError("", $"Error: ({error.Code}) {error.Description}");
+                        }
                     }
                     else
                     {
@@ -311,6 +306,8 @@ namespace CDT.Cosmos.Cms.Controllers
 
                 return View(new ConfigureIndexViewModel(_options.Value.EnvironmentVariable, _options.Value));
             }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
 
             return Unauthorized();
         }
@@ -557,6 +554,8 @@ namespace CDT.Cosmos.Cms.Controllers
                 return View(model);
             }
 
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
             return Unauthorized();
         }
 
@@ -567,114 +566,6 @@ namespace CDT.Cosmos.Cms.Controllers
         public IActionResult BootConfig()
         {
             if (_options.Value.SiteSettings.AllowSetup ?? false) return View();
-
-            return Unauthorized();
-        }
-
-        /// <summary>
-        ///     Installs the C/CMS database
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult InstallDatabase()
-        {
-            if (_options.Value.SiteSettings.AllowSetup ?? false)
-            {
-                ViewData["HasConfig"] = _options.Value.SqlConnectionStrings != null &&
-                                        _options.Value.SqlConnectionStrings.Any();
-                return View();
-            }
-
-            return Unauthorized();
-        }
-
-        /// <summary>
-        ///     Installs C/CMS database, schema and seeds selected tables
-        /// </summary>
-        /// <param name="enableInstall">The user has enabled database install.</param>
-        /// <returns></returns>
-        /// <remarks>This may take several minutes!</remarks>
-        [HttpPost]
-        public async Task<IActionResult> InstallDatabase(bool enableInstall)
-        {
-            var hasConfig = _options.Value.SqlConnectionStrings != null && _options.Value.SqlConnectionStrings.Any();
-            ViewData["HasConfig"] = hasConfig;
-            // Safety check!
-            if (!enableInstall || hasConfig == false) return View();
-
-            var dropDatabase = _options.Value?.SiteSettings.AllowReset ?? false;
-
-            if (_options.Value.SiteSettings.AllowSetup ?? false)
-            {
-                if (_options.Value == null || !_options.Value.SqlConnectionStrings.Any())
-                {
-                    ModelState.AddModelError("", "Database configuration not found.");
-                }
-                else if (!_options.Value.SqlConnectionStrings.Any(a => a.IsPrimary))
-                {
-                    ModelState.AddModelError("", "Primary database connection not set.");
-                }
-                else
-                {
-                    try
-                    {
-                        var tasks = new List<Task>();
-                        // Drop existing databases
-                        foreach (var connection in _options.Value.SqlConnectionStrings)
-                            tasks.Add(DropAndInstallDb(connection.ToString(), dropDatabase));
-                        Task.WaitAll(tasks.ToArray());
-                    }
-                    catch (Exception e)
-                    {
-                        ModelState.AddModelError("", e.Message);
-                    }
-
-                    try
-                    {
-                        // Pre load tables. Records will automatically be replicated among all database instances.
-                        // Install icons and layout
-
-                        var primary = _options.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
-
-                        using var sqlContext = GetDbContext(primary.ToString());
-                        var syncContext = new SqlDbSyncContext(_options);
-                        sqlContext.LoadSyncContext(syncContext);
-
-                        var tblSeeding = new TableSeeding(sqlContext);
-
-                        await tblSeeding.LoadTemplates();
-                        await tblSeeding.LoadLayouts();
-                        await tblSeeding.LoadFontIcons();
-
-                        // Setup roles //
-                        using var roleManager = GetRoleManager(sqlContext);
-
-                        if (!await roleManager.RoleExistsAsync("Administrators"))
-                            await roleManager.CreateAsync(new IdentityRole("Administrators"));
-
-                        if (!await roleManager.RoleExistsAsync("Editors"))
-                            await roleManager.CreateAsync(new IdentityRole("Editors"));
-
-                        if (!await roleManager.RoleExistsAsync("Authors"))
-                            await roleManager.CreateAsync(new IdentityRole("Authors"));
-
-                        if (!await roleManager.RoleExistsAsync("Reviewers"))
-                            await roleManager.CreateAsync(new IdentityRole("Reviewers"));
-
-                        if (!await roleManager.RoleExistsAsync("Team Members"))
-                            await roleManager.CreateAsync(new IdentityRole("Team Members"));
-                    }
-                    catch (Exception e)
-                    {
-                        ModelState.AddModelError("", e.Message);
-                    }
-                }
-
-                return Json(new
-                {
-                    ModelState.IsValid,
-                    Errors = ModelState.Values
-                });
-            }
 
             return Unauthorized();
         }
@@ -699,23 +590,14 @@ namespace CDT.Cosmos.Cms.Controllers
 
                 using var userManager = GetUserManager(dbContext);
                 using var roleManager = GetRoleManager(dbContext);
-                var admins = await userManager.GetUsersInRoleAsync("Administrators");
                 var anyUsers = await userManager.Users.AnyAsync();
 
-                IdentityResult result = null;
+                if (await userManager.Users.AnyAsync())
+                {
+                    return Unauthorized();
+                }
 
-                var user = await userManager.GetUserAsync(User);
-
-                if (user == null) return Redirect("~/Account/Logout");
-
-                if (admins != null && admins.Count < 1)
-                    // Add the first registered user as the first administrator
-                    result = await userManager.AddToRoleAsync(user, "Administrators");
-                else if (User.Identity.IsAuthenticated)
-                    if (await userManager.IsInRoleAsync(user, "Administrators"))
-                        result = IdentityResult.Success;
-
-                return View(result);
+                return View();
             }
 
             return Unauthorized();

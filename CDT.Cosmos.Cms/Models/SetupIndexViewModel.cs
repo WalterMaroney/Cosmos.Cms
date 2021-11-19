@@ -19,6 +19,7 @@ namespace CDT.Cosmos.Cms.Models
 
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
+        [Required(AllowEmptyStrings = false)]
         public string Password { get; set; }
 
         [Display(Name = "Confirm Password")]
@@ -34,12 +35,16 @@ namespace CDT.Cosmos.Cms.Models
     public enum SetupState
     {
         /// <summary>
-        /// Database has not been setup yet.
+        /// Setup administrator account.
         /// </summary>
-        NewInstall,
+        SetupAdmin,
         /// <summary>
-        /// Database is installed but needs updates.
+        /// Database is installed but needed to apply missing migrations.
         /// </summary>
-        Update
+        Upgrade,
+        /// <summary>
+        /// Database is up to date.
+        /// </summary>
+        UpToDate
     }
 }

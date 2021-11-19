@@ -1,9 +1,11 @@
-﻿using Dotmim.Sync;
+﻿using CDT.Cosmos.Cms.Common.Services.Configurations;
+using Dotmim.Sync;
 using Dotmim.Sync.Enumerations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -24,6 +26,16 @@ namespace CDT.Cosmos.Cms.Common.Data
         /// <param name="options"></param>
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+        }
+
+        /// <summary>
+        ///    Constructor that also loads the database synchronization context.
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="cosmosOptions"></param>
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IOptions<CosmosConfig> cosmosOptions) : base(options)
+        {
+            this.LoadSyncContext(new SqlDbSyncContext(cosmosOptions));
         }
 
         /// <summary>

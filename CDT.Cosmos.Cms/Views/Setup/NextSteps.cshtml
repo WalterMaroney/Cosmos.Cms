@@ -7,8 +7,9 @@
             <h2>Almost Done!</h2>
             <p>Before using your website please complete the following tasks:</p>
             <ul>
-                <li>Remove the configuration variable &quot;CosmosAllowSetup&quot; from your Editor website.</li>
+                <li>Disable setup mode by removing the configuration variable &quot;CosmosAllowSetup&quot; from your Editor website.</li>
                 <li>Configure SendGrid to allow your website to send Email (<a href="https://sendgrid.com/blog/introducing-ip-access-management/" target="_blank">IP address management</a>).</li>
+                <li>Close your web browser, then log into your editor as the new administrator.</li>
             </ul>
         </div>
     </div>
@@ -16,7 +17,8 @@
         <div class="col">
             <h4>Notes:</h4>
             <ol>
-                <li>Removing &quot;CosmosAllowSetup&quot; protects your website by disabling website setup.</li>
+                <li>Removing &quot;CosmosAllowSetup&quot; protects your website by disabling setup.</li>
+                <li>When you need to upgrade your website, temporarily renable &quot;CosmosAllowSetup&quot;.</li>
                 <li>If email fails to send check to see if the IP address of your website <a href="https://sendgrid.com/blog/introducing-ip-access-management/" target="_blank">is being blocked by SendGrid</a>.</li>
             </ol>
         </div>

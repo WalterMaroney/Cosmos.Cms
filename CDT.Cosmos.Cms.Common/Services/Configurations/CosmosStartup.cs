@@ -340,6 +340,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
                     config = Options.Create(new CosmosConfig());
                 }
             }
+                        
 
             // If there are no errors, we have success.
             return HasErrors == false;

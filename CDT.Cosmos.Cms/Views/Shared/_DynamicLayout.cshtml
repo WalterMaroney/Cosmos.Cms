@@ -77,7 +77,7 @@
             @* Make sure we use the right jQuery *@
 
             var nodes = htmlDoc.DocumentNode.SelectNodes("//script");
-            var jQuery = nodes.FirstOrDefault(n => n.Attributes.Any(a => a.Name == "src" && a.Value.Contains("jquery", StringComparison.CurrentCultureIgnoreCase)));
+            var jQuery = nodes == null ? null : nodes.FirstOrDefault(n => n.Attributes.Any(a => a.Name == "src" && a.Value.Contains("jquery", StringComparison.CurrentCultureIgnoreCase)));
             if (jQuery == null)
             {
                 htmlDoc.DocumentNode.ChildNodes[0].ChildNodes.Append(HtmlNode.CreateNode("<script src=\"https://kendo.cdn.telerik.com/2021.3.914/js/jquery.min.js\"></script>"));

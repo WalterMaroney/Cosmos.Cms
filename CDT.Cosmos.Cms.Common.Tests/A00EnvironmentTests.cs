@@ -45,26 +45,26 @@ namespace CDT.Cosmos.Cms.Common.Tests
         //    Assert.IsNotNull(results);
         //}
 
-        [TestMethod]
-        public async Task A01_InstallDatabases_Success()
-        {
-            var setupController = utils.GetSetupController();
+        //[TestMethod]
+        //public async Task A01_InstallDatabases_Success()
+        //{
+        //    var setupController = utils.GetSetupController();
 
-            // Now recreate the database and schema
-            await setupController.InstallDatabase(true);
+        //    // Now recreate the database and schema
+        //    await setupController.I(true);
 
-            var options = utils.GetCosmosConfigOptions();
+        //    var options = utils.GetCosmosConfigOptions();
 
-            foreach (var connection in options.Value.SqlConnectionStrings)
-            {
-                var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-                builder.UseSqlServer(connection.ToString());
-                using var dbContext = new ApplicationDbContext(builder.Options);
-                // Create database if it does not exist, and schema
-                var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
-                Assert.IsTrue(migrations.Count() > 1);
-            }
-        }
+        //    foreach (var connection in options.Value.SqlConnectionStrings)
+        //    {
+        //        var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        //        builder.UseSqlServer(connection.ToString());
+        //        using var dbContext = new ApplicationDbContext(builder.Options);
+        //        // Create database if it does not exist, and schema
+        //        var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
+        //        Assert.IsTrue(migrations.Count() > 1);
+        //    }
+        //}
 
         [TestMethod]
         public async Task A02_TestSetup()
