@@ -322,5 +322,10 @@
             ]
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "ipAddressForSendGrid": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName')), '2016-03-01', 'Full').properties.possibleOutboundIpAddresses]"
+        }
+    }
 }
