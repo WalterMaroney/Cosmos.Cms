@@ -24,7 +24,7 @@ This button installs the following:
 * After creating the admin account, remove the configuration variable "CosmosAllowSetup" from the Editor website.
 * [Enable the static website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website-host#configure-static-website-hosting) on the storage account.
 * Close all web browsers.
-* Open a new web browser and log into the Editor website to begin building your website.
+* Open a new web browser and log into the Editor to begin building your website.
  
 
 ## Optional (yet recommended) Post Installation Steps
