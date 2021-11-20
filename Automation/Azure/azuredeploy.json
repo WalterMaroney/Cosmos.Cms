@@ -319,7 +319,7 @@
     "outputs": {
         "ipAddressForSendGrid": {
             "type": "string",
-            "value": "[reference(resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName')), '2016-03-01', 'Full').properties.possibleOutboundIpAddresses]"
+            "value": "[reference(resourceId('Microsoft.Web/sites', variables('editorName')), '2018-02-01').possibleOutboundIpAddresses]"
         },
         "sqlServerPassword": {
             "type": "string",
