@@ -136,6 +136,23 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             return (T)outputValue;
         }
 
+        private string GetConnectionString(string name)
+        {
+
+            var val = _configuration.GetConnectionString(name);
+
+            if (string.IsNullOrEmpty(val))
+            {
+                AddDiagnostic($"INFORMATIONAL: Connection string {name} is null or empty.", true);
+            }
+            else
+            {
+                AddDiagnostic($"INFORMATIONAL: Connection string {name} was found.", true);
+            }
+
+            return val;
+        }
+
         #region BOOT TIME CONFIGURATION BUILDING AND VALIDATION METHODS
 
         /// <summary>
@@ -178,17 +195,20 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             AwsKeyId = GetValue<string>("CosmosAwsKeyId");
             AwsSecretAccessKey = GetValue<string>("CosmosAwsSecretAccessKey");
 
+            var dbConnection = GetConnectionString("DefaultConnection");
+            var blobConnection = GetConnectionString("BlobConnection");
+
             #endregion
 
             #region VALIDATE REQUIRED VALUES
 
-            if (string.IsNullOrEmpty(SecretName))
+            if (string.IsNullOrEmpty(SecretName) && string.IsNullOrEmpty(dbConnection) && string.IsNullOrEmpty(blobConnection))
             {
                 AddDiagnostic("Boot environment variable CosmosSecretName is null or empty.", false);
             }
             else
             {
-                AddDiagnostic($"Secret Name is set to '{SecretName}'.", true);
+                AddDiagnostic($"Secret Name is set to '{SecretName}' or DefaultConnection and BlobConnection provided.", true);
             }
 
             if (string.IsNullOrEmpty(PrimaryCloud))

@@ -5,9 +5,6 @@
         "sendGridApiKey": {
             "value": ""
         },
-        "sqlServerPassword": {
-            "value": "9k2oS-13oojowo3-dJWDF"
-        },
         "sqlServerAdminName": {
             "value": "cosmosdbadmin"
         },
