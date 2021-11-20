@@ -14,9 +14,10 @@ This button installs the following:
 
 # Required Post Installation Steps
 
+* After the template finishes, click the "Outputs" tab on left. Copy the list of IP addresses and [add them your SendGrid account](https://docs.sendgrid.com/ui/account-and-settings/ip-access-management).
 * Open the Editor website and create your admin account.
   * Note: The Editor and Publisher websites may take a minute or two to spin up as the Docker containers are being installed upon first use.
-* After the template finishes, click the "Outputs" tab on left. Copy the list of IP addresses and [add them your SendGrid account](https://docs.sendgrid.com/ui/account-and-settings/ip-access-management).
+* After creating the admin account, remove the configuration variable "CosmosAllowSetup" from the Editor website.
 * [Enable the static website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website-host#configure-static-website-hosting) on the storage account.
 
  
