@@ -22,13 +22,6 @@
             "metadata": {
                 "description": "SQL Admin Name"
             }
-        },
-        "sqlServerPassword": {
-            "type": "string",
-            "metadata": {
-                "description": "SQL Admin Password (include upper and lower case, numbers and at least one of these: ! $ # %)"
-            },
-            "minLength": 8
         }
     },
     "functions": [],
@@ -37,6 +30,7 @@
         "storageAccountName": "[concat('files', uniquestring(resourceGroup().id))]",
         "sqlDatabaseName": "cosmosdb",
         "sqlServerName": "[concat('sqlserver', uniquestring(resourceGroup().id))]",
+        "sqlServerPassword": "[concat('P', uniqueString(resourceGroup().id, deployment().name, '95b734ff-a0e1-4252-8171-33d68e03d351'), 'x', '!')]",
         "appServicePlanName": "[concat('appplan', uniquestring(resourceGroup().id))]",
         "editorName": "[concat('editor-', uniquestring(resourceGroup().id))]",
         "publisherName": "[concat('publisher-', uniquestring(resourceGroup().id))]"
@@ -76,7 +70,7 @@
                 "minimalTlsVersion": "1.2",
                 "publicNetworkAccess": "Enabled",
                 "restrictOutboundNetworkAccess": "Disabled",
-                "administratorLoginPassword": "[parameters('sqlServerPassword')]"
+                "administratorLoginPassword": "[variables('sqlServerPassword')]"
             }
         },
         {
@@ -211,7 +205,7 @@
                         "CosmosEditorUrl": "[concat(variables('editorName'), '.azurewebsites.net')]",
                         "CosmosStorageUrl": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2018-07-01').primaryEndpoints.web]",
                         "CosmosBlobContainer" : "$web",
-                        "CosmosSecretKey" : "[concat('CSK-', uniqueString(resourceGroup().id), uniqueString(parameters('sqlServerPassword')))]",
+                        "CosmosSecretKey" : "[concat('CSK-', uniqueString(resourceGroup().id), uniqueString(variables('sqlServerPassword')))]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",
@@ -231,7 +225,7 @@
                             "type": "Custom"
                         },
                         "DefaultConnection": {
-                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, parameters('sqlServerPassword'))]",
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlServerPassword'))]",
                             "type": "SQLAzure"
                         }
                     }
@@ -314,7 +308,7 @@
                     ],
                     "properties": {
                         "DefaultConnection": {
-                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, parameters('sqlServerPassword'))]",
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlServerPassword'))]",
                             "type": "SQLAzure"
                         }
                     }
