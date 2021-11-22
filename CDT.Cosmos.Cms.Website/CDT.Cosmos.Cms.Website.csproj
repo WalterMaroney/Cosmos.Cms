@@ -7,8 +7,8 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<StartupObject>CDT.Cosmos.Cms.Website.Program</StartupObject>
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-		<AssemblyVersion>2021.11.22.2</AssemblyVersion>
-		<FileVersion>2021.11.22.2</FileVersion>
+		<AssemblyVersion>2021.11.22.4</AssemblyVersion>
+		<FileVersion>2021.11.22.4</FileVersion>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>

@@ -130,7 +130,7 @@ namespace CDT.Cosmos.Cms.Website.Controllers
 
             // Determine if Google Translate v3 is configured so the javascript support will be added
             ViewData["UseGoogleTranslate"] =
-                string.IsNullOrEmpty(_cosmosOptions?.Value?.GoogleCloudAuthConfig.ClientId) == false;
+                string.IsNullOrEmpty(_cosmosOptions?.Value?.GoogleCloudAuthConfig?.ClientId) == false;
 
             return View(model);
         }

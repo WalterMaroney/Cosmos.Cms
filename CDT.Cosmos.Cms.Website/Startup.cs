@@ -226,13 +226,6 @@ namespace CDT.Cosmos.Cms.Website
             // https://docs.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/5.0/middleware-database-error-page-obsolete
             // services.AddDatabaseDeveloperPageExceptionFilter();
 
-            cosmosStartup.Diagnostics.Add(new Diagnostic()
-            {
-                Message = "ConfigureServices(IServiceCollection services) completed.",
-                ServiceType = "Startup.cs",
-                Success = true
-            });
-
             // Save Cosmos configuration status
             services.AddSingleton(cosmosStartup.GetStatus());
 
