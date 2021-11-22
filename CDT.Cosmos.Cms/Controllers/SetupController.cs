@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Azure.Storage.Blobs;
 using CDT.Cosmos.Cms.Common.Data;
+using CDT.Cosmos.Cms.Common.Data.Logic;
 using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Common.Services.Configurations.Storage;
@@ -208,7 +209,7 @@ namespace CDT.Cosmos.Cms.Controllers
                     if (result.Succeeded)
                     {
                         var roleResult = await userManager.AddToRoleAsync(user, "Administrators");
-                        
+
                         if (roleResult.Succeeded)
                         {
                             return RedirectToAction("NextSteps");
@@ -221,7 +222,7 @@ namespace CDT.Cosmos.Cms.Controllers
                     }
                     else
                     {
-                        foreach(var error in result.Errors)
+                        foreach (var error in result.Errors)
                         {
                             ModelState.AddModelError("", $"Error: ({error.Code}) {error.Description}");
                         }

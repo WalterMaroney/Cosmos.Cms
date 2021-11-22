@@ -1,4 +1,5 @@
 ﻿using CDT.Cosmos.Cms.Common.Data;
+using CDT.Cosmos.Cms.Common.Data.Logic;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Data.Logic;
 using Microsoft.AspNetCore.Identity;
@@ -71,9 +72,35 @@ namespace CDT.Cosmos.Cms.Data
 
                 var tblSeeding = new TableSeeding(dbContext);
 
-                await tblSeeding.LoadTemplates();
-                await tblSeeding.LoadLayouts();
+                //await tblSeeding.LoadTemplates();
+                //await tblSeeding.LoadLayouts();
                 await tblSeeding.LoadFontIcons();
+
+
+                // Load default layout and pages
+                var layoutUtilities = new LayoutUtilities();
+                var defaultLayout = layoutUtilities.GetDefault();
+                var templates = layoutUtilities.GetTemplates();
+                var homeTemplate = templates.FirstOrDefault(f => f.Title.Equals("home page", StringComparison.CurrentCultureIgnoreCase));
+
+                dbContext.Layouts.Add(defaultLayout);
+                dbContext.Templates.AddRange(templates);
+                await dbContext.SaveChangesAsync();
+
+                dbContext.Articles.Add(new Article()
+                {
+                    ArticleNumber = 1,
+                    Content = homeTemplate.Content,
+                    LayoutId = defaultLayout.Id,
+                    Published = DateTime.UtcNow.AddMinutes(-5),
+                    StatusCode = (int)StatusCodeEnum.Active,
+                    Title = "Home Page",
+                    UrlPath = "root",
+                    Updated = DateTime.UtcNow.AddMinutes(-5),
+                    VersionNumber = 1
+                });
+
+                await dbContext.SaveChangesAsync();
 
                 // Setup roles //
                 using var roleManager = GetRoleManager(dbContext);
