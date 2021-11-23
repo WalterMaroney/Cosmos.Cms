@@ -324,6 +324,14 @@
         "sqlServerPassword": {
             "type": "string",
             "value": "[variables('sqlServerPassword')]"
+        },
+        "editorUrl": {
+            "type": "string",
+            "value": "[concat(variables('editorName'), '.azurewebsites.net')]"
+        },
+        "publisherUrl": {
+            "type": "string",
+            "value": "[concat(variables('publisherName'), '.azurewebsites.net')]"
         }
     }
 }
