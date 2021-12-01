@@ -68,5 +68,6 @@ namespace CDT.Cosmos.Cms.Models
         /// </summary>
         [Display(Name = "Team Name")]
         public string TeamName { get; set; }
+
     }
 }

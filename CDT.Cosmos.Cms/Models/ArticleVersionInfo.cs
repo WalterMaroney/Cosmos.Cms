@@ -28,5 +28,10 @@ namespace CDT.Cosmos.Cms.Models
 
         /// <inheritdoc cref="Article.Expires" />
         public DateTime? Expires { get; set; }
+
+        /// <summary>
+        /// Can use HTML Editor
+        /// </summary>
+        public bool UsesHtmlEditor { get; set; }
     }
 }

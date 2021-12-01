@@ -17,6 +17,8 @@
 
     var teamMemberLogic = (TeamIdentityLogic)ViewData["TeamLogic"];
     var teamName = (string)ViewData["TeamName"];
+    var editorToolBar = controllerName == "Editor" && actionName == "Edit" && Model != null;
+
 
     var isAuthor = false;
     var isEditor = false;
@@ -44,119 +46,107 @@
     Icons:
         https://fontawesome.com/icons?from=io
 *@
-<style>
-    .fa.k-sprite,
-    .fa.k-sprite:before {
-        font-size: 16px;
-        line-height: 16px;
-    }
-
-    /*.k-widget.k-window.k-dialog {
-        background-color: #363636 !important;
-    }*/
-
-    /*.editorToolbarWindow.k-window-content {
-        position: fixed !important;
-        top: 1px !important;
-        left: 58px;
-        right: 0px;
-    }*/
-
-    .cosmos-btn-blue {
-        background-color: #2e5cb8;
-        color: white;
-    }
-
-    .cosmos-btn-success {
-        background-color: #009933;
-        color: white;
-    }
-
-    .k-widget.k-window.k-window-titleless.k-editor-widget.k-display-inline-flex {
-        position: fixed !important;
-        top: 40px !important;
-    }
-
-    .k-editor-inline {
-        padding: 0;
-        margin: 0;
-        border-width: 0;
-        box-shadow: none;
-        background: none;
-    }
-
-        .k-editor-inline:hover {
-            border-width: 1px;
-            border-color: red;
-            border-style: dashed;
+@*<style>
+        .fa.k-sprite,
+        .fa.k-sprite:before {
+            font-size: 16px;
+            line-height: 16px;
         }
 
-        .k-editor-inline.k-state-active {
-            border-width: 1px;
-            border-color: red;
+        /*.k-widget.k-window.k-dialog {
+            background-color: #363636 !important;
+        }*/
+
+        /*.editorToolbarWindow.k-window-content {
+            position: fixed !important;
+            top: 1px !important;
+            left: 58px;
+            right: 0px;
+        }*/
+
+        .cosmos-btn-blue {
+            background-color: #2e5cb8;
+            color: white;
+        }
+
+        .cosmos-btn-success {
+            background-color: #009933;
+            color: white;
+        }
+
+        .k-widget.k-window.k-window-titleless.k-editor-widget.k-display-inline-flex {
+            position: fixed !important;
+            top: 40px !important;
+        }
+
+        .k-editor-inline {
+            padding: 0;
+            margin: 0;
+            border-width: 0;
+            box-shadow: none;
             background: none;
         }
 
-    .k-widget.k-editor.k-editor-inline {
-        background: none;
-        color: inherit !important;
-    }
+            .k-editor-inline:hover {
+                border-width: 1px;
+                border-color: red;
+                border-style: dashed;
+            }
 
-    .k-editor .k-i-close-editor:before {
-        font-family: FontAwesome;
-        content: "\f09e";
-        font-size: 16px;
-    }
+            .k-editor-inline.k-state-active {
+                border-width: 1px;
+                border-color: red;
+                background: none;
+            }
 
-    div#k-table-properties.k-content.k-state-active {
-        overflow: auto;
-    }
+        .k-widget.k-editor.k-editor-inline {
+            background: none;
+            color: inherit !important;
+        }
 
-    div#k-cell-properties {
-        overflow: auto;
-    }
+        .k-editor .k-i-close-editor:before {
+            font-family: FontAwesome;
+            content: "\f09e";
+            font-size: 16px;
+        }
 
-    div#k-table-wizard-tabs {
-        font-size: 0.78rem;
-    }
+        div#k-table-properties.k-content.k-state-active {
+            overflow: auto;
+        }
 
-    .k-toolbar {
-        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
-    }
+        div#k-cell-properties {
+            overflow: auto;
+        }
 
-    #ToolBar {
-        z-index: 9000000 !important;
-    }
-</style>
-@if (controllerName == "Editor" && actionName == "Edit" && Model != null)
+        div#k-table-wizard-tabs {
+            font-size: 0.78rem;
+        }
+
+        .k-toolbar {
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+        }
+
+        #ToolBar {
+            z-index: 9000000 !important;
+        }
+    </style>*@
+@if (editorToolBar)
 {
-    <form id="frmEdit" asp-action="Edit" method="post" kendo-validator="true">
-        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="ArticleNumber" />
-        <input type="hidden" asp-for="UrlPath" />
-        <input type="hidden" asp-for="VersionNumber" />
-        <input type="hidden" asp-for="Content" />
-        <input type="hidden" asp-for="HeaderJavaScript" />
-        <input type="hidden" asp-for="FooterJavaScript" />
-        <input type="hidden" asp-for="Published" />
-        <input type="hidden" asp-for="RoleList" />
-        <input type="hidden" id="userName" value="@User.Identity?.Name" />
-
-        @* EDITING TOOL BAR *@
-        @(Html.Kendo().ToolBar()
+    @* EDITING TOOL BAR *@
+    @(Html.Kendo().ToolBar()
             .Name("ToolBar")
             .Items(items =>
             {
                 items.Add().Type(CommandType.SplitButton).Text("Menu").Id("ddMenu").MenuButtons(menuButtons =>
                 {
-                    menuButtons.Add().Text("Save").SpriteCssClass("fa fa-cloud-upload");
-                    menuButtons.Add().Text("Code").SpriteCssClass("fa fa-codepen");
-                    menuButtons.Add().Text("Files").SpriteCssClass("fa fa-folder");
-                    menuButtons.Add().Text("Preview").SpriteCssClass("fa fa-folder-open");
-                    menuButtons.Add().Text("Versions").SpriteCssClass("fa fa-github");
-                    menuButtons.Add().Text("Close").SpriteCssClass("fa fa-times-circle");
-                    menuButtons.Add().Text("Permissions").SpriteCssClass("fa fa-shield").Hidden(!User.IsInRole("Editors") && !User.IsInRole("Administrators"));
-                    menuButtons.Add().Text("Help").SpriteCssClass("fa fa-info-circle");
+                    menuButtons.Add().Text("Save");
+                    menuButtons.Add().Text("Code");
+                    menuButtons.Add().Text("Files");
+                    menuButtons.Add().Text("Preview");
+                    menuButtons.Add().Text("Versions");
+                    menuButtons.Add().Text("Close");
+                    menuButtons.Add().Text("Permissions").Hidden(!User.IsInRole("Editors") && !User.IsInRole("Administrators"));
+                    menuButtons.Add().Text("Help");
                 }).Click("bgEditClick").Hidden(controllerName == "Templates");
                 items.Add().Template("<span>Title: </span>");
                 items.Add().Template(Html.Kendo().TextBoxFor(m => m.Title).HtmlAttributes(new {style = "width: 265px;"}).ToHtmlString());
@@ -170,8 +160,8 @@
 
                 items.Add().Type(CommandType.SplitButton).Template(accountBtnTemplate).MenuButtons(menuButtons =>
                 {
-                    menuButtons.Add().Text("User Account").SpriteCssClass("fa fa-user");
-                    menuButtons.Add().Text("Log Out").SpriteCssClass("fa fa-sign-out");
+                    menuButtons.Add().Text("User Account");
+                    menuButtons.Add().Text("Log Out");
                 }).Click("bgCmsClick");
                 if (isAuthor)
                 {
@@ -190,7 +180,93 @@
 
                 items.Add().Template("<i style='font-size:small;'>Note: HTML editor disables JavaScript in some pages.</i>");
             }))
+
+}
+else
+{
+    @* NOT EDITING TOOL BAR *@
+    @(Html.Kendo().ToolBar()
+        .Name("ToolBar")
+        .Items(items =>
+        {
+            items.Add().Type(CommandType.SplitButton).Text("Menu").Id("menuBtn").ImageUrl("/images/CosmosBearIcon.png").MenuButtons(menuButtons =>
+            {
+                menuButtons.Add().Text("Home Page");
+                menuButtons.Add().Text("Help");
+                if (Model != null && controllerName == "Home" && actionName == "Index" && (isAuthor && Model?.Published == null || isEditor || isAdministrator))
+                {
+                    menuButtons.Add().Text("Edit");
+                }
+                if (isAdministrator || isEditor || isAuthor || isTeamMember)
+                {
+                    menuButtons.Add().Text("Files");
+                    menuButtons.Add().Text("Pages");
+                }
+                if (isAdministrator || isEditor && isTeamMember == false)
+                {
+                    menuButtons.Add().Text("Templates");
+                    menuButtons.Add().Text("Preload");
+                    menuButtons.Add().Text("Publish");
+                    menuButtons.Add().Text("Navigation");
+                    menuButtons.Add().Text("Layouts");
+                    menuButtons.Add().Text("Logs");
+                    menuButtons.Add().Text("Teams");
+                }
+                if (isAdministrator && isTeamMember == false)
+                {
+                    menuButtons.Add().Text("Users");
+                    if (options.Value.SiteSettings != null && options.Value.SiteSettings.AllowSetup.HasValue && options.Value.SiteSettings.AllowSetup.Value)
+                    {
+                        menuButtons.Add().Text("Setup");
+                        menuButtons.Add().Text("Diagnostics");
+                        menuButtons.Add().Text("Configure");
+                    }
+                    if (options.Value.SiteSettings.AllowReset.HasValue && options.Value.SiteSettings.AllowReset.Value)
+                    {
+                        menuButtons.Add().Text("Reset Site");
+                    }
+                }
+                if (User.Identity.IsAuthenticated)
+                {
+                    menuButtons.Add().Text("User Account");
+                    menuButtons.Add().Text("Log Out");
+                }
+            }).Click("bgCmsClick");
+            items.Add().Template("<a id='timeZone' title='Dates and times are in this time zone.' class='k-button .cosmos-btn-blue'></a>");
+
+            if (User.Identity.IsAuthenticated)
+            {
+                items.Add().Type(CommandType.SplitButton).Text(accountBtnTemplate).MenuButtons(menuButtons =>
+                {
+                    menuButtons.Add().Text("User Account");
+                    menuButtons.Add().Text("Log Out");
+                }).Click("bgCmsClick");
+            }
+            items.Add().Template($"<div id='versInfo' class='badge rounded-pill bg-secondary'>({assemblyName.Version})</div>");
+        }))
+    <div style="display: none">
+        @* This is the hidden log out form executed by the log out drop down menu pick above*@
+        <form id="frmLogout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+        </form>
+    </div>
+}
+
+@if (editorToolBar)
+{
+<div style="display:none">
+    <form id="frmEdit" asp-action="Edit" method="post" kendo-validator="true">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ArticleNumber" />
+        <input type="hidden" asp-for="UrlPath" />
+        <input type="hidden" asp-for="VersionNumber" />
+        <input type="hidden" asp-for="Content" />
+        <input type="hidden" asp-for="HeaderJavaScript" />
+        <input type="hidden" asp-for="FooterJavaScript" />
+        <input type="hidden" asp-for="Published" />
+        <input type="hidden" asp-for="RoleList" />
+        <input type="hidden" id="userName" value="@User.Identity?.Name" />
     </form>
+</div>
     <div style="display: none">
         <kendo-dialog name="saveChangesDialog" title="Please Wait" modal="true" visible="false" min-width="500">
             <content>
@@ -439,23 +515,11 @@
 
         // EDITOR UTILITIES
         function loadEditors() {
-
-            var mode = "single";
             var elements = $("[contenteditable='true']");
-
-            if (elements.length > 0) {
-                mode = "multi";
-            }
-
-            if (mode === "single") {
-                deployEditor($("#eContent"));
-            } else {
-                $(elements).each(function() {
-                    deployEditor(this);
-                });
-            }
+            $(elements).each(function () {
+                deployEditor(this);
+            });
         }
-
 
         function loadCdnProgBar(maxValue) {
             $("#progressBar").kendoProgressBar({
@@ -543,28 +607,28 @@
                 }
             });
 
-            $(element).data("kendoEditor").toolbar.window.bind("open",
-                function (e) {
-                    //$("#ToolBar").hide();
-                    popupNotification.setOptions({
-                        position: {
-                            top: 50,
-                            left: 1
-                        }
-                    });
-                    popupNotification.show("Editor ON.", "info");
-                });
+            //$(element).data("kendoEditor").toolbar.window.bind("open",
+            //    function (e) {
+            //        //$("#ToolBar").hide();
+            //        popupNotification.setOptions({
+            //            position: {
+            //                top: 50,
+            //                left: 1
+            //            }
+            //        });
+            //        popupNotification.show("Editor ON.", "info");
+            //    });
 
-            $(element).data("kendoEditor").toolbar.window.bind("close",
-                function (e) {
-                    popupNotification.setOptions({
-                        position: {
-                            top: 50,
-                            left: 1
-                        }
-                    });
-                    popupNotification.show("HTML editor OFF.", "info");
-                });
+            //$(element).data("kendoEditor").toolbar.window.bind("close",
+            //    function (e) {
+            //        popupNotification.setOptions({
+            //            position: {
+            //                top: 50,
+            //                left: 1
+            //            }
+            //        });
+            //        popupNotification.show("HTML editor OFF.", "info");
+            //    });
 
             // Add to the editor array
             editors.push(element);
@@ -910,74 +974,8 @@
 
     </script>
 }
-else
-{
-    @* NOT EDITING TOOL BAR *@
-    @(Html.Kendo().ToolBar()
-        .Name("ToolBar")
-        .Items(items =>
-        {
-            items.Add().Type(CommandType.SplitButton).Text("Menu").Id("menuBtn").ImageUrl("/images/CosmosBearIcon.png").MenuButtons(menuButtons =>
-            {
-                menuButtons.Add().Text("Home Page").SpriteCssClass("fa fa-home");
-                menuButtons.Add().Text("Help").SpriteCssClass("fa fa-info-circle");
-                if (Model != null && controllerName == "Home" && actionName == "Index" && (isAuthor && Model?.Published == null || isEditor || isAdministrator))
-                {
-                    menuButtons.Add().Text("Edit").SpriteCssClass("fa fa-edit");
-                }
-                if (isAdministrator || isEditor || isAuthor || isTeamMember)
-                {
-                    menuButtons.Add().Text("Files").SpriteCssClass("fa fa-folder");
-                    menuButtons.Add().Text("Pages").SpriteCssClass("fa fa-file-text-o");
-                }
-                if (isAdministrator || isEditor && isTeamMember == false)
-                {
-                    menuButtons.Add().Text("Templates").SpriteCssClass("fa fa-building");
-                    menuButtons.Add().Text("Preload").SpriteCssClass("fa fa-spinner");
-                    menuButtons.Add().Text("Publish").SpriteCssClass("fa fa-html5");
-                    menuButtons.Add().Text("Navigation").SpriteCssClass("fa fa-list");
-                    menuButtons.Add().Text("Layouts").SpriteCssClass("fa fa-wrench");
-                    menuButtons.Add().Text("Logs").SpriteCssClass("fa fa-pencil");
-                    menuButtons.Add().Text("Teams").SpriteCssClass("fa fa-flag");
-                }
-                if (isAdministrator && isTeamMember == false)
-                {
-                    menuButtons.Add().Text("Users").SpriteCssClass("fa fa-users");
-                    if (options.Value.SiteSettings != null && options.Value.SiteSettings.AllowSetup.HasValue && options.Value.SiteSettings.AllowSetup.Value)
-                    {
-                        menuButtons.Add().Text("Setup").SpriteCssClass("fa fa-puzzle-piece");
-                        menuButtons.Add().Text("Diagnostics").SpriteCssClass("fa fa-medkit");
-                        menuButtons.Add().Text("Configure").SpriteCssClass("fa fa-cog");
-                    }
-                    if (options.Value.SiteSettings.AllowReset.HasValue && options.Value.SiteSettings.AllowReset.Value)
-                    {
-                        menuButtons.Add().Text("Reset Site").SpriteCssClass("fa fa-power-off");
-                    }
-                }
-                if (User.Identity.IsAuthenticated)
-                {
-                    menuButtons.Add().Text("User Account").SpriteCssClass("fa fa-user");
-                    menuButtons.Add().Text("Log Out").SpriteCssClass("fa fa-sign-out");
-                }
-            }).Click("bgCmsClick");
-            items.Add().Template("<a id='timeZone' title='Dates and times are in this time zone.' class='k-button .cosmos-btn-blue'></a>");
 
-            if (User.Identity.IsAuthenticated)
-            {
-                items.Add().Type(CommandType.SplitButton).Text(accountBtnTemplate).MenuButtons(menuButtons =>
-                {
-                    menuButtons.Add().Text("User Account").SpriteCssClass("fa fa-user");
-                    menuButtons.Add().Text("Log Out").SpriteCssClass("fa fa-sign-out");
-                }).Click("bgCmsClick");
-            }
-            items.Add().Template($"<div id='versInfo' class='badge rounded-pill bg-secondary'>({assemblyName.Version})</div>");
-        }))
-    <div style="display: none">
-        @* This is the hidden log out form executed by the log out drop down menu pick above*@
-        <form id="frmLogout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
-        </form>
-    </div>
-}
+
 <script id="verToolTip" type="text/x-kendo-template">
     <h5>C/CMS Version Information</h5>
     <div class='card-body'>
@@ -1104,10 +1102,9 @@ else
             $("#frmLogout").submit();
             break;
         case "Help":
-            window.open("https://cosmos.azureedge.net/documentation");
+                window.open("https://github.com/CosmosSoftware/Cosmos.Cms");
             break;
         }
     }
-
 </script>
 <div id="c-n-notifications"></div>

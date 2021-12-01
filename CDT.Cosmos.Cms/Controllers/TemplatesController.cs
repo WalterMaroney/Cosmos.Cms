@@ -251,5 +251,31 @@ namespace CDT.Cosmos.Cms.Controllers
 
             return Json(await templates.ToDataSourceResultAsync(request, ModelState));
         }
+
+        [HttpPost]
+        public IActionResult Layouts_Read([DataSourceRequest] DataSourceRequest request)
+        {
+            var layoutUtils = new LayoutUtilities();
+            var model = layoutUtils.Catalogs.LayoutCatalog.Select(s => new LayoutCatalogViewModel()
+            {
+                Id = s.Id,
+                Description = s.Description,
+                License = s.License,
+                Name = s.Name
+            }
+            ).ToList();
+
+            return Json(model.ToDataSourceResult(request));
+        }
+
+        [HttpPost]
+        public IActionResult LayoutPages_Read([DataSourceRequest] DataSourceRequest request, string id)
+        {
+            var layoutUtils = new LayoutUtilities();
+
+            var model = layoutUtils.Catalogs.LayoutCatalog.FirstOrDefault(f => f.Id == id).Pages;
+
+            return Json(model.ToDataSourceResult(request));
+        }
     }
 }

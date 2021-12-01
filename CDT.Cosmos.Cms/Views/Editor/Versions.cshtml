@@ -41,7 +41,7 @@
             {
                 c.Bound(b => b.Id).Hidden(true);
                 c.Bound(b => b.VersionNumber).Width(90).Title("Version");
-                c.Template($"<a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('HTML', #: Id #, '#: Published #') \" title=\"Edit online with Kendo WSYWIG editor\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published) #><img src=\"{Url.Content("~/images/KendoIcon.jpg")}\" height=\"22\"/> Kendo HTML Editor</a> <a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('CODE', #: Id #, '#: Published #')\" title=\"Edit online with Visual Studio Code Monaco editor\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published) #><img src=\"{Url.Content("~/images/vscicon-120.png")}\" height=\"22\"/> Visual Studio Code</a>").Width(400).Title("Edit Tools");
+                c.Template($"<a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('HTML', #: Id #, '#: Published #') \" title=\"Edit online with Kendo WSYWIG editor\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, UsesHtmlEditor) #><img src=\"{Url.Content("~/images/KendoIcon.jpg")}\" height=\"22\"/> Kendo HTML Editor</a> <a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('CODE', #: Id #, '#: Published #')\" title=\"Edit online with Visual Studio Code Monaco editor\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, true) #><img src=\"{Url.Content("~/images/vscicon-120.png")}\" height=\"22\"/> Visual Studio Code</a>").Width(400).Title("Edit Tools");
                 c.Template($"<a class=\"btn btn-sm btn-success\" title=\"Promote this version to the latest version and put it in edit mode.\" href=\"{Url.Action("CreateVersion")}?id={ViewData["ArticleId"]}&entityId=#: Id #\"><span class=\"text-white fa fa-arrow-circle-up\" aria-hidden=\"true\"></span></a>").Title("Promote").Width(50);
                 c.Template($"<a target=\"_blank\" class=\"btn btn-sm btn-primary\" href=\"{Url.Action("Preview", "Home")}/#: Id #\" title=\"Open preview\"><span class=\"fa fa-external-link\"></span></a>").Width(59).Title("Preview");
 
@@ -87,8 +87,8 @@
     </kendo-dialog>
 </div>
 <script>
-    function visibleStyle(isReviewer, isAuthor, isPublished) {
-        if (isReviewer === "True" || (isAuthor === "True" && isPublished !== null)) {
+    function visibleStyle(isReviewer, isAuthor, isPublished, usesEditor) {
+        if (isReviewer === "True" || usesEditor === false || (isAuthor === "True" && isPublished !== null)) {
             return "style=display:none";
         }
         return "";

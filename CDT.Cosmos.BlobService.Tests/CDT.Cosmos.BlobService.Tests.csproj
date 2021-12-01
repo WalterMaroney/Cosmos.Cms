@@ -7,9 +7,9 @@
 
     <UserSecretsId>6819ac3c-504d-4025-8177-415defbc234e</UserSecretsId>
 
-    <AssemblyVersion>2021.11.22.3</AssemblyVersion>
+    <AssemblyVersion>2021.12.1.1</AssemblyVersion>
 
-    <FileVersion>2021.11.22.3</FileVersion>
+    <FileVersion>2021.12.1.1</FileVersion>
 
     <Version>2021.7.11.1</Version>
   </PropertyGroup>
@@ -28,11 +28,11 @@
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.20" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.21" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
     <PackageReference Include="coverlet.collector" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

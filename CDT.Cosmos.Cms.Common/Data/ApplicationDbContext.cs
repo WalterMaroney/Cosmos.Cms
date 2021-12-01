@@ -111,6 +111,10 @@ namespace CDT.Cosmos.Cms.Common.Data
                 .Property(b => b.Guid)
                 .HasDefaultValueSql("newid()");
 
+            modelBuilder.Entity<ArticleLock>()
+                .Property(p => p.Id)
+                .HasDefaultValueSql("newid()");
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -194,6 +198,11 @@ namespace CDT.Cosmos.Cms.Common.Data
         ///     Articles
         /// </summary>
         public DbSet<Article> Articles { get; set; }
+
+        /// <summary>
+        /// Article locks
+        /// </summary>
+        public DbSet<ArticleLock> ArticleLocks { get; set; }
 
         /// <summary>
         ///     Article activity logs

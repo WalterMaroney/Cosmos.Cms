@@ -18,6 +18,9 @@ namespace CDT.Cosmos.Cms.Common.Data
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Display(Name = "Community Layout Id")]
+        public string CommunityLayoutId { get; set; }
+
         /// <summary>
         ///     If true this is the default layout for website.
         /// </summary>

@@ -24,22 +24,36 @@ namespace CDT.Cosmos.Cms.Common.Tests
         {
             var layoutUtilities = new LayoutUtilities();
 
-            var defaultLayout = layoutUtilities.GetDefault();
+            var defaultLayout = layoutUtilities.LoadDefaultLayout();
 
             Assert.IsNotNull(defaultLayout);
         }
 
         [TestMethod]
-        public void A03_GetTemplates()
+        public void A03_GetLayouts()
         {
             var layoutUtilities = new LayoutUtilities();
 
-            var layout = layoutUtilities.Catalogs.LayoutCatalog.FirstOrDefault();
+            var layouts = layoutUtilities.GetCommunityLayouts();
 
-            var pageTemplate = layoutUtilities.GetTemplates(layout.Id);
+            Assert.IsTrue(layouts.Count > 1);
+        }
 
-            Assert.IsNotNull(pageTemplate);
-            Assert.IsTrue(pageTemplate.Count > 0);
+        [TestMethod]
+        public void A04_GetTemplates()
+        {
+            var layoutUtilities = new LayoutUtilities();
+
+            var layouts = layoutUtilities.GetCommunityLayouts();
+
+            foreach(var layout in layouts)
+            {
+                var pageTemplates = layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
+
+                Assert.IsNotNull(pageTemplates);
+                Assert.IsTrue(pageTemplates.Count > 0);
+            }
+
         }
     }
 }

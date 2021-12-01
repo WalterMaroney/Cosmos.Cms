@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyVersion>2021.11.23.0</AssemblyVersion>
-    <FileVersion>2021.11.23.0</FileVersion>
+    <AssemblyVersion>2021.12.1.1</AssemblyVersion>
+    <FileVersion>2021.12.1.1</FileVersion>
     <Version>2021.7.11.1</Version>
   </PropertyGroup>
 
@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.7.3.24" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.7" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.914" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.1109" />
   </ItemGroup>
 
   <ItemGroup>

@@ -39,7 +39,6 @@ namespace CDT.Cosmos.Cms.Data
 
             if (_options.Value.SiteSettings.AllowSetup ?? false)
             {
-
                 foreach (var connectionString in _options.Value.SqlConnectionStrings)
                 {
                     using (var dbContext = GetDbContext(connectionString.ToString()))
@@ -76,22 +75,36 @@ namespace CDT.Cosmos.Cms.Data
                 //await tblSeeding.LoadLayouts();
                 await tblSeeding.LoadFontIcons();
 
-
                 // Load default layout and pages
                 var layoutUtilities = new LayoutUtilities();
-                var defaultLayout = layoutUtilities.GetDefault();
-                var templates = layoutUtilities.GetTemplates();
-                var homeTemplate = templates.FirstOrDefault(f => f.Title.Equals("home page", StringComparison.CurrentCultureIgnoreCase));
 
-                dbContext.Layouts.Add(defaultLayout);
-                dbContext.Templates.AddRange(templates);
+                var layouts = layoutUtilities.GetCommunityLayouts();
+                dbContext.Layouts.AddRange(layouts);
                 await dbContext.SaveChangesAsync();
+
+                foreach (var layout in layouts)
+                {
+                    var templates = layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
+
+                    foreach (var t in templates)
+                    {
+                        t.LayoutId = layout.Id;
+                    }
+
+                    dbContext.Templates.AddRange(templates);
+
+                    await dbContext.SaveChangesAsync();
+                }
+
+                var defaultLayoutId = dbContext.Layouts.FirstOrDefault(f => f.IsDefault).Id;
+
+                var homeTemplate = dbContext.Templates.FirstOrDefault(f => f.LayoutId == defaultLayoutId && f.Title.ToLower() == "home page");
 
                 dbContext.Articles.Add(new Article()
                 {
                     ArticleNumber = 1,
                     Content = homeTemplate.Content,
-                    LayoutId = defaultLayout.Id,
+                    LayoutId = defaultLayoutId,
                     Published = DateTime.UtcNow.AddMinutes(-5),
                     StatusCode = (int)StatusCodeEnum.Active,
                     Title = "Home Page",

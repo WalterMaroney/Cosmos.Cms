@@ -1030,7 +1030,8 @@ namespace CDT.Cosmos.Cms.Controllers
                     s.Title,
                     s.Updated,
                     s.VersionNumber,
-                    s.Expires
+                    s.Expires,
+                    UsesHtmlEditor = s.Content.ToLower().Contains(" crx=")
                 }).ToListAsync();
 
             //
@@ -1069,7 +1070,8 @@ namespace CDT.Cosmos.Cms.Controllers
                         s.Title,
                         s.Updated,
                         s.VersionNumber,
-                        s.Expires
+                        s.Expires,
+                        UsesHtmlEditor = s.Content.ToLower().Contains(" crx=")
                     }).ToListAsync();
             }
 
@@ -1081,7 +1083,8 @@ namespace CDT.Cosmos.Cms.Controllers
                     Title = x.Title,
                     Updated = x.Updated.ToUniversalTime(),
                     Published = x.Published?.ToUniversalTime(),
-                    Expires = x.Expires?.ToUniversalTime()
+                    Expires = x.Expires?.ToUniversalTime(),
+                    UsesHtmlEditor = x.UsesHtmlEditor
                 });
 
             return Json(await model.ToDataSourceResultAsync(request));
