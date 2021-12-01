@@ -3,7 +3,7 @@
 Prerequisites:
 
 * You already have an [Azure account](https://azure.microsoft.com/en-us/free/search/?OCID=AID2200277_SEM_0bab6efa957c19e686fb0f63b7658f30:G:s&ef_id=0bab6efa957c19e686fb0f63b7658f30:G:s&msclkid=0bab6efa957c19e686fb0f63b7658f30) and can navigate the Azure Portal website.
-* If you do not already have one, please [create a SendGrid account](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021) then [create and save an API key](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021#api-keys). You will need the key during the install.
+* If you do not already have one, please [create a SendGrid account](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/SendGrid.md) then [create and save an API key](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021#api-keys). You will need the key during the install.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FCosmosSoftware%2FCosmos.Cms%2Fmain%2FAutomation%2FAzure%2Fazuredeploy.json)
 
