@@ -37,7 +37,7 @@ You can deploy Cosmos to Azure by clicking the following button (recommended) or
 This documentation is still under development, so check back for more topics as they become available.
 
 * Setup Help
-  * [Installation instructions](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/Index.md)
+  * [Manual installation instructions](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/Index.md)
   * Links to Docker containers containers: [Editor](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor) | [Publisher](https://hub.docker.com/repository/docker/toiyabe/cosmospublisher)
 * [Developing with Cosmos](/Documentation/DevelopingWithCosmos.md)
 
