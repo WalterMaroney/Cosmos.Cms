@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace CDT.Cosmos.Cms.Data.Logic
@@ -23,8 +24,8 @@ namespace CDT.Cosmos.Cms.Data.Logic
         /// </summary>
         public LayoutUtilities()
         {
-            using var client = new WebClient();
-            var data = client.DownloadString($"{COSMOSLAYOUTSREPO}/catalog.json");
+            using var client = new HttpClient();
+            var data = client.GetStringAsync($"{COSMOSLAYOUTSREPO}/catalog.json").Result;
             Catalogs = JsonConvert.DeserializeObject<Root>(data);
         }
 

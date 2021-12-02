@@ -163,7 +163,6 @@ namespace CDT.Cosmos.Cms
                     .AddNewtonsoftJson(options =>
                         options.SerializerSettings.ContractResolver =
                             new DefaultContractResolver())
-                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
                     .AddRazorPagesOptions(options =>
                     {
                         // This section docs are here: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/scaffold-identity?view=aspnetcore-3.1&tabs=visual-studio#full
@@ -235,7 +234,6 @@ namespace CDT.Cosmos.Cms
                     .AddNewtonsoftJson(options =>
                         options.SerializerSettings.ContractResolver =
                             new DefaultContractResolver())
-                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
                     .AddRazorPagesOptions(options =>
                     {
                         // This section docs are here: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/scaffold-identity?view=aspnetcore-3.1&tabs=visual-studio#full

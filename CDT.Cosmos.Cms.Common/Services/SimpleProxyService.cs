@@ -87,10 +87,8 @@ namespace CDT.Cosmos.Cms.Common.Services
                 var data = ascii.GetBytes(proxyData);
                 request.ContentLength = data.Length;
 
-                using (var stream = await request.GetRequestStreamAsync())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
+                using var stream = await request.GetRequestStreamAsync();
+                stream.Write(data, 0, data.Length);
             }
 
             using var response = (HttpWebResponse)await request.GetResponseAsync();
