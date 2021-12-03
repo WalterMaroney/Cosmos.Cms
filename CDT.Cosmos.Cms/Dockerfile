@@ -10,7 +10,6 @@ WORKDIR /src
 COPY ["nuget.config", "."]
 COPY ["CDT.Cosmos.Cms/CDT.Cosmos.Cms.csproj", "CDT.Cosmos.Cms/"]
 COPY ["CDT.Cosmos.Cms.Common/CDT.Cosmos.Cms.Common.csproj", "CDT.Cosmos.Cms.Common/"]
-COPY ["CDT.Akamai.EdgeAuth/CDT.Akamai.EdgeAuth.csproj", "CDT.Akamai.EdgeAuth/"]
 COPY ["CDT.Cosmos.BlobService/CDT.Cosmos.BlobService.csproj", "CDT.Cosmos.BlobService/"]
 COPY . .
 WORKDIR "/src/CDT.Cosmos.Cms"
