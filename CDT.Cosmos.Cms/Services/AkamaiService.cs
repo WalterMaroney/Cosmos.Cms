@@ -1,5 +1,6 @@
 ﻿using CDT.Cosmos.Cms.Common.Services.Configurations;
 using Microsoft.Extensions.Options;
+using CDT.Akamai.Cdn;
 
 namespace CDT.Cosmos.Cms.Services
 {
@@ -24,7 +25,7 @@ namespace CDT.Cosmos.Cms.Services
         {
             var purgeObjects = new AkamaiPurgeObjects
             { Objects = new[] { _options.Value.CdnConfig.AkamaiContextConfig.CpCode } };
-            return _client.PurgeProduction(purgeObjects,
+            return _client.Purge(purgeObjects,
                 PurgeEndPoints.CpCodeProductionEndpoint);
         }
         /// <summary>
@@ -35,7 +36,7 @@ namespace CDT.Cosmos.Cms.Services
         /// <returns></returns>
         public string PurgeCdnByUrls(string hostName, string[] paths)
         {
-            return _client.PurgeProductionByUrls(hostName, paths);
+            return _client.PurgeUrls(hostName, paths);
         }
     }
 }

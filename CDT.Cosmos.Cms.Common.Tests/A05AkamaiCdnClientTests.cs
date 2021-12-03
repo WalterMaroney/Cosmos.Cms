@@ -1,4 +1,5 @@
 ﻿using System;
+using CDT.Akamai.Cdn;
 using CDT.Cosmos.Cms.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -72,7 +73,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
             //string json = "{ \"objects\": [ 959654 ] }";
             try
             {
-                var result = client.PurgeProduction(new AkamaiPurgeObjects {Objects = new[] {"1118561"}},
+                var result = client.Purge(new AkamaiPurgeObjects {Objects = new[] {"1118561"}},
                     PurgeEndPoints.CpCodeProductionEndpoint);
                 Assert.IsTrue(result.Contains("Request accepted"));
             }
@@ -98,7 +99,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
             try
             {
                 var result =
-                    client.PurgeProduction(
+                    client.Purge(
                         new AkamaiPurgeObjects {Objects = new[] {"https://akamaipremium.dev.technology.ca.gov/"}},
                         PurgeEndPoints.UrlProductionEndpoint);
                 Assert.IsTrue(result.Contains("Request accepted"));
