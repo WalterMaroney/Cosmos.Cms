@@ -39,6 +39,7 @@
     {
         isAdministrator = true;
     }
+    var htmlEditorEnabled = Model == null ? false : Model.Content.Contains(" contenteditable=", StringComparison.CurrentCultureIgnoreCase);
 }
 @*
     Tool bar documentation:
@@ -149,8 +150,9 @@
                     menuButtons.Add().Text("Help");
                 }).Click("bgEditClick").Hidden(controllerName == "Templates");
                 items.Add().Template("<span>Title: </span>");
-                items.Add().Template(Html.Kendo().TextBoxFor(m => m.Title).HtmlAttributes(new {style = "width: 265px;"}).ToHtmlString());
+                items.Add().Template(Html.Kendo().TextBox().Name("tbTitle").Value(Model.Title).HtmlAttributes(new {style = "width: 265px;"}).ToHtmlString());
                 items.Add().Template($"(v.<span for='versionLbl'>{Model.VersionNumber}</span>)");
+                items.Add().Template($"<a class='k-button k-button-sm k-button-primary' title='This page can only be edited with the code editor.' onclick='openCodeEditorDialog()'>Open Code Editor</a>").Hidden(htmlEditorEnabled);
                 if (isEditor || isAdministrator)
                 {
                     items.Add().Type(CommandType.Button).Template("<div onclick='openSchedulerDialog()' id='btnPublish'></div>");
@@ -264,6 +266,7 @@ else
         <input type="hidden" asp-for="FooterJavaScript" />
         <input type="hidden" asp-for="Published" />
         <input type="hidden" asp-for="RoleList" />
+        <input type="hidden" asp-for="Title" />
         <input type="hidden" id="userName" value="@User.Identity?.Name" />
     </form>
 </div>
@@ -752,6 +755,10 @@ else
             $("#schedulingDialog").data("kendoDialog").close();
         };
 
+        function openCodeEditorDialog() {
+            $("#editCodeDialog").data("kendoDialog").open();
+        }
+
         // Handles button bar click - edit button.
         function bgEditClick(e) {
             var command = e.target.text();
@@ -801,6 +808,9 @@ else
 
                 // save the page content.
                 saveContent();
+
+                // Save title
+                $("#Title").val($("#tbTitle").val());
 
                 processKendoCtrls("listbox", "kendoDropDownList");
 
