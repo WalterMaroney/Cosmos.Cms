@@ -5,7 +5,7 @@
 		<UserSecretsId>aspnet-CDT.Cosmos.Cms-7EA5716F-3AA0-40C0-B742-C20FE7803177</UserSecretsId>
 		<AnalysisLevel>5.0</AnalysisLevel>
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
-		<RepositoryUrl>https://github.com/StateOfCalifornia/CosmosCMS.Editor</RepositoryUrl>
+		<RepositoryUrl>https://github.com/CosmosSoftware/Cosmos.Cms</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Version>6.0.0.2</Version>
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
@@ -14,6 +14,9 @@
 		<Authors></Authors>
 		<ApplicationInsightsResourceId>/subscriptions/9bdb8e29-156f-4fc9-a1fe-1bb6a915a4f0/resourceGroups/CosmosCMS/providers/microsoft.insights/components/edit-cosmos-cms202107021426</ApplicationInsightsResourceId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -34,6 +37,13 @@
 	<ItemGroup>
 		<_WebToolingArtifacts Remove="Properties\PublishProfiles\Linux-x64_Single.pubxml" />
 		<_WebToolingArtifacts Remove="Properties\PublishProfiles\Win-x64_Single.pubxml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>
