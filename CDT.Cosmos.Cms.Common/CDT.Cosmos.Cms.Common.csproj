@@ -3,23 +3,23 @@
 	<PropertyGroup>
 		<Deterministic>true</Deterministic>
 		<TargetFramework>net6.0</TargetFramework>
-		<Version>6.0.0.2</Version>
-		<Authors>California Department of Technology</Authors>
-		<Company>State of California</Company>
+		<Authors>Eric Kauffman</Authors>
+		<Company>Eric Kauffman</Company>
 		<Product>Cosmos CMS</Product>
 		<Description>This package contains all the common methods and objects used by the Cosmos CMS editor website, and by any website service the role of a publishing website.</Description>
-		<Copyright>State of California</Copyright>
+		<Copyright>Eric Kauffman</Copyright>
 		<RepositoryType>Class Library</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<SignAssembly>false</SignAssembly>
 		<AnalysisLevel>5.0</AnalysisLevel>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<RepositoryUrl>https://github.com/StateOfCalifornia/CosmosCMS</RepositoryUrl>
-		<AssemblyVersion>6.0.0.2</AssemblyVersion>
-		<FileVersion>6.0.0.2</FileVersion>
+		<RepositoryUrl>https://github.com/CosmosSoftware/Cosmos.Cms</RepositoryUrl>
+		<Version>6.0.0.3</Version>
+		<AssemblyVersion>6.0.0.3</AssemblyVersion>
+		<FileVersion>6.0.0.3</FileVersion>
 		<UserSecretsId>498e495c-d772-4d44-870d-92009f01de57</UserSecretsId>
-		<PackageProjectUrl>https://cosmos.azureedge.net</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/CosmosSoftware/Cosmos.Cms</PackageProjectUrl>
 		<NeutralLanguage></NeutralLanguage>
 		<PackageTags>CCMS</PackageTags>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
