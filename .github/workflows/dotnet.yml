@@ -1,5 +1,5 @@
 
-name: Publish Ubuntu Docker Containers
+name: Docker Publish
 
 on:
   workflow_dispatch
