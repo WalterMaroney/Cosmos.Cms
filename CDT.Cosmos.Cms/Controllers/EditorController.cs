@@ -1031,7 +1031,7 @@ namespace CDT.Cosmos.Cms.Controllers
                     s.Updated,
                     s.VersionNumber,
                     s.Expires,
-                    UsesHtmlEditor = s.Content.ToLower().Contains(" crx=")
+                    UsesHtmlEditor = true // s.Content.ToLower().Contains(" crx=")
                 }).ToListAsync();
 
             //
@@ -1071,7 +1071,7 @@ namespace CDT.Cosmos.Cms.Controllers
                         s.Updated,
                         s.VersionNumber,
                         s.Expires,
-                        UsesHtmlEditor = s.Content.ToLower().Contains(" crx=")
+                        UsesHtmlEditor = true // s.Content.ToLower().Contains(" crx=")
                     }).ToListAsync();
             }
 

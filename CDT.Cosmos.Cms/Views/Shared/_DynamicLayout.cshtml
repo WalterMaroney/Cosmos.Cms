@@ -208,9 +208,7 @@
         <partial name="_EditModeNavBar" model="@Model" />
         @Html.Raw(Model.Layout.HtmlHeader)
     </header>
-    <div id="main-content" class="main-content">
-        @RenderBody()
-    </div>
+    @RenderBody()
     <footer @Html.Raw(Model.Layout.FooterHtmlAttributes)>
         @Html.Raw(Model.Layout.FooterHtmlContent)
     </footer>

@@ -1,4 +1,5 @@
 ﻿using CDT.Cosmos.Cms.Common.Data;
+using CDT.Cosmos.Cms.Common.Data.Logic;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using System;
@@ -132,7 +133,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 var uglifiedUrl = NUglify.Uglify.Html(url);
                 var html = client.DownloadString(uglifiedUrl.Code);
 
-                var template = ParseTemplate(html);
+                var template = ParseHtml<Template>(html);
                 template.Description = page.Description;
                 template.Title = page.Type == "home" ? "Home Page" : page.Title;
                 template.CommunityLayoutId = communityLayoutId;
@@ -160,11 +161,11 @@ namespace CDT.Cosmos.Cms.Data.Logic
         }
 
         /// <summary>
-        /// Parses an HTML page and loads it into Cosmos
+        /// Parses an HTML page and loads it as either a <see cref="Template"/> or an <see cref="Article"/>.
         /// </summary>
         /// <param name="html"></param>
         /// <returns>Body content of a page without layout elements.</returns>
-        public Template ParseTemplate(string html)
+        public T ParseHtml<T>(string html)
         {
             var builder = new StringBuilder();
 
@@ -200,21 +201,53 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             var childNodes = body.ChildNodes.Where(t => t.NodeType != HtmlNodeType.Comment);
 
+            var aboveFooter = true;
+            var postFooter = new StringBuilder();
+
             foreach (var node in childNodes)
             {
                 if (node.Name.Equals("footer", System.StringComparison.CurrentCultureIgnoreCase))
                 {
-                    break;
+                    aboveFooter = false;
+                    continue;
                 }
-                builder.AppendLine(node.OuterHtml);
+                if (aboveFooter)
+                {
+                    builder.AppendLine(node.OuterHtml);
+                }
+                else
+                {
+                    postFooter.AppendLine(node.OuterHtml);
+                }
             }
-                        
-            return new Template()
+
+            object model = null;
+            if (typeof(T) == typeof(Template))
             {
-                Content = builder.ToString(),
-                Description = string.Empty,
-                Title = string.Empty
-            };
+
+                model = new Template()
+                {
+                    Content = builder.ToString(),
+                    Description = string.Empty,
+                    Title = string.Empty
+                };
+
+            }
+            else if (typeof(T) == typeof(Article))
+            {
+                model = new Article()
+                {
+                    Content = builder.ToString(),
+                    FooterJavaScript = postFooter.ToString(),
+                    Title = string.Empty,
+                    StatusCode = (int)StatusCodeEnum.Active
+                };
+            } else
+            {
+                throw new Exception($"Type {typeof(T)} not supported for this operation.");
+            }
+
+            return (T)model;
         }
     }
 
