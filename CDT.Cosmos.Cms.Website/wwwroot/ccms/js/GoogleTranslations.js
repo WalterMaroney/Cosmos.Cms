@@ -25,8 +25,7 @@ $(function () {
     ctrl += "</ul></div></div>";
 
     // The div to hold the language drop down.
-    var langDropDownCtrl = $("#ccms-lang-dd-ctrl").html(ctrl);
-    langDropDownCtrl.html(ctrl);
+    $("#ccms-lang-dd-ctrl").html(ctrl);
 
     var langCode = $.urlParam("lang");
 
