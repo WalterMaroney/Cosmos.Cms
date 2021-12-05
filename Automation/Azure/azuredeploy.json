@@ -225,7 +225,7 @@
                             "type": "Custom"
                         },
                         "DefaultConnection": {
-                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlServerPassword'))]",
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2};Password={3};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), variables('sqlServerPassword'))]",
                             "type": "SQLAzure"
                         }
                     }
@@ -308,7 +308,7 @@
                     ],
                     "properties": {
                         "DefaultConnection": {
-                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2}@{3};Password={4};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlServerPassword'))]",
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2};Password={3};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), variables('sqlServerPassword'))]",
                             "type": "SQLAzure"
                         }
                     }

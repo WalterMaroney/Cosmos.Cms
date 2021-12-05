@@ -425,7 +425,7 @@ namespace CDT.Cosmos.Cms.Controllers
 
                     ViewData["TeamLogic"] = GetTeamIdentityLogic();
 
-                    return await BaseArticle_Get(pageId, EnumControllerName.Edit);
+                    return await BaseArticle_Get(pageId, EnumControllerName.Edit, true, true);
                 }
 
                 return NotFound();

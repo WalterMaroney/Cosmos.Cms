@@ -131,7 +131,7 @@ namespace CDT.Cosmos.Cms.Controllers
 
             if (defaultView) return View(model);
 
-            return View("~/Views/Home/Index.cshtml", model);
+            return View("~/Views/Editor/Index.cshtml", model);
         }
 
         /// <summary>

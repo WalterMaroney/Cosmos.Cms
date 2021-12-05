@@ -69,53 +69,64 @@ namespace CDT.Cosmos.Cms.Data
 
                 using var dbContext = GetDbContext(conn.ToString(), true);
 
-                var tblSeeding = new TableSeeding(dbContext);
-
-                //await tblSeeding.LoadTemplates();
-                //await tblSeeding.LoadLayouts();
-                await tblSeeding.LoadFontIcons();
-
-                // Load default layout and pages
-                var layoutUtilities = new LayoutUtilities();
-
-                var layouts = layoutUtilities.GetCommunityLayouts();
-                dbContext.Layouts.AddRange(layouts);
-                await dbContext.SaveChangesAsync();
-
-                foreach (var layout in layouts)
+                if (!dbContext.FontIcons.Any())
                 {
-                    var templates = layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
+                    var tblSeeding = new TableSeeding(dbContext);
 
-                    foreach (var t in templates)
+                    // Load fonts if they don't already exist.
+                    await tblSeeding.LoadFontIcons();
+                }
+
+                // Load default layouts if they don't already exist.
+                if (!dbContext.Layouts.Any())
+                {
+                    // Load default layout and pages
+                    var layoutUtilities = new LayoutUtilities();
+
+                    var layouts = layoutUtilities.GetCommunityLayouts();
+                    dbContext.Layouts.AddRange(layouts);
+                    await dbContext.SaveChangesAsync();
+
+                    foreach (var layout in layouts)
                     {
-                        t.LayoutId = layout.Id;
-                    }
+                        var templates = layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
 
-                    dbContext.Templates.AddRange(templates);
+                        foreach (var t in templates)
+                        {
+                            t.LayoutId = layout.Id;
+                        }
+
+                        dbContext.Templates.AddRange(templates);
+
+                        await dbContext.SaveChangesAsync();
+                    }
+                }
+
+                // Add home page if they don't already exist.
+                if (!dbContext.Articles.Any())
+                {
+                    var defaultLayoutId = dbContext.Layouts.FirstOrDefault(f => f.IsDefault).Id;
+
+                    var homeTemplate = dbContext.Templates.FirstOrDefault(f => f.LayoutId == defaultLayoutId && f.Title.ToLower() == "home page");
+
+                    dbContext.Articles.Add(new Article()
+                    {
+                        ArticleNumber = 1,
+                        Content = homeTemplate.Content,
+                        LayoutId = defaultLayoutId,
+                        Published = DateTime.UtcNow.AddMinutes(-5),
+                        StatusCode = (int)StatusCodeEnum.Active,
+                        Title = "Home Page",
+                        UrlPath = "root",
+                        Updated = DateTime.UtcNow.AddMinutes(-5),
+                        VersionNumber = 1
+                    });
 
                     await dbContext.SaveChangesAsync();
                 }
+                
 
-                var defaultLayoutId = dbContext.Layouts.FirstOrDefault(f => f.IsDefault).Id;
-
-                var homeTemplate = dbContext.Templates.FirstOrDefault(f => f.LayoutId == defaultLayoutId && f.Title.ToLower() == "home page");
-
-                dbContext.Articles.Add(new Article()
-                {
-                    ArticleNumber = 1,
-                    Content = homeTemplate.Content,
-                    LayoutId = defaultLayoutId,
-                    Published = DateTime.UtcNow.AddMinutes(-5),
-                    StatusCode = (int)StatusCodeEnum.Active,
-                    Title = "Home Page",
-                    UrlPath = "root",
-                    Updated = DateTime.UtcNow.AddMinutes(-5),
-                    VersionNumber = 1
-                });
-
-                await dbContext.SaveChangesAsync();
-
-                // Setup roles //
+                // Setup roles if they don't already exist. //
                 using var roleManager = GetRoleManager(dbContext);
 
                 if (!await roleManager.RoleExistsAsync("Administrators"))
