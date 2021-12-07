@@ -5,13 +5,13 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyVersion>6.0.0.2</AssemblyVersion>
+    <AssemblyVersion>6.0.0.4</AssemblyVersion>
 
-    <FileVersion>6.0.0.2</FileVersion>
+    <FileVersion>6.0.0.4</FileVersion>
 
     <UserSecretsId>31db3e16-30f0-4d36-9fe8-01c2ce54d6ad</UserSecretsId>
 
-    <Version>6.0.0.2</Version>
+    <Version>6.0.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
-    <PackageReference Include="CDT.Akamai.Cdn" Version="6.0.0.2" />
+    <PackageReference Include="CDT.Akamai.Cdn" Version="6.0.0.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.21" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
