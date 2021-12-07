@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,8 +23,6 @@ using Z.EntityFramework.Plus;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
-
-
     [Authorize(Roles = "Administrators, Editors")]
     public class LayoutsController : BaseController
     {
@@ -69,6 +68,52 @@ namespace CDT.Cosmos.Cms.Controllers
             _dbContext.Layouts.Add(layout);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("EditCode", new { layout.Id });
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            return await GetLayoutWithHomePage(id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([Bind("id,header,footer")] int id, string header, string footer)
+        {
+            var layout = await _dbContext.Layouts.FirstOrDefaultAsync(i => i.Id == id);
+
+            // Make editable
+            header = header.Replace(" contenteditable=\"", " crx=\"", StringComparison.CurrentCultureIgnoreCase);
+            footer = footer.Replace(" contenteditable=\"", " crx=\"", StringComparison.CurrentCultureIgnoreCase);
+
+            layout.HtmlHeader = header;
+            layout.FooterHtmlContent = footer;
+
+            await _dbContext.SaveChangesAsync();
+
+            return await GetLayoutWithHomePage(id);
+        }
+
+        /// <summary>
+        /// Gets the home page with the specified layout (may not be the default layout)
+        /// </summary>
+        /// <param name="id">Layout Id (default layout if null)</param>
+        /// <returns>ViewResult with <see cref="ArticleViewModel"/></returns>
+        private async Task<IActionResult> GetLayoutWithHomePage(int? id)
+        {
+            // Get the home page
+            var model = await _articleLogic.GetByUrl("");
+
+            // Specify layout if given.
+            if (id.HasValue)
+            {
+                var layout = await _dbContext.Layouts.FirstOrDefaultAsync(i => i.Id == id.Value);
+                model.Layout = new LayoutViewModel(layout);
+            }
+
+            // Make its editable
+            model.Layout.HtmlHeader = model.Layout.HtmlHeader.Replace(" crx=\"", " contenteditable=\"", StringComparison.CurrentCultureIgnoreCase);
+            model.Layout.FooterHtmlContent = model.Layout.FooterHtmlContent.Replace(" crx=\"", " contenteditable=\"", StringComparison.CurrentCultureIgnoreCase);
+
+            return View(model);
         }
 
         public async Task<IActionResult> EditNotes(int? id)

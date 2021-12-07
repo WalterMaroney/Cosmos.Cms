@@ -75,116 +75,6 @@
     {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.1/mdb.min.css" integrity="sha512-lB7yIzvz6+ap0+tZODJB6YU4SwZbCOI89a2DAnFiapgqtohkiWBoKOeAZzjSHVhmc8CGz2m3BjlzIRofFx2PHg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     }
-    @*<style>
-        .k-toolbar.k-toolbar-resizable {
-            -ms-flex-wrap: nowrap;
-            flex-wrap: nowrap;
-            left: 0px;
-            position: fixed;
-            right: 0px;
-            top: 0px;
-            z-index: 2;
-        }
-
-        .k-widget.k-window.k-window-titleless.k-editor-widget.k-display-inline-flex {
-            -ms-flex-wrap: nowrap;
-            flex-wrap: nowrap;
-            left: 0px;
-            position: fixed !important;
-            right: 0px;
-            top: 0px;
-            z-index: 2;
-        }
-
-        #topNavBar {
-            height: 40px;
-            width: 100%;
-            z-index: 1;
-        }
-
-        .fa.k-sprite,
-        .fa.k-sprite:before {
-            font-size: 16px;
-            line-height: 16px;
-        }
-
-        /*.k-widget.k-window.k-dialog {
-            background-color: #363636 !important;
-        }*/
-
-        /*.editorToolbarWindow.k-window-content {
-            position: fixed !important;
-            top: 1px !important;
-            left: 58px;
-            right: 0px;
-        }*/
-
-        .cosmos-btn-blue {
-            background-color: #2e5cb8;
-            color: white;
-        }
-
-        .cosmos-btn-success {
-            background-color: #009933;
-            color: white;
-        }
-
-        .k-widget.k-window.k-window-titleless.k-editor-widget.k-display-inline-flex {
-            position: fixed !important;
-            top: 40px !important;
-        }
-
-        .k-editor-inline {
-            padding: 0;
-            margin: 0;
-            border-width: 0;
-            box-shadow: none;
-            background: none;
-        }
-
-            .k-editor-inline:hover {
-                border-width: 1px;
-                border-color: red;
-                border-style: dashed;
-            }
-
-            .k-editor-inline.k-state-active {
-                border-width: 1px;
-                border-color: red;
-                background: none;
-            }
-
-        .k-widget.k-editor.k-editor-inline {
-            background: none;
-            color: inherit !important;
-        }
-
-        .k-editor .k-i-close-editor:before {
-            font-family: FontAwesome;
-            content: "\f09e";
-            font-size: 16px;
-        }
-
-        div#k-table-properties.k-content.k-state-active {
-            overflow: auto;
-        }
-
-        div#k-cell-properties {
-            overflow: auto;
-        }
-
-        div#k-table-wizard-tabs {
-            font-size: 0.78rem;
-        }
-
-        .k-toolbar {
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
-        }
-
-        #ToolBar {
-            z-index: 9000000 !important;
-        }
-    </style>*@
 
     <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jquery.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/@kendoVersion/js/jszip.min.js"></script>
@@ -194,6 +84,11 @@
 
 
     @Html.Raw(htmlHeader.DocumentNode.ChildNodes[0].InnerHtml)
+
+    @*
+       Page specific header content    
+    *@
+    @Html.Raw(Model.HeaderJavaScript)
 
     @*
         Application Insights Scripts
