@@ -402,7 +402,7 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             DbContext.Entry(layout).State = EntityState.Detached;
 
             layout.HtmlHeader = layout.HtmlHeader?.Replace("<!--{COSMOS-UL-NAV}-->",
-               "<!--{COSMOS-UL-NAV}-->" +
+               "<!--MENU START-->" +
                $"<ul class=\"navbar-nav me-auto mb-2 mb-lg-0\">{menuHtml}</ul>");
 
             return new LayoutViewModel(layout);
