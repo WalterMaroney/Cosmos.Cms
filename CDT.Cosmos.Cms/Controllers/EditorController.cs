@@ -465,8 +465,8 @@ namespace CDT.Cosmos.Cms.Controllers
             // The HTML editor edits the title and Content fields.
             // Next two lines detect any HTML errors with each.
             // Errors are saved in ModelState.
-            model.Title = BaseValidateHtml("Title", model.Title, ModelState);
-            model.Content = BaseValidateHtml("Content", model.Content, ModelState);
+            model.Title = BaseValidateHtml("Title", model.Title);
+            model.Content = BaseValidateHtml("Content", model.Content);
 
             // Make sure model state is valid
             if (ModelState.IsValid)
@@ -796,7 +796,7 @@ namespace CDT.Cosmos.Cms.Controllers
             model.FooterJavaScript = StripBOM(model.FooterJavaScript);
 
             // Validate HTML
-            model.Content = BaseValidateHtml("Content", model.Content, ModelState);
+            model.Content = BaseValidateHtml("Content", model.Content);
 
             if (ModelState.IsValid) article.Content = model.Content;
 

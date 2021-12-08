@@ -290,9 +290,9 @@ namespace CDT.Cosmos.Cms.Controllers
                     entity.BodyHtmlAttributes = layout.BodyHtmlAttributes;
                     entity.FooterHtmlAttributes = layout.FooterHtmlAttributes;
                     entity.FooterHtmlContent =
-                        BaseValidateHtml("FooterHtmlContent", layout.FooterHtmlContent, ModelState);
-                    entity.Head = BaseValidateHtml("Head", layout.Head, ModelState);
-                    entity.HtmlHeader = BaseValidateHtml("HtmlHeader", layout.HtmlHeader, ModelState);
+                        BaseValidateHtml("FooterHtmlContent", layout.FooterHtmlContent);
+                    entity.Head = BaseValidateHtml("Head", layout.Head);
+                    entity.HtmlHeader = BaseValidateHtml("HtmlHeader", layout.HtmlHeader);
                     entity.PostFooterBlock = layout.PostFooterBlock;
 
                     // Check validation again after validation of HTML

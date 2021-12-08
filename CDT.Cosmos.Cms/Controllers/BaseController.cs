@@ -139,7 +139,6 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <param name="fieldName"></param>
         /// <param name="inputHtml"></param>
-        /// <param name="modelState"></param>
         /// <returns>HTML content</returns>
         /// <remarks>
         ///     <para>
@@ -147,15 +146,15 @@ namespace CDT.Cosmos.Cms.Controllers
         ///         It uses an instance of <see cref="HtmlAgilityPack.HtmlDocument" /> to check HTML formatting.
         ///     </para>
         /// </remarks>
-        internal string BaseValidateHtml(string fieldName, string inputHtml, ModelStateDictionary modelState)
+        internal string BaseValidateHtml(string fieldName, string inputHtml)
         {
             if (!string.IsNullOrEmpty(inputHtml))
             {
                 var contentHtmlDocument = new HtmlDocument();
                 contentHtmlDocument.LoadHtml(HttpUtility.HtmlDecode(inputHtml));
-                if (contentHtmlDocument.ParseErrors.Any())
-                    foreach (var error in contentHtmlDocument.ParseErrors)
-                        modelState.AddModelError(fieldName, error.Reason);
+                //if (contentHtmlDocument.ParseErrors.Any())
+                //    foreach (var error in contentHtmlDocument.ParseErrors)
+                //        modelState.AddModelError(fieldName, error.Reason);
 
                 return contentHtmlDocument.ParsedText.Trim();
             }
