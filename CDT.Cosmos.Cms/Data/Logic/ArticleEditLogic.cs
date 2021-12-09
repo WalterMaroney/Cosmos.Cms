@@ -427,9 +427,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
             {
                 //// When we save to the database, remove content editable attribute.
                 model.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
-                    StringComparison.CurrentCultureIgnoreCase).Replace("\u200B", "");
-                //// strip out unicode characters - https://stackoverflow.com/questions/123336/how-can-you-strip-non-ascii-characters-from-a-string-in-c
-                model.Content = Regex.Replace(model.Content, @"[^\u001F-\u007F]", string.Empty);
+                    StringComparison.CurrentCultureIgnoreCase);
             }
 
             if (!await DbContext.Users.AnyAsync(a => a.Id == userId))
@@ -643,28 +641,10 @@ namespace CDT.Cosmos.Cms.Data.Logic
             //article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
             //    StringComparison.CurrentCultureIgnoreCase).Replace("\u200B", "");
 
-            if (model.Content == null || model.Content == "")
+            if (model.Content == null || model.Content.Trim() == "")
             {
                 article.Content = "";
             }
-            else
-            {
-                //
-                // Converting to a stream, and loading into HTML Agility Pack document
-                // removes hidden characters and cleans up HTML
-                //
-                var htmlDocument = new HtmlDocument();
-                var bytes = Encoding.UTF8.GetBytes(model.Content);
-                using (var inputStream = new MemoryStream(bytes))
-                {
-                    htmlDocument.Load(inputStream, true);
-                }
-
-                using var outputStream = new MemoryStream();
-                htmlDocument.Save(outputStream, Encoding.UTF8);
-                article.Content = Encoding.UTF8.GetString(outputStream.ToArray());
-            }
-
 
             //
             // Make sure everything server-side is saved in UTC time.

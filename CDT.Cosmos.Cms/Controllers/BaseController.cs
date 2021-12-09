@@ -307,11 +307,22 @@ namespace CDT.Cosmos.Cms.Controllers
 
             if (string.IsNullOrEmpty(data) || string.IsNullOrWhiteSpace(data)) return data;
 
-            var array = data.ToCharArray();
+            // Get rid of Zero Length strings
+            var rows = data.Split("\r\n");
+            var builder = new StringBuilder();
+            foreach (var row in rows)
+            {
+                if (row.Trim().Equals("") == false)
+                {
+                    builder.AppendLine(row);
+                }
+            }
 
-            var removed = array.Where(c => c.Equals('\uFEFF') == false).ToArray();
+            data = builder.ToString();
+
+            //var removed = array.Where(c => c.Equals(regex) == false).ToArray();
             
-            data = new string(removed);
+            //data = new string(removed);
 
             using var memStream = new MemoryStream();
             using var writer = new StreamWriter(memStream, new UTF8Encoding(false));

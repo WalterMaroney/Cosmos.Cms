@@ -811,10 +811,15 @@ else
                 $("#Title").val($("#tbTitle").val());
 
                 processKendoCtrls("listbox", "kendoDropDownList");
+                var data = $("#frmEdit").serialize();
+
+                // Strip Zero width characters from data
+                // https://stackoverflow.com/questions/11305797/remove-zero-width-space-characters-from-a-javascript-string
+                data = data.replace(/[\u200B-\u200D\uFEFF]/g, '');
 
                 // No template change, may do ajax post.
                 $.post("@Url.Action("SaveHtml", controllerName)",
-                    $("#frmEdit").serialize(),
+                    data,
                     function(response) {
                         $("#pendingChangesBadge").hide();
                         if (response.IsValid) {
@@ -912,8 +917,7 @@ else
             if (typeof editor !== 'undefined' && editor !== null) {
                 // Object is a Kendo Editor
                 var html = editor.value();
-                // Remove any BOM introducted by editor
-                hiddenField.val(html.replace(/^\uFEFF/gm, "").replace(/^\u00BB\u00BF/gm, ""));
+                hiddenField.val(html);
             } else {
                 editor = $("#eContent");
                 hiddenField.val(editor.html());
