@@ -1,4 +1,4 @@
-# Deploy to Azure Instructions
+# Install Cosmos to Azure
 
 Prerequisites:
 
