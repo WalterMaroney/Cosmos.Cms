@@ -637,9 +637,9 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             article.Title = model.Title.Trim();
 
-            //// When we save to the database, remove content editable attribute.
-            //article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
-            //    StringComparison.CurrentCultureIgnoreCase).Replace("\u200B", "");
+            // When we save to the database, remove content editable attribute.
+            article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
+                StringComparison.CurrentCultureIgnoreCase);
 
             if (model.Content == null || model.Content.Trim() == "")
             {

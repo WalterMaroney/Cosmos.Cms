@@ -250,7 +250,7 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
         /// </remarks>
         public static string HandleUrlEncodeTitle(string title)
         {
-            return HttpUtility.UrlEncode(title.Trim().Replace(" ", "_").ToLower());
+            return HttpUtility.UrlEncode(title.Trim().Replace(" ", "_").ToLower()).Replace("%2f", "/");
         }
 
         /// <summary>

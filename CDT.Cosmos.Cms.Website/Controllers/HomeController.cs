@@ -58,6 +58,8 @@ namespace CDT.Cosmos.Cms.Website.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Index(string id, string lang = "en")
         {
+            // We do this so Cosmos can handle heirarchical page paths
+            id = HttpContext.Request.Path;
             return await GetArticleViewModelAsync(id, lang, false, true);
         }
 

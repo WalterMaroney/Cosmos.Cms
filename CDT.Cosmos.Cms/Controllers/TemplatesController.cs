@@ -207,9 +207,10 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <returns>JsonResult</returns>
         public async Task<IActionResult> Templates_Read([DataSourceRequest] DataSourceRequest request)
         {
-            return Json(await _dbContext.Templates.OrderBy(t => t.Title).Select(s => new TemplateIndexViewModel
+            return Json(await _dbContext.Templates.Include(i => i.Layout.LayoutName).OrderBy(t => t.Title).Select(s => new TemplateIndexViewModel
             {
                 Id = s.Id,
+                LayoutName = s.Layout.LayoutName,
                 Description = s.Description,
                 Title = s.Title
             }).ToDataSourceResultAsync(request));

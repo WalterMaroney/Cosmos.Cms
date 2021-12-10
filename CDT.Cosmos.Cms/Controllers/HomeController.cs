@@ -1,9 +1,7 @@
 ﻿using CDT.Cosmos.Cms.Common.Data;
-using CDT.Cosmos.Cms.Common.Data.Logic;
 using CDT.Cosmos.Cms.Common.Models;
 using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
-using CDT.Cosmos.Cms.Common.Services.Configurations.BootUp;
 using CDT.Cosmos.Cms.Data.Logic;
 using CDT.Cosmos.Cms.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -41,26 +39,17 @@ namespace CDT.Cosmos.Cms.Controllers
             _dbContext = dbContext;
         }
 
-        public async Task<IActionResult> Index(string id, string lang)
+        public async Task<IActionResult> Index(string id, string lang = "en")
         {
             try
             {
-                // ViewData["EditModeOn"] = false;
-                //
-                // Check for configuration setup
-                //
-
-                if (await _dbContext.IsConfigured())
-                {
-                }
-
+                // We do this so Cosmos can handle heirarchical page paths
+                id = HttpContext.Request.Path;
                 // Make sure this is Url Encoded, because this is the way it is stored in DB.
-                if (!string.IsNullOrEmpty(id))
-                    id = ArticleLogic.HandleUrlEncodeTitle(id);
+                //if (!string.IsNullOrEmpty(id))
+                //    id = ArticleLogic.HandleUrlEncodeTitle(id);
 
                 ArticleViewModel article;
-
-                if (string.IsNullOrEmpty(lang)) lang = "en";
 
                 ViewData["UseGoogleTranslate"] =
                     string.IsNullOrEmpty(_cosmosConfigOptions?.Value?.GoogleCloudAuthConfig?.ClientId) == false;

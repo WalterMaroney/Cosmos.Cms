@@ -494,7 +494,8 @@ namespace CDT.Cosmos.Cms.Controllers
                 // Flush Redis and CDN if required 
                 // New: Delay CDN 10 seconds to allow for local memory cache(s) to drain
                 //
-                if (result.Urls.Any())
+                if (result.Urls.Any() && 
+                    (_options.Value?.CdnConfig.AzureCdnConfig.ClientId != null) || _options.Value?.CdnConfig.AkamaiContextConfig.AccessToken != null)
                 {
 
                     // Now get all the languages that were flushed

@@ -22,6 +22,7 @@
                     command.Custom("Preview Edit").Click("clickEditPreview");
                 }).Width(300);
                 columns.Bound(m => m.Id).Hidden(true);
+                columns.Bound(m => m.LayoutName);
                 columns.Bound(m => m.Title);
                 columns.Bound(m => m.Description);
                 columns.Command(command => { command.Destroy(); });

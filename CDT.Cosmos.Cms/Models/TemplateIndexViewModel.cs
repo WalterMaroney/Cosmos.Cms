@@ -6,6 +6,9 @@ namespace CDT.Cosmos.Cms.Models
     {
         [Key] public int Id { get; set; }
 
+        [Display(Name = "Associated Layout")]
+        public string LayoutName { get; set; }
+
         [Display(Name = "Template Title")]
         [StringLength(128)]
         public string Title { get; set; }
