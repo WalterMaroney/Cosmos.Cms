@@ -108,7 +108,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
         {
             var data = await
                 (from x in query
-                 where x.StatusCode != (int)StatusCodeEnum.Deleted
+                 where x.StatusCode != (int)StatusCodeEnum.Deleted && x.Title.ToLower() != "redirect"
                  group x by x.ArticleNumber
                     into g
                  select new

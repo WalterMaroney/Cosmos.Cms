@@ -15,8 +15,6 @@ namespace CDT.Cosmos.Cms.Common.Tests
         public static void Initialize(TestContext context)
         {
             utils = new Utilities();
-
-
         }
 
         //[TestMethod]

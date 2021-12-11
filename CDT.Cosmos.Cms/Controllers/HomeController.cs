@@ -206,7 +206,19 @@ namespace CDT.Cosmos.Cms.Controllers
 
         #endregion
 
-        #region SIMPLE PROXIES
+        #region API
+
+        /// <summary>
+        /// Gets the children of a given page path.
+        /// </summary>
+        /// <param name="id">UrlPath</param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetTOC(string id, bool orderByPub = false)
+        {
+            id = System.Web.HttpUtility.UrlDecode(id);
+            var result = await _articleLogic.GetTOC(id, orderByPub);
+            return Json(result);
+        }
 
         ///// <summary>
         ///// Returns a proxy result as a <see cref="JsonResult"/>.

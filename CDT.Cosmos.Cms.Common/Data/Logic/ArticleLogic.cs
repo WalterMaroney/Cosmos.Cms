@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,6 +66,34 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
         /// Provides cache hit information
         /// </summary>
         public string[] CacheResult { get; internal set; }
+
+        /// <summary>
+        /// Gets the list of child pages for a given page URL
+        /// </summary>
+        /// <param name="prefix">Page url</param>
+        /// <param name="orderByPublishedDate">Order by when was published (most recent on top)</param>
+        /// <returns></returns>
+        public async Task<List<TOCItem>> GetTOC(string prefix, bool orderByPublishedDate = false)
+        {
+            if (string.IsNullOrEmpty(prefix) || string.IsNullOrWhiteSpace(prefix) || prefix.Equals("/"))
+            {
+                prefix = "";
+            }
+            else
+            {
+                prefix = prefix.ToLower() + "/";
+            }
+            var query = $"SELECT * FROM Articles WHERE Published <= GETUTCDATE() AND Title <> 'Redirect' AND UrlPath LIKE '{prefix}%' AND UrlPath NOT LIKE '{prefix}%/%'";
+            
+            if (orderByPublishedDate)
+            {
+                return await DbContext.Articles.FromSqlRaw(query).Select(s => new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated }).Distinct().OrderByDescending(o => o.Published).ToListAsync();
+            }
+            else
+            {
+                return await DbContext.Articles.FromSqlRaw(query).Select(s => new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated }).Distinct().ToListAsync();
+            }
+        }
 
         #region GET ARTICLE METHODS
 
