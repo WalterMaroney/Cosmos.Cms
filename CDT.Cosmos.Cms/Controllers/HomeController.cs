@@ -215,7 +215,6 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <returns></returns>
         public async Task<IActionResult> GetTOC(string id, bool orderByPub = false)
         {
-            id = System.Web.HttpUtility.UrlDecode(id);
             var result = await _articleLogic.GetTOC(id, orderByPub);
             return Json(result);
         }

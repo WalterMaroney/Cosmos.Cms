@@ -63,6 +63,17 @@ namespace CDT.Cosmos.Cms.Website.Controllers
             return await GetArticleViewModelAsync(id, lang, false, true);
         }
 
+        /// <summary>
+        /// Gets the children of a given page path.
+        /// </summary>
+        /// <param name="id">UrlPath</param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetTOC(string id, bool orderByPub = false)
+        {
+            var articleLogic = new ArticleLogic(_dbContext, _cosmosOptions);
+            var result = await articleLogic.GetTOC(id, orderByPub);
+            return Json(result);
+        }
 
         /// <summary>
         /// Gets the page as a JSON result

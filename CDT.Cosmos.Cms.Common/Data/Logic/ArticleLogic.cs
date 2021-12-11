@@ -81,7 +81,7 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             }
             else
             {
-                prefix = prefix.ToLower() + "/";
+                prefix = System.Web.HttpUtility.UrlDecode(prefix.ToLower().Replace("%20", "_").Replace(" ", "_")) + "/";
             }
             var query = $"SELECT * FROM Articles WHERE Published <= GETUTCDATE() AND Title <> 'Redirect' AND UrlPath LIKE '{prefix}%' AND UrlPath NOT LIKE '{prefix}%/%'";
             
