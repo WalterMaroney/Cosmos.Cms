@@ -7,7 +7,7 @@ Prerequisites:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FCosmosSoftware%2FCosmos.Cms%2Fmain%2FAutomation%2FAzure%2Fazuredeploy.json)
 
-This button installs the following:
+This button installs the following in about 15 minutes:
 
 * [Azure SQL Database](https://azure.microsoft.com/en-us/products/azure-sql/database/) (SKU Basic)
 * Storage Account ([Standard RA-GRS](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview))
@@ -15,7 +15,11 @@ This button installs the following:
   * Cosmos Editor Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor))
   * Cosmos Publisher Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmospublisher))
 
+PLEASE NOTE: The Docker containers may take 5 minutes to install and run upon first use.  This is normal.
+
 ## Required Post Installation Steps
+
+These steps take about 5 minutes to complete:
 
 * Click the "Outputs" tab on left of the install page after the template finishes.
 * Copy the list of IP addresses and [add them your SendGrid account](https://docs.sendgrid.com/ui/account-and-settings/ip-access-management).
