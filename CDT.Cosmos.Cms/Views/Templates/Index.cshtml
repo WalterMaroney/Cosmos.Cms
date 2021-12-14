@@ -24,7 +24,6 @@
                 columns.Bound(m => m.Id).Hidden(true);
                 columns.Bound(m => m.LayoutName);
                 columns.Bound(m => m.Title);
-                columns.Bound(m => m.Description);
                 columns.Command(command => { command.Destroy(); });
             })
             .ToolBar(toolbar =>
@@ -49,10 +48,12 @@
                 .Update("Templates_Update", "Templates")
                 .Destroy("Templates_Destroy", "Templates")
             )
+            .ClientDetailTemplateId("detail-template")
             )
     </div>
 </div>
 <script type="text/javascript">
+
     function error_handler(e) {
         if (e.errors) {
             var message = "Errors:\n";
@@ -83,5 +84,10 @@
         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
         window.open("@Url.Action("PreviewEdit")/" + dataItem.Id);
     }
-
+</script>
+<script id="detail-template" type="text/x-kendo-template">
+    <strong>Description/Notes:</strong>
+    <div>
+        #: Description #
+    </div>
 </script>

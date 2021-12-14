@@ -83,15 +83,19 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             {
                 prefix = System.Web.HttpUtility.UrlDecode(prefix.ToLower().Replace("%20", "_").Replace(" ", "_")) + "/";
             }
-            var query = $"SELECT * FROM Articles WHERE Published <= GETUTCDATE() AND Title <> 'Redirect' AND UrlPath LIKE '{prefix}%' AND UrlPath NOT LIKE '{prefix}%/%'";
-            
+
+            var query = DbContext.Articles.Select(s => new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated })
+                .Where(a => a.Published <= DateTime.UtcNow &&
+                        EF.Functions.Like(a.Title, prefix + "%") &&
+                        (EF.Functions.Like(a.Title, prefix + "%/%") == false)).Distinct();
+
             if (orderByPublishedDate)
             {
-                return await DbContext.Articles.FromSqlRaw(query).Select(s => new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated }).Distinct().OrderByDescending(o => o.Published).ToListAsync();
+                return await query.OrderByDescending(o => o.Published).ToListAsync();
             }
             else
             {
-                return await DbContext.Articles.FromSqlRaw(query).Select(s => new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated }).Distinct().ToListAsync();
+                return await query.ToListAsync();
             }
         }
 

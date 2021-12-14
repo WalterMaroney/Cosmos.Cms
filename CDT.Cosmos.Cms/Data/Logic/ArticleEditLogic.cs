@@ -552,14 +552,37 @@ namespace CDT.Cosmos.Cms.Data.Logic
                     // And capture old URL to flush.
                     flushUrls.Add(model.UrlPath);
 
+                    var oldTitle = article.Title;
+                    var newTitle = model.Title;
+                    var oldUrl = article.UrlPath;
+                    var newUrl = HandleUrlEncodeTitle(model.Title);
+
+                    // Update sub articles.
+                    var subArticles = await GetAllSubArticles(model.UrlPath);
+
+                    foreach (var subArticle in subArticles)
+                    {
+                        if (!subArticle.Title.Equals("redirect", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            subArticle.Title = UpdatePrefix(oldTitle, newTitle, subArticle.Title);
+                        }
+                        subArticle.UrlPath = UpdatePrefix(oldUrl, newUrl, subArticle.UrlPath);
+                    }
+
+                    DbContext.Articles.UpdateRange(subArticles);
+
+                    // Remove any conflicting redirects
+                    var conflictingRedirects = await DbContext.Articles.Where(a => a.Content == newUrl && a.Title.ToLower().Equals("redirect")).ToListAsync();
+                    
+                    if (conflictingRedirects.Any())
+                    {
+                        DbContext.Articles.RemoveRange(conflictingRedirects);
+                    }
+
                     //
                     // Update the path to reflect new title 
                     //
                     article.UrlPath = HandleUrlEncodeTitle(model.Title);
-
-                    // make all those articles with the old path inactive, so they don't conflict with URLs
-                    var oldArticles = await DbContext.Articles.Where(w => w.ArticleNumber == article.ArticleNumber)
-                        .ToListAsync();
 
                     // Add redirect here
                     await DbContext.Articles.AddAsync(new Article
@@ -568,11 +591,11 @@ namespace CDT.Cosmos.Cms.Data.Logic
                         LayoutId = null,
                         ArticleNumber = 0,
                         StatusCode = (int)StatusCodeEnum.Redirect,
-                        UrlPath = model.UrlPath, // Old URL
+                        UrlPath = oldUrl, // Old URL
                         VersionNumber = 0,
                         Published = DateTime.Now.ToUniversalTime().AddDays(-1), // Make sure this sticks!
                         Title = "Redirect",
-                        Content = article.UrlPath, // New URL
+                        Content = newUrl, // New URL
                         Updated = DateTime.Now.ToUniversalTime(),
                         HeaderJavaScript = null,
                         FooterJavaScript = null,
@@ -587,6 +610,9 @@ namespace CDT.Cosmos.Cms.Data.Logic
                     HandleLogEntry(article, $"Redirect {model.UrlPath} to {article.UrlPath}", userId);
 
                     // We have to change the title and paths for all versions now.
+                    var oldArticles = await DbContext.Articles.Where(w => w.ArticleNumber == article.ArticleNumber)
+                        .ToListAsync();
+
                     foreach (var oldArticle in oldArticles)
                     {
                         // We have to change the title and paths for all versions now.
@@ -594,9 +620,31 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
                         oldArticle.Title = model.Title;
                         oldArticle.Updated = DateTime.Now.ToUniversalTime();
+
+                        await DbContext.Articles.AddAsync(new Article
+                        {
+                            Id = 0,
+                            LayoutId = null,
+                            ArticleNumber = 0,
+                            StatusCode = (int)StatusCodeEnum.Redirect,
+                            UrlPath = oldUrl, // Old URL
+                            VersionNumber = 0,
+                            Published = DateTime.Now.ToUniversalTime().AddDays(-1), // Make sure this sticks!
+                            Title = "Redirect",
+                            Content = article.UrlPath, // New URL
+                            Updated = DateTime.Now.ToUniversalTime(),
+                            HeaderJavaScript = null,
+                            FooterJavaScript = null,
+                            Layout = null,
+                            ArticleLogs = null,
+                            MenuItems = null,
+                            FontIconId = null,
+                            FontIcon = null
+                        });
                     }
 
                     DbContext.Articles.UpdateRange(oldArticles);
+
                 }
 
                 //
@@ -677,6 +725,12 @@ namespace CDT.Cosmos.Cms.Data.Logic
             };
 
             return result;
+        }
+
+        private string UpdatePrefix(string oldprefix, string newPrefix, string targetString)
+        {
+            var updated = newPrefix + targetString.TrimStart(oldprefix.ToArray());
+            return updated;
         }
 
         /// <summary>
@@ -838,6 +892,27 @@ namespace CDT.Cosmos.Cms.Data.Logic
             return await BuildArticleViewModel(article, "en-US", false);
         }
 
+        /// <summary>
+        /// Gets the sub articles for a page
+        /// </summary>
+        /// <param name="urlPrefix">URL Prefix</param>
+        /// <returns></returns>
+        private async Task<List<Article>> GetAllSubArticles(string urlPrefix)
+        {
+            if (string.IsNullOrEmpty(urlPrefix) || string.IsNullOrWhiteSpace(urlPrefix) || urlPrefix.Equals("/"))
+            {
+                urlPrefix = "";
+            }
+            else
+            {
+                urlPrefix = System.Web.HttpUtility.UrlDecode(urlPrefix.ToLower().Replace("%20", "_").Replace(" ", "_")) + "/";
+            }
+
+            var query = DbContext.Articles
+                .Where(a => a.Published <= DateTime.UtcNow && a.UrlPath.StartsWith(urlPrefix));
+
+            return await query.ToListAsync();
+        }
 
         #region LISTS
 
