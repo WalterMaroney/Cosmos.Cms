@@ -1,26 +1,49 @@
 ﻿// Cosmos CMS utility functions
 
 // Automatically creates a Table of Contents for a given page
-var cosmosBuildTOC = function (targetDivId, ordByPubDate) {
+var cosmosBuildTOC = function (targetDivId, ordByPubDate. pageNo, pageSize, ) {
     if (ordByPubDate === null || typeof (ordByPubDate) === "undefined") {
         ordByPubDate = true;
     } else {
         ordByPubDate = Boolean(ordByPubDate);
     }
     document.addEventListener("DOMContentLoaded", function () {
-        cosmosGetTOC(document.title, true, function (data) {
+        cosmosGetTOC(document.title, true, pageNo, pageSize, function (data) {
             var html = "<ul>";
-            data.forEach(function (item) {
+            data.Items.forEach(function (item) {
                 html += "<li><a href='/" + item.UrlPath + "'>" + item.Title.substring(item.Title.indexOf("/") + 1) + "</a></li>";
             });
             html += "</ul>";
             var el = document.getElementById(targetDivId);
             el.innerHTML = html;
+
+            var footer = "<div>";
+
+            if (data.PageNo > 0) {
+                footer += "<span onclick=''>Prev</span>";
+            }
+            var current = (data.PageNo * data.PageSize) + data.PageSize;
+
+            if (current < data.TotalCount) {
+                footer += "<span onclick='' style='float:right'>Next</span>";
+            }
+
+            footer += "</div>";
         });
     });
 }
 
-function cosmosGetTOC(parentTitle, orderbypub, callback) {
+// Cosmos CMS Table of Contents generator
+function cosmosGetTOC(parentTitle, orderbypub, pageNo, pageSize, callback) {
+
+    if (pageNo === null) {
+        pageNo = 0;
+    }
+
+    if (pageSize === null) {
+        pageSize = 10;
+    }
+
     var http_request = new XMLHttpRequest();
     try {
         // Opera 8.0+, Firefox, Chrome, Safari
@@ -49,7 +72,7 @@ function cosmosGetTOC(parentTitle, orderbypub, callback) {
             callback(data);
         }
     }
-
-    http_request.open("GET", "/Home/GetTOC/" + encodeURIComponent(parentTitle) + "?orderByPub=" + orderbypub, true);
+    // pageNo, pageSize
+    http_request.open("GET", "/Home/GetTOC/" + encodeURIComponent(parentTitle) + "?orderByPub=" + orderbypub + "&pageNo=" + pageNo + "&pageSize=" + pageSize, true);
     http_request.send();
 }

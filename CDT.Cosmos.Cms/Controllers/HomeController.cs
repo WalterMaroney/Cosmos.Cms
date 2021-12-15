@@ -213,9 +213,9 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <param name="id">UrlPath</param>
         /// <returns></returns>
-        public async Task<IActionResult> GetTOC(string id, bool orderByPub = false)
+        public async Task<IActionResult> GetTOC(string id, int pageNo = 0, int pageSize = 10, bool orderByPub = false)
         {
-            var result = await _articleLogic.GetTOC(id, orderByPub);
+            var result = await _articleLogic.GetTOC(id, pageNo, pageSize, orderByPub);
             return Json(result);
         }
 

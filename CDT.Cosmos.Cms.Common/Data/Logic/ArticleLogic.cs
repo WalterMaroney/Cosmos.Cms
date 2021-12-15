@@ -71,9 +71,11 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
         /// Gets the list of child pages for a given page URL
         /// </summary>
         /// <param name="prefix">Page url</param>
+        /// <param name="pageNo">Zero based index (page 1 is index 0)</param>
+        /// <param name="pageSize">Number of records in a page.</param>
         /// <param name="orderByPublishedDate">Order by when was published (most recent on top)</param>
         /// <returns></returns>
-        public async Task<List<TOCItem>> GetTOC(string prefix, bool orderByPublishedDate = false)
+        public async Task<TableOfContents> GetTOC(string prefix, int pageNo = 0, int pageSize = 10, bool orderByPublishedDate = false)
         {
             if (string.IsNullOrEmpty(prefix) || string.IsNullOrWhiteSpace(prefix) || prefix.Equals("/"))
             {
@@ -83,20 +85,33 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             {
                 prefix = System.Web.HttpUtility.UrlDecode(prefix.ToLower().Replace("%20", "_").Replace(" ", "_")) + "/";
             }
+            var skip = pageNo * pageSize;
 
-            var query = DbContext.Articles.Select(s => new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated })
+            var query = DbContext.Articles.Select(s => 
+            new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated })
                 .Where(a => a.Published <= DateTime.UtcNow &&
                         EF.Functions.Like(a.Title, prefix + "%") &&
                         (EF.Functions.Like(a.Title, prefix + "%/%") == false)).Distinct();
 
+            var model = new TableOfContents();
+
+            List<TOCItem> results;
+
             if (orderByPublishedDate)
             {
-                return await query.OrderByDescending(o => o.Published).ToListAsync();
+                results = await query.OrderByDescending(o => o.Published).ToListAsync();
             }
             else
             {
-                return await query.ToListAsync();
+                results = await query.ToListAsync();
             }
+
+            model.TotalCount = results.Count;
+            model.PageNo = pageNo;
+            model.PageSize = pageSize;
+            model.Items = results.Skip(skip).Take(pageSize).ToList();
+
+            return model;
         }
 
         #region GET ARTICLE METHODS

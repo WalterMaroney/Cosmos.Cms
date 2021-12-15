@@ -68,10 +68,10 @@ namespace CDT.Cosmos.Cms.Website.Controllers
         /// </summary>
         /// <param name="id">UrlPath</param>
         /// <returns></returns>
-        public async Task<IActionResult> GetTOC(string id, bool orderByPub = false)
+        public async Task<IActionResult> GetTOC(string id, bool orderByPub = false, int pageSize = 10, int pageNo = 0)
         {
             var articleLogic = new ArticleLogic(_dbContext, _cosmosOptions);
-            var result = await articleLogic.GetTOC(id, orderByPub);
+            var result = await articleLogic.GetTOC(id, pageNo, pageSize, orderByPub);
             return Json(result);
         }
 
