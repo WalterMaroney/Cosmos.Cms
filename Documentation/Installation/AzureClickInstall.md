@@ -2,12 +2,12 @@
 
 Prerequisites:
 
-* You already have an [Azure account](https://azure.microsoft.com/en-us/free/search/?OCID=AID2200277_SEM_0bab6efa957c19e686fb0f63b7658f30:G:s&ef_id=0bab6efa957c19e686fb0f63b7658f30:G:s&msclkid=0bab6efa957c19e686fb0f63b7658f30) and can navigate the Azure Portal website.
+* You already have an [Azure account](https://azure.microsoft.com/en-us/free/search/?OCID=AID2200277_SEM_0bab6efa957c19e686fb0f63b7658f30:G:s&ef_id=0bab6efa957c19e686fb0f63b7658f30:G:s&msclkid=0bab6efa957c19e686fb0f63b7658f30) and know how to navigate the Azure Portal website.
 * If you do not already have one, please [create a SendGrid account](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/SendGrid.md) then [create and save an API key](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021#api-keys). You will need the key during the install.
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FCosmosSoftware%2FCosmos.Cms%2Fmain%2FAutomation%2FAzure%2Fazuredeploy.json)
 
-This button installs the following:
+This button installs the following in about 15 minutes:
 
 * [Azure SQL Database](https://azure.microsoft.com/en-us/products/azure-sql/database/) (SKU Basic)
 * Storage Account ([Standard RA-GRS](https://docs.microsoft.com/en-us/azure/storage/common/storage-account-overview))
@@ -15,7 +15,11 @@ This button installs the following:
   * Cosmos Editor Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor))
   * Cosmos Publisher Website ([container from Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmospublisher))
 
+PLEASE NOTE: The Docker containers may take 5 minutes to install and run upon first use.  This is normal.
+
 ## Required Post Installation Steps
+
+These steps take about 5 minutes to complete:
 
 * Click the "Outputs" tab on left of the install page after the template finishes.
 * Copy the list of IP addresses and [add them your SendGrid account](https://docs.sendgrid.com/ui/account-and-settings/ip-access-management).
