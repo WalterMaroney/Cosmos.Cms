@@ -1,14 +1,19 @@
 ﻿// Cosmos CMS utility functions
 
 // Automatically creates a Table of Contents for a given page
-var cosmosBuildTOC = function (targetDivId, ordByPubDate. pageNo, pageSize, ) {
+var cosmosBuildTOC = function (targetDivId, startTitle, ordByPubDate, pageNo, pageSize,) {
+
+    if (startTitle === null || typeof (startTitle) === "undefined" || startTitle === "") {
+        startTitle = document.title;
+    }
     if (ordByPubDate === null || typeof (ordByPubDate) === "undefined") {
         ordByPubDate = true;
     } else {
         ordByPubDate = Boolean(ordByPubDate);
     }
     document.addEventListener("DOMContentLoaded", function () {
-        cosmosGetTOC(document.title, true, pageNo, pageSize, function (data) {
+
+        cosmosGetTOC(startTitle, true, pageNo, pageSize, function (data) {
             var html = "<ul>";
             data.Items.forEach(function (item) {
                 html += "<li><a href='/" + item.UrlPath + "'>" + item.Title.substring(item.Title.indexOf("/") + 1) + "</a></li>";

@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.7.7.1" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.1109" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.1207" />
   </ItemGroup>
 
   <ItemGroup>
