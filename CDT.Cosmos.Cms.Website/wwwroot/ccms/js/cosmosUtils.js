@@ -7,13 +7,13 @@ var cosmosBuildTOC = function (targetDivId, startTitle, ordByPubDate, pageNo, pa
         startTitle = document.title;
     }
     if (ordByPubDate === null || typeof (ordByPubDate) === "undefined") {
-        ordByPubDate = true;
+        ordByPubDate = false;
     } else {
         ordByPubDate = Boolean(ordByPubDate);
     }
     document.addEventListener("DOMContentLoaded", function () {
 
-        cosmosGetTOC(startTitle, true, pageNo, pageSize, function (data) {
+        cosmosGetTOC(startTitle, ordByPubDate, pageNo, pageSize, function (data) {
             var html = "<ul>";
             data.Items.forEach(function (item) {
                 html += "<li><a href='/" + item.UrlPath + "'>" + item.Title.substring(item.Title.indexOf("/") + 1) + "</a></li>";
