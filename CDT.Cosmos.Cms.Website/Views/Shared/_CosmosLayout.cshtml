@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<distributed-cache name="Cosmos-head" expires-after="@TimeSpan.FromSeconds(120)" vary-by-route="id" vary-by-query="lang">
     <title>@Model.Title</title>
 
     @Html.Raw(Model.Layout.Head)
@@ -17,7 +16,6 @@
     <script>
         document.documentElement.setAttribute("lang", "@Model.LanguageCode");
     </script>
-</distributed-cache>
 </head>
     <body>
         @RenderBody()

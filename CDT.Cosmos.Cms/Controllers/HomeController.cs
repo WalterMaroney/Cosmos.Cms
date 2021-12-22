@@ -212,8 +212,11 @@ namespace CDT.Cosmos.Cms.Controllers
         /// Gets the children of a given page path.
         /// </summary>
         /// <param name="id">UrlPath</param>
+        /// <param name="pageNo"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="orderByPub"></param>
         /// <returns></returns>
-        public async Task<IActionResult> GetTOC(string id, int pageNo = 0, int pageSize = 10, bool orderByPub = false)
+        public async Task<IActionResult> GetTOC(string id, bool orderByPub = false, int pageNo = 0, int pageSize = 10)
         {
             var result = await _articleLogic.GetTOC(id, pageNo, pageSize, orderByPub);
             return Json(result);

@@ -103,7 +103,7 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             }
             else
             {
-                results = await query.ToListAsync();
+                results = await query.OrderBy(o => o.Title).ToListAsync();
             }
 
             model.TotalCount = results.Count;

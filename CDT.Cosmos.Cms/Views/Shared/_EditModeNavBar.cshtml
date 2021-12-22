@@ -797,11 +797,11 @@ else
                                 editorSave("eTitle", "kendoEditor", response.Model.Title);
 
                                 // Load Content
-                                //$("#eContent").html(response.Model.Content);
+                                $("#eContent").html(response.Model.Content);
 
                                 $("#savedVersionNo").text(response.Model.VersionNumber);
 
-                                //loadEditors();
+                                loadEditors();
 
                                 $("#saveChangesDialog").data("kendoDialog").close();
                                 if (response.IsValid) {
