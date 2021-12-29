@@ -715,21 +715,24 @@ namespace CDT.Cosmos.Cms.Controllers
                         FieldId = "HeaderJavaScript",
                         FieldName = "Header Block",
                         EditorMode = EditorMode.Html,
-                        IconUrl = "/images/seti-ui/icons/html.svg"
+                        IconUrl = "/images/seti-ui/icons/html.svg",
+                        ToolTip = "Content to appear at the bottom of the <head> tag."
                     },
                     new EditorField
                     {
                         FieldId = "Content",
                         FieldName = "Html Content",
                         EditorMode = EditorMode.Html,
-                        IconUrl = "~/images/seti-ui/icons/html.svg"
+                        IconUrl = "~/images/seti-ui/icons/html.svg",
+                        ToolTip = "Content to appear in the <body>."
                     },
                     new EditorField
                     {
                         FieldId = "FooterJavaScript",
                         FieldName = "Footer Block",
                         EditorMode = EditorMode.Html,
-                        IconUrl = "~/images/seti-ui/icons/html.svg"
+                        IconUrl = "~/images/seti-ui/icons/html.svg",
+                        ToolTip = "Content to appear at the bottom of the <body> tag."
                     }
                 },
                 HeaderJavaScript = article.HeaderJavaScript,
