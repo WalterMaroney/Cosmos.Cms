@@ -7,13 +7,13 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<StartupObject>CDT.Cosmos.Cms.Website.Program</StartupObject>
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-		<AssemblyVersion>6.0.1.5</AssemblyVersion>
-		<FileVersion>6.0.1.5</FileVersion>
+		<AssemblyVersion>6.0.2.6</AssemblyVersion>
+		<FileVersion>6.0.2.6</FileVersion>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 		<ApplicationInsightsResourceId>/subscriptions/aec61f6c-81f1-4589-b4a5-c743876b4847/resourceGroups/CosmosCMS/providers/microsoft.insights/components/cosmos-cms</ApplicationInsightsResourceId>
-		<Version>6.0.1.5</Version>
+		<Version>6.0.2.6</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -49,21 +49,21 @@
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
 		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.8.0" />
 		<PackageReference Include="Azure.Storage.Queues" Version="12.8.0" />
-		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Azure" Version="1.1.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
