@@ -69,13 +69,8 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             var head = contentHtmlDocument.DocumentNode.SelectSingleNode("//head");
             var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");
-            var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/header");
-            var bodyFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/footer");
-
-            var start = data.IndexOf("<!--Post-Footer-Begin-->") + 24;
-            var end = data.LastIndexOf("<!--Post-Footer-End-->");
-
-            var postFooter = data.Substring(start, end - start);
+            var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-header");
+            var bodyFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-footer");
 
             var cosmosLayout = new Layout()
             {
@@ -87,7 +82,6 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 BodyHtmlAttributes = ParseAttributes(body?.Attributes),
                 HtmlHeader = bodyHeader.InnerHtml,
                 FooterHtmlAttributes = ParseAttributes(bodyFooter?.Attributes),
-                PostFooterBlock = postFooter,
                 FooterHtmlContent = bodyFooter.InnerHtml
             };
 
@@ -112,7 +106,6 @@ namespace CDT.Cosmos.Cms.Data.Logic
         /// Gets a page template
         /// </summary>
         /// <param name="communityLayoutId"></param>
-        /// <param name="page"></param>
         /// <returns></returns>
         public List<Template> GetCommunityTemplatePages(string communityLayoutId = "")
         {
@@ -174,7 +167,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
             contentHtmlDocument.LoadHtml(html);
 
             //var head = contentHtmlDocument.DocumentNode.SelectSingleNode("//head");
-            //var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");
+            var pageFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-page-footer");
             var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/header");
 
             var headerComments = bodyHeader.ChildNodes.Where(w => w.NodeType == HtmlNodeType.Comment).ToList();
@@ -183,18 +176,14 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 headerComment.Remove();
             }
 
-            var bodyFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/footer");
-
             // Break out the HEADER tag
             // Start removing things
-            var nav = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/header/nav");
-            nav.Remove(); // nav bar
+            var removePostPageFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/pageFooter");
+            removePostPageFooter.Remove(); // nav bar
             // Anything in the header other than nav bar needs to be pulled out and put below
             // the header.
             builder.AppendLine(bodyHeader.InnerHtml);
 
-            // Now remove header element from the body of the document.
-            bodyHeader.Remove();
 
             // Save what remains in the body
             var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");

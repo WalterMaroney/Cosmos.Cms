@@ -15,15 +15,10 @@
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
-<header @Html.Raw(Model.Layout.BodyHeaderHtmlAttributes)>
-    @Html.Raw(Model.Layout.HtmlHeader)
-</header>
- @RenderBody()
-<footer @Html.Raw(Model.Layout.FooterHtmlAttributes)>
-    @Html.Raw(Model.Layout.FooterHtmlContent)
-</footer>
+@Html.Raw(Model.Layout.HtmlHeader)
+@RenderBody()
+@Html.Raw(Model.Layout.FooterHtmlContent)
 @(await RenderSectionAsync("Scripts", false))
-@Html.Raw(Model.Layout.PostFooterBlock)
 @*
     Page specific footer block    
 *@

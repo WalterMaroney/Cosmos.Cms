@@ -23,6 +23,9 @@ using Z.EntityFramework.Plus;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
+    /// <summary>
+    /// Layouts controller
+    /// </summary>
     [Authorize(Roles = "Administrators, Editors")]
     public class LayoutsController : BaseController
     {
@@ -30,6 +33,15 @@ namespace CDT.Cosmos.Cms.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<LayoutsController> _logger;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="userManager"></param>
+        /// <param name="articleLogic"></param>
+        /// <param name="syncContext"></param>
+        /// <param name="options"></param>
+        /// <param name="logger"></param>
         public LayoutsController(ApplicationDbContext dbContext,
             UserManager<IdentityUser> userManager,
             ArticleEditLogic articleLogic,
@@ -45,7 +57,10 @@ namespace CDT.Cosmos.Cms.Controllers
             _logger = logger;
         }
 
-        // GET: Layouts
+        /// <summary>
+        /// Gets a list of layouts
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             if (!await _dbContext.Layouts.AnyAsync())
@@ -59,6 +74,10 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Create a new layout
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Create()
         {
             var layout = LayoutDefaults.GetOceanside();
@@ -70,11 +89,23 @@ namespace CDT.Cosmos.Cms.Controllers
             return RedirectToAction("EditCode", new { layout.Id });
         }
 
+        /// <summary>
+        /// Edit a layout by its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(int? id)
         {
             return await GetLayoutWithHomePage(id);
         }
 
+        /// <summary>
+        /// Edit the page header and footer of a layout.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="header"></param>
+        /// <param name="footer"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Edit([Bind("id,header,footer")] int id, string header, string footer)
         {
@@ -165,7 +196,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Layouts/Edit/5
+        /// <summary>
+        /// Edit code for a layout
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> EditCode(int? id)
         {
             if (id == null) return NotFound();
@@ -183,53 +218,36 @@ namespace CDT.Cosmos.Cms.Controllers
                     {
                         FieldId = "Head",
                         FieldName = "Head",
-                        EditorMode = EditorMode.Html
-                    },
-                    new()
-                    {
-                        FieldId = "BodyHtmlAttributes",
-                        FieldName = "Body Html Attributes",
-                        EditorMode = EditorMode.Html
-                    },
-                    new()
-                    {
-                        FieldId = "BodyHeaderHtmlAttributes",
-                        FieldName = "Header Html Attributes",
-                        EditorMode = EditorMode.Html
+                        EditorMode = EditorMode.Html,
+                        ToolTip = "Layout content to appear in the HEAD of every page."
                     },
                     new()
                     {
                         FieldId = "HtmlHeader",
                         FieldName = "Header Content",
-                        EditorMode = EditorMode.Html
+                        EditorMode = EditorMode.Html,
+                        ToolTip = "Layout body header content to appear on every page."
                     },
                     new()
                     {
-                        FieldId = "FooterHtmlAttributes",
-                        FieldName = "Footer Html Attributes",
-                        EditorMode = EditorMode.Html
+                        FieldId = "BodyHtmlAttributes",
+                        FieldName = "Body Attributes",
+                        EditorMode = EditorMode.Html,
+                        ToolTip = "Body tag attributes such as class or styles."
                     },
                     new()
                     {
                         FieldId = "FooterHtmlContent",
                         FieldName = "Footer Content",
-                        EditorMode = EditorMode.Html
-                    },
-                    new()
-                    {
-                        FieldId = "PostFooterBlock",
-                        FieldName = "Post Footer Block",
-                        EditorMode = EditorMode.Html
+                        EditorMode = EditorMode.Html,
+                        ToolTip = "Layout footer content to appear at the bottom of the body on every page."
                     }
                 },
                 CustomButtons = new List<string> { "Preview", "Layouts" },
                 Head = layout.Head,
-                BodyHtmlAttributes = layout.BodyHtmlAttributes,
-                BodyHeaderHtmlAttributes = layout.BodyHeaderHtmlAttributes,
                 HtmlHeader = layout.HtmlHeader,
-                FooterHtmlAttributes = layout.FooterHtmlAttributes,
+                BodyHtmlAttributes = layout.BodyHtmlAttributes,
                 FooterHtmlContent = layout.FooterHtmlContent,
-                PostFooterBlock = layout.PostFooterBlock,
                 EditingField = ""
             };
             return View(model);
@@ -276,24 +294,18 @@ namespace CDT.Cosmos.Cms.Controllers
                     // Strip out BOM
                     layout.Head = StripBOM(layout.Head);
                     layout.HtmlHeader = StripBOM(layout.HtmlHeader);
-                    layout.BodyHeaderHtmlAttributes = StripBOM(layout.BodyHeaderHtmlAttributes);
-                    layout.BodyHtmlAttributes = StripBOM(layout.BodyHtmlAttributes);
-                    layout.FooterHtmlAttributes = StripBOM(layout.FooterHtmlAttributes);
                     layout.FooterHtmlContent = StripBOM(layout.FooterHtmlContent);
-                    layout.PostFooterBlock = StripBOM(layout.PostFooterBlock);
+                    layout.BodyHtmlAttributes = StripBOM(layout.BodyHtmlAttributes);
 
                     //
                     // This layout now is the default, make sure the others are set to "false."
 
                     var entity = await _dbContext.Layouts.FindAsync(layout.Id);
-                    entity.BodyHeaderHtmlAttributes = layout.BodyHeaderHtmlAttributes;
-                    entity.BodyHtmlAttributes = layout.BodyHtmlAttributes;
-                    entity.FooterHtmlAttributes = layout.FooterHtmlAttributes;
                     entity.FooterHtmlContent =
                         BaseValidateHtml("FooterHtmlContent", layout.FooterHtmlContent);
                     entity.Head = BaseValidateHtml("Head", layout.Head);
                     entity.HtmlHeader = BaseValidateHtml("HtmlHeader", layout.HtmlHeader);
-                    entity.PostFooterBlock = layout.PostFooterBlock;
+                    entity.BodyHtmlAttributes = layout.BodyHtmlAttributes;
 
                     // Check validation again after validation of HTML
                     if (entity.IsDefault)
@@ -329,6 +341,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(layout);
         }
 
+        /// <summary>
+        /// Preview 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Preview(int id)
         {
             var layout = await _dbContext.Layouts.FindAsync(id);
@@ -341,6 +358,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return View("~/Views/Home/CosmosIndex.cshtml", model);
         }
 
+        /// <summary>
+        /// Preview how a layout will look in edit mode.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> EditPreview(int id)
         {
             var layout = await _dbContext.Layouts.FindAsync(id);
@@ -352,6 +374,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return View("~/Views/Home/Index.cshtml", model);
         }
 
+        /// <summary>
+        /// Set a layout as the default layout.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> SetLayoutAsDefault(int? id)
         {

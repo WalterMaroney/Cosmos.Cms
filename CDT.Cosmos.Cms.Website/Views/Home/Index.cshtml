@@ -19,16 +19,9 @@
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
-    <header @Html.Raw(Model.Layout.BodyHeaderHtmlAttributes)>
-        @Html.Raw(Model.Layout.HtmlHeader)
-    </header>
-    <div id="main-content">
-        @Html.Raw(Model.Content)
-    </div>
-    <footer @Html.Raw(Model.Layout.FooterHtmlAttributes)>
-        @Html.Raw(Model.Layout.FooterHtmlContent)
-    </footer>
-    @Html.Raw(Model.Layout.PostFooterBlock)
+    @Html.Raw(Model.Layout.HtmlHeader)
+    @Html.Raw(Model.Content)
+    @Html.Raw(Model.Layout.FooterHtmlContent)
     @*
         Page specific
     *@

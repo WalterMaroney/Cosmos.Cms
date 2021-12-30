@@ -11,19 +11,8 @@ namespace CDT.Cosmos.Cms.Common.Models
     [Serializable]
     public class LayoutViewModel
     {
-        /// <summary>
-        ///     Constructor
-        /// </summary>
         public LayoutViewModel()
         {
-            var starterLayout = LayoutDefaults.GetOceanside();
-            Head = starterLayout.Head;
-            BodyHtmlAttributes = starterLayout.BodyHtmlAttributes;
-            BodyHeaderHtmlAttributes = starterLayout.BodyHeaderHtmlAttributes;
-            HtmlHeader = starterLayout.HtmlHeader;
-            FooterHtmlAttributes = starterLayout.FooterHtmlAttributes;
-            FooterHtmlContent = starterLayout.FooterHtmlContent;
-            PostFooterBlock = starterLayout.PostFooterBlock;
         }
 
         /// <summary>
@@ -36,12 +25,8 @@ namespace CDT.Cosmos.Cms.Common.Models
             LayoutName = layout.LayoutName;
             Notes = layout.Notes;
             Head = layout.Head;
-            BodyHtmlAttributes = layout.BodyHtmlAttributes;
-            BodyHeaderHtmlAttributes = layout.BodyHeaderHtmlAttributes;
             HtmlHeader = layout.HtmlHeader;
-            FooterHtmlAttributes = layout.FooterHtmlAttributes;
             FooterHtmlContent = layout.FooterHtmlContent;
-            PostFooterBlock = layout.PostFooterBlock;
         }
 
         /// <summary>
@@ -78,20 +63,6 @@ namespace CDT.Cosmos.Cms.Common.Models
         public string Head { get; set; }
 
         /// <summary>
-        ///     Body tag attribute
-        /// </summary>
-        [Display(Name = "BODY Html Attributes", GroupName = "Body")]
-        [StringLength(256)]
-        public string BodyHtmlAttributes { get; set; }
-
-        /// <summary>
-        ///     Page header attributes
-        /// </summary>
-        [Display(Name = "Header Html Attributes", GroupName = "Header")]
-        [StringLength(256)]
-        public string BodyHeaderHtmlAttributes { get; set; }
-
-        /// <summary>
         ///     Content injected into page header
         /// </summary>
         [Display(Name = "Header Html Content", GroupName = "Header")]
@@ -99,25 +70,11 @@ namespace CDT.Cosmos.Cms.Common.Models
         public string HtmlHeader { get; set; }
 
         /// <summary>
-        ///     Footer html attributes
-        /// </summary>
-        [Display(Name = "Footer Html Attributes", GroupName = "Footer")]
-        [StringLength(256)]
-        public string FooterHtmlAttributes { get; set; }
-
-        /// <summary>
         ///     Content injected into the page footer
         /// </summary>
         [Display(Name = "Footer Html Content", GroupName = "Footer")]
         [DataType(DataType.Html)]
         public string FooterHtmlContent { get; set; }
-
-        /// <summary>
-        ///     Content injected into post footer block
-        /// </summary>
-        [Display(Name = "Post-Footer Code Bloc", GroupName = "Footer")]
-        [DataType(DataType.Html)]
-        public string PostFooterBlock { get; set; }
 
         /// <summary>
         ///     Gets a detached entity.
@@ -133,12 +90,8 @@ namespace CDT.Cosmos.Cms.Common.Models
                     LayoutName = LayoutName,
                     Notes = HttpUtility.HtmlDecode(Notes),
                     Head = HttpUtility.HtmlDecode(Head),
-                    BodyHtmlAttributes = BodyHtmlAttributes,
-                    BodyHeaderHtmlAttributes = BodyHeaderHtmlAttributes,
                     HtmlHeader = HttpUtility.HtmlDecode(HtmlHeader),
-                    FooterHtmlAttributes = FooterHtmlAttributes,
-                    FooterHtmlContent = HttpUtility.HtmlDecode(FooterHtmlContent),
-                    PostFooterBlock = HttpUtility.HtmlDecode(PostFooterBlock)
+                    FooterHtmlContent = HttpUtility.HtmlDecode(FooterHtmlContent)
                 };
             return new Layout
             {
@@ -147,12 +100,8 @@ namespace CDT.Cosmos.Cms.Common.Models
                 LayoutName = LayoutName,
                 Notes = Notes,
                 Head = Head,
-                BodyHtmlAttributes = BodyHtmlAttributes,
-                BodyHeaderHtmlAttributes = BodyHeaderHtmlAttributes,
                 HtmlHeader = HtmlHeader,
-                FooterHtmlAttributes = FooterHtmlAttributes,
-                FooterHtmlContent = FooterHtmlContent,
-                PostFooterBlock = PostFooterBlock
+                FooterHtmlContent = FooterHtmlContent
             };
         }
     }

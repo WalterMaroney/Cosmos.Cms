@@ -310,8 +310,8 @@ namespace CDT.Cosmos.Cms
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="lifetime"></param>
-        /// <param name="cache"></param>
+        /// <param name="cosmosStatus"></param>
+        /// <param name="options"></param>
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env,

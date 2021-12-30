@@ -87,7 +87,7 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             }
             var skip = pageNo * pageSize;
 
-            var query = DbContext.Articles.Select(s => 
+            var query = DbContext.Articles.Select(s =>
             new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated })
                 .Where(a => a.Published <= DateTime.UtcNow &&
                         EF.Functions.Like(a.Title, prefix + "%") &&
@@ -434,7 +434,16 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             }
             else
             {
-                layoutViewModel = new LayoutViewModel(layout);
+                layoutViewModel = new LayoutViewModel()
+                {
+                    FooterHtmlContent = layout.FooterHtmlContent,
+                    Head = layout.Head,
+                    HtmlHeader = layout.HtmlHeader,
+                    Id = layout.Id,
+                    IsDefault = layout.IsDefault,
+                    LayoutName = layout.LayoutName,
+                    Notes = layout.Notes
+                };
             }
 
             if (!includeMenu) return layoutViewModel;

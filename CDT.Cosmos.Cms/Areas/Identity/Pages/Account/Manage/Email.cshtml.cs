@@ -15,9 +15,14 @@ namespace CDT.Cosmos.Cms.Areas.Identity.Pages.Account.Manage
         private readonly IEmailSender _emailSender;
 
         /// private readonly SignInManager
-        /// <IdentityUser> _signInManager;
+        /// IdentityUser _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="emailSender"></param>
         public EmailModel(
             UserManager<IdentityUser> userManager,
             //SignInManager<IdentityUser> signInManager,

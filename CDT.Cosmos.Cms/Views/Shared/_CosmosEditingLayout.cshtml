@@ -22,15 +22,10 @@ if (menuViewName != null)
 <partial name="@menuViewName" />
 }
 }
-<header @Html.Raw(Model.Layout.BodyHeaderHtmlAttributes)>
 @Html.Raw(Model.Layout.HtmlHeader)
-</header>
 @RenderBody()
-<footer @Html.Raw(Model.Layout.FooterHtmlAttributes)>
 @Html.Raw(Model.Layout.FooterHtmlContent)
-</footer>
 @(await RenderSectionAsync("Scripts", false))
-@Html.Raw(Model.Layout.PostFooterBlock)
 @*
     Page specific footer block
 *@

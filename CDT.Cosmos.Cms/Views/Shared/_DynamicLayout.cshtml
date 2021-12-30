@@ -14,7 +14,7 @@
         mdbDark = Model.HeaderJavaScript != null && Model.HeaderJavaScript.Contains("mdb.dark", StringComparison.CurrentCultureIgnoreCase);
 
         htmlHeader.LoadHtml($"<body>{Model.Layout.Head}</body>");
-        htmlFooter.LoadHtml($"<body>{Model.Layout.PostFooterBlock}</body>");
+        htmlFooter.LoadHtml($"<body>{Model.Layout.FooterHtmlContent}</body>");
 
         var scripts = htmlHeader.DocumentNode.SelectNodes("//script");
         if (scripts != null && scripts.Any())
@@ -46,7 +46,7 @@
         }
 
         var links = htmlHeader.DocumentNode.SelectNodes("//link");
-        if (links != null && links.Any())
+        if (links != null && links.Any() && scripts.Any())
         {
 
             var nodes = scripts.Where(n => n.Attributes.Any(a => a.Name == "href"
@@ -99,23 +99,14 @@
     }
 </head>
 <body>
-    <header @Html.Raw(Model.Layout.BodyHeaderHtmlAttributes)>
-        <partial name="_EditModeNavBar" model="@Model" />
-        @Html.Raw(Model.Layout.HtmlHeader)
-    </header>
+    <partial name="_EditModeNavBar" model="@Model" />
+    @Html.Raw(Model.Layout.HtmlHeader)
     @RenderBody()
-    <footer @Html.Raw(Model.Layout.FooterHtmlAttributes)>
-        @Html.Raw(Model.Layout.FooterHtmlContent)
-    </footer>
     @(await RenderSectionAsync("Scripts", false))
-    @Html.Raw(Model.Layout.PostFooterBlock)
     <script>
     var ccmsLangDisplayName = "@(Model.LanguageName ?? "US English")";
     </script>
-
     @Html.Raw(htmlFooter.DocumentNode.ChildNodes[0].InnerHtml)
-
-
     @if (Model?.EditModeOn == false)
     {
         <script src="~/ccms/js/GoogleTranslations.js" id="ccms-lang-script" data-lang="@Model.LanguageName"></script>
