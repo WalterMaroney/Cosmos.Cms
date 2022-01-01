@@ -8,6 +8,7 @@ using HtmlAgilityPack;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -16,7 +17,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Z.EntityFramework.Plus;
@@ -32,6 +35,46 @@ namespace CDT.Cosmos.Cms.Controllers
         private readonly ArticleEditLogic _articleLogic;
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<LayoutsController> _logger;
+
+        private bool LayoutExists(int id)
+        {
+            return _dbContext.Layouts.Any(e => e.Id == id);
+        }
+
+        /// <summary>
+        /// Gets the home page with the specified layout (may not be the default layout)
+        /// </summary>
+        /// <param name="id">Layout Id (default layout if null)</param>
+        /// <param name="html"></param>
+        /// <returns>ViewResult with <see cref="ArticleViewModel"/></returns>
+        private async Task<IActionResult> GetLayoutWithHomePage(int? id)
+        {
+            // Get the home page
+            var model = await _articleLogic.GetByUrl("");
+
+            // Specify layout if given.
+            if (id.HasValue)
+            {
+                var layout = await _dbContext.Layouts.FirstOrDefaultAsync(i => i.Id == id.Value);
+                model.Layout = new LayoutViewModel(layout);
+            }
+
+            // Make its editable
+            model.Layout.HtmlHeader = model.Layout.HtmlHeader.Replace(" crx=\"", " contenteditable=\"", StringComparison.CurrentCultureIgnoreCase);
+            model.Layout.FooterHtmlContent = model.Layout.FooterHtmlContent.Replace(" crx=\"", " contenteditable=\"", StringComparison.CurrentCultureIgnoreCase);
+
+            return View(model);
+        }
+
+        /// <summary>
+        /// After a layout change, refresh everything!
+        /// </summary>
+        /// <returns></returns>
+        private async Task MakeGlobalChange()
+        {
+            _ = await base.UpdateTimeStamps();
+            _ = await FlushCdn(_logger, new[] { "/*" });
+        }
 
         /// <summary>
         /// Constructor
@@ -72,6 +115,15 @@ namespace CDT.Cosmos.Cms.Controllers
             var model = await _articleLogic.Create("Layouts");
             model.Title = "Layouts";
             return View(model);
+        }
+
+        /// <summary>
+        /// Page returns a list of community layouts.
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult CommunityLayouts()
+        {
+            return View();
         }
 
         /// <summary>
@@ -124,29 +176,10 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        /// Gets the home page with the specified layout (may not be the default layout)
+        /// Gets a layout to edit it's notes
         /// </summary>
-        /// <param name="id">Layout Id (default layout if null)</param>
-        /// <returns>ViewResult with <see cref="ArticleViewModel"/></returns>
-        private async Task<IActionResult> GetLayoutWithHomePage(int? id)
-        {
-            // Get the home page
-            var model = await _articleLogic.GetByUrl("");
-
-            // Specify layout if given.
-            if (id.HasValue)
-            {
-                var layout = await _dbContext.Layouts.FirstOrDefaultAsync(i => i.Id == id.Value);
-                model.Layout = new LayoutViewModel(layout);
-            }
-
-            // Make its editable
-            model.Layout.HtmlHeader = model.Layout.HtmlHeader.Replace(" crx=\"", " contenteditable=\"", StringComparison.CurrentCultureIgnoreCase);
-            model.Layout.FooterHtmlContent = model.Layout.FooterHtmlContent.Replace(" crx=\"", " contenteditable=\"", StringComparison.CurrentCultureIgnoreCase);
-
-            return View(model);
-        }
-
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> EditNotes(int? id)
         {
             if (id == null)
@@ -165,6 +198,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Edit layout notes
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> EditNotes([Bind(include: "Id,IsDefault,LayoutName,Notes")] LayoutIndexViewModel model)
         {
@@ -349,6 +387,8 @@ namespace CDT.Cosmos.Cms.Controllers
         public async Task<IActionResult> Preview(int id)
         {
             var layout = await _dbContext.Layouts.FindAsync(id);
+            if (layout == null) return NotFound();
+
             var model = await _articleLogic.Create("Layout Preview");
             model.Layout = new LayoutViewModel(layout);
             model.EditModeOn = false;
@@ -442,11 +482,6 @@ namespace CDT.Cosmos.Cms.Controllers
             return RedirectToAction("Index", "Layouts");
         }
 
-        private bool LayoutExists(int id)
-        {
-            return _dbContext.Layouts.Any(e => e.Id == id);
-        }
-
         /// <summary>
         ///     Gets a list of layouts
         /// </summary>
@@ -463,6 +498,61 @@ namespace CDT.Cosmos.Cms.Controllers
             }).OrderByDescending(o => o.IsDefault).ThenBy(t => t.LayoutName);
 
             return Json(await model.ToDataSourceResultAsync(request));
+        }
+
+        /// <summary>
+        /// Reads the community layouts
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Read_CommunityLayouts([DataSourceRequest] DataSourceRequest request)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            var utilities = new LayoutUtilities();
+
+            return Json(await utilities.CommunityCatalog.LayoutCatalog.ToDataSourceResultAsync(request));
+        }
+
+        /// <summary>
+        /// Gets the template pages for a community layout.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Read_LayoutTemplatePages([DataSourceRequest] DataSourceRequest request, string id)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            var utilities = new LayoutUtilities();
+
+            var model = await utilities.GetPageTemplates(id);
+
+            return Json(await model.ToDataSourceResultAsync(request));
+        }
+
+        /// <summary>
+        /// Upload a layout
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> UploadLayout(IEnumerable<IFormFile> files)
+        {
+            var utilities = new LayoutUtilities();
+            var file = files.FirstOrDefault();
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            var html = Encoding.UTF8.GetString(memoryStream.ToArray());
+
+            var layout = utilities.ParseHtml(html);
+
+            return View(layout);
         }
 
         /// <summary>
@@ -485,11 +575,12 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        ///     Removes a layout
+        ///     Removes a layout and its associated template pages.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="model"></param>
         /// <returns></returns>
+        /// <remarks>Cannot remove the default layout.</remarks>
         [HttpPost]
         public async Task<IActionResult> Destroy_Layout([DataSourceRequest] DataSourceRequest request,
             LayoutIndexViewModel model)
@@ -500,6 +591,9 @@ namespace CDT.Cosmos.Cms.Controllers
 
                 if (!entity.IsDefault)
                 {
+                    // also remove pages that go with this layout.
+                    var pages = await _dbContext.Templates.Where(t => t.LayoutId == model.Id).ToListAsync();
+                    _dbContext.Templates.RemoveRange(pages);
                     _dbContext.Layouts.Remove(entity);
                     await _dbContext.SaveChangesAsync();
                 }
@@ -513,13 +607,43 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        /// After a layout change, refresh everything!
+        /// Gets a community layout
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        private async Task MakeGlobalChange()
+        public async Task<IActionResult> ImportCommunityLayout(string id)
         {
-            _ = await base.UpdateTimeStamps();
-            _ = await FlushCdn(_logger, new[] { "/*" });
+            try
+            {
+                var utilities = new LayoutUtilities();
+                var layout = await utilities.GetCommunityLayout(id, false);
+                var communityPages = await utilities.GetCommunityTemplatePages(id);
+
+                _dbContext.Layouts.Add(layout);
+                await _dbContext.SaveChangesAsync();
+
+                if (communityPages != null && communityPages.Any())
+                {
+                    var pages = communityPages.Select(p => new Template()
+                    {
+                        CommunityLayoutId = id,
+                        Content = p.Content,
+                        Description = p.Description,
+                        LayoutId = layout.Id,
+                        Title = p.Title
+                    });
+
+                    _dbContext.Templates.AddRange(pages);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Id", ex.Message);
+            }
+
+            return RedirectToAction("Index");
         }
+
     }
 }

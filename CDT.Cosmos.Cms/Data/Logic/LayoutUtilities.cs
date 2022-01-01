@@ -6,88 +6,22 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Data.Logic
 {
     /// <summary>
     /// Loads external layouts and associated page templates into Comsos CMS
     /// </summary>
-    /// <remarks>Layouts are loaded from here: <see href="https://cosmos-layouts.azurewebsites.net"/>.</remarks>
+    /// <remarks>Layouts are loaded from here: <see href="http://cosmos-layouts.moonrise.net"/>.</remarks>
     public class LayoutUtilities
     {
-        private const string COSMOSLAYOUTSREPO = "https://cosmos-layouts.azurewebsites.net";
-
         /// <summary>
-        /// Constructor
+        /// Default online catalog location
         /// </summary>
-        public LayoutUtilities()
-        {
-            using var client = new HttpClient();
-            var data = client.GetStringAsync($"{COSMOSLAYOUTSREPO}/catalog.json").Result;
-            Catalogs = JsonConvert.DeserializeObject<Root>(data);
-        }
-
-        /// <summary>
-        /// Default layout ID
-        /// </summary>
-        /// <remarks>Default is mdb-cfc</remarks>
-        public string DefaultLayoutId { get; set; } = "mdb-cfc";
-
-        /// <summary>
-        /// Catalogs of layouts
-        /// </summary>
-        public Root Catalogs { get; private set; }
-
-        /// <summary>
-        /// Loads the default layout
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>This is used when setting up Cosmos.</remarks>
-        public Layout LoadDefaultLayout()
-        {
-            return LoadLayout(DefaultLayoutId, true);
-        }
-
-        /// <summary>
-        /// Loads a specified layout
-        /// </summary>
-        /// <param name="layoutId"></param>
-        /// <param name="isDefault"></param>
-        /// <returns></returns>
-        public Layout LoadLayout(string layoutId, bool isDefault)
-        {
-            var layout = Catalogs.LayoutCatalog.FirstOrDefault(f => f.Id == layoutId);
-            using var client = new WebClient();
-            var url = $"{COSMOSLAYOUTSREPO}/Layouts/{layoutId}/layout.html";
-            var data = client.DownloadString(url);
-
-            var contentHtmlDocument = new HtmlDocument();
-            contentHtmlDocument.LoadHtml(data);
-
-            var head = contentHtmlDocument.DocumentNode.SelectSingleNode("//head");
-            var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");
-            var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-header");
-            var bodyFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-footer");
-
-            var cosmosLayout = new Layout()
-            {
-                IsDefault = isDefault,
-                CommunityLayoutId = layoutId,
-                LayoutName = layout.Name,
-                Notes = layout.Description,
-                Head = head.InnerHtml,
-                BodyHtmlAttributes = ParseAttributes(body?.Attributes),
-                HtmlHeader = bodyHeader.InnerHtml,
-                FooterHtmlAttributes = ParseAttributes(bodyFooter?.Attributes),
-                FooterHtmlContent = bodyFooter.InnerHtml
-            };
-
-            return cosmosLayout;
-        }
-
+        private const string COSMOSLAYOUTSREPO = "http://cosmos-layouts.moonrise.net";
 
         private string ParseAttributes(HtmlAttributeCollection collection)
         {
@@ -102,12 +36,120 @@ namespace CDT.Cosmos.Cms.Data.Logic
             return builder.ToString().Trim();
         }
 
+        private async Task LoadCatalog()
+        {
+            using var client = new HttpClient();
+            var data = await client.GetStringAsync($"{COSMOSLAYOUTSREPO}/catalog.json");
+            CommunityCatalog = JsonConvert.DeserializeObject<Root>(data);
+            if (CommunityCatalog != null && CommunityCatalog.LayoutCatalog != null && CommunityCatalog.LayoutCatalog.Any())
+            {
+                CommunityCatalog.LayoutCatalog = CommunityCatalog.LayoutCatalog.OrderBy(o => o.Name).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Get template pages for a layout
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<List<Page>> GetPageTemplates(string id)
+        {
+            using var client = new HttpClient();
+            var data = await client.GetStringAsync($"{COSMOSLAYOUTSREPO}/Layouts/{id}/catalog.json");
+            var root = JsonConvert.DeserializeObject<PageRoot>(data);
+            return root.Pages.OrderBy(o => o.Title).ToList();
+        }
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LayoutUtilities()
+        {
+            var task = LoadCatalog();
+            task.Wait();
+        }
+
+        /// <summary>
+        /// Default layout ID
+        /// </summary>
+        /// <remarks>Default is the Bootstrap 5 Starter Template (bs5-strt).</remarks>
+        public string DefaultLayoutId { get; set; } = "bs5-strt";
+
+        /// <summary>
+        /// Catalog of layouts
+        /// </summary>
+        public Root CommunityCatalog { get; private set; }
+
+        /// <summary>
+        /// Loads the default community layout
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>This is used when setting up Cosmos.</remarks>
+        public async Task<Layout> GetDefaultCommunityLayout()
+        {
+            return await GetCommunityLayout(DefaultLayoutId, true);
+        }
+
+        /// <summary>
+        /// Gets a specified layout
+        /// </summary>
+        /// <param name="layoutId"></param>
+        /// <param name="isDefault"></param>
+        /// <returns></returns>
+        public async Task<Layout> GetCommunityLayout(string layoutId, bool isDefault)
+        {
+            var item = CommunityCatalog.LayoutCatalog.FirstOrDefault(f => f.Id == layoutId);
+            using var client = new HttpClient();
+            var url = $"{COSMOSLAYOUTSREPO}/Layouts/{layoutId}/layout.html";
+            var html = await client.GetStringAsync(url);
+
+            var layout = ParseHtml(html);
+            layout.CommunityLayoutId = layoutId;
+            layout.IsDefault = isDefault;
+            layout.LayoutName = item.Name;
+            layout.Notes = item.Description;
+
+            return layout;
+        }
+
+        /// <summary>
+        /// Creates a layout from HTML.
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        public Layout ParseHtml(string html)
+        {
+            var contentHtmlDocument = new HtmlDocument();
+            contentHtmlDocument.LoadHtml(html);
+
+            var head = contentHtmlDocument.DocumentNode.SelectSingleNode("//head");
+            var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");
+            var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-header");
+            var bodyFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-footer");
+
+            var layout = new Layout()
+            {
+                IsDefault = false,
+                CommunityLayoutId = string.Empty,
+                LayoutName = string.Empty,
+                Notes = string.Empty,
+                Head = head.InnerHtml,
+                BodyHtmlAttributes = ParseAttributes(body?.Attributes),
+                HtmlHeader = bodyHeader.InnerHtml,
+                FooterHtmlAttributes = ParseAttributes(bodyFooter?.Attributes),
+                FooterHtmlContent = bodyFooter.InnerHtml
+            };
+
+            return layout;
+        }
+
         /// <summary>
         /// Gets a page template
         /// </summary>
         /// <param name="communityLayoutId"></param>
         /// <returns></returns>
-        public List<Template> GetCommunityTemplatePages(string communityLayoutId = "")
+        public async Task<List<Template>> GetCommunityTemplatePages(string communityLayoutId = "")
         {
             var tempates = new List<Template>();
 
@@ -116,21 +158,28 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 communityLayoutId = DefaultLayoutId;
             }
 
-            var layout = Catalogs.LayoutCatalog.FirstOrDefault(f => f.Id == communityLayoutId);
+            var pages = await GetPageTemplates(communityLayoutId);
 
-            using var client = new WebClient();
+            using var client = new HttpClient();
 
-            foreach (var page in layout.Pages)
+            foreach (var page in pages)
             {
-                var url = $"{COSMOSLAYOUTSREPO}/Layouts/{page.Path}";
-                var uglifiedUrl = NUglify.Uglify.Html(url);
-                var html = client.DownloadString(uglifiedUrl.Code);
+                try
+                {
+                    var url = $"{COSMOSLAYOUTSREPO}/Layouts/{page.Path}";
+                    var uglifiedUrl = NUglify.Uglify.Html(url);
+                    var html = await client.GetStringAsync(uglifiedUrl.Code);
 
-                var template = ParseHtml<Template>(html);
-                template.Description = page.Description;
-                template.Title = page.Type == "home" ? "Home Page" : page.Title;
-                template.CommunityLayoutId = communityLayoutId;
-                tempates.Add(template);
+                    var template = ParseHtml<Template>(html);
+                    template.Description = page.Description;
+                    template.Title = page.Type == "home" ? "Home Page" : page.Title;
+                    template.CommunityLayoutId = communityLayoutId;
+                    tempates.Add(template);
+                }
+                catch (Exception ex)
+                {
+                    // TODO Handle page not found
+                }
             }
 
             return tempates.Distinct().ToList();
@@ -140,75 +189,33 @@ namespace CDT.Cosmos.Cms.Data.Logic
         /// Gets all the layouts in the community catalog
         /// </summary>
         /// <returns></returns>
-        public List<Layout> GetCommunityLayouts()
+        public async Task<List<Layout>> GetAllCommunityLayouts()
         {
-            var layoutIds = Catalogs.LayoutCatalog.Select(s => s.Id).ToList();
+            var layoutIds = CommunityCatalog.LayoutCatalog.Select(s => s.Id).ToList();
             var layouts = new List<Layout>();
 
             foreach (var id in layoutIds)
             {
-                layouts.Add(LoadLayout(id, id == DefaultLayoutId));
+                layouts.Add(await GetCommunityLayout(id, id == DefaultLayoutId));
             }
 
-            return layouts;
+            return layouts.OrderBy(o => o.LayoutName).ToList();
         }
 
         /// <summary>
         /// Parses an HTML page and loads it as either a <see cref="Template"/> or an <see cref="Article"/>.
         /// </summary>
         /// <param name="html"></param>
-        /// <returns>Body content of a page without layout elements.</returns>
+        /// <returns>Body content of a page.</returns>
+        /// <remarks>Template pages should NOT contain any layout components.</remarks>
         public T ParseHtml<T>(string html)
         {
-            var builder = new StringBuilder();
-
             var contentHtmlDocument = new HtmlDocument();
 
             contentHtmlDocument.LoadHtml(html);
 
-            //var head = contentHtmlDocument.DocumentNode.SelectSingleNode("//head");
-            var pageFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-page-footer");
-            var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/header");
-
-            var headerComments = bodyHeader.ChildNodes.Where(w => w.NodeType == HtmlNodeType.Comment).ToList();
-            foreach (var headerComment in headerComments)
-            {
-                headerComment.Remove();
-            }
-
-            // Break out the HEADER tag
-            // Start removing things
-            var removePostPageFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/pageFooter");
-            removePostPageFooter.Remove(); // nav bar
-            // Anything in the header other than nav bar needs to be pulled out and put below
-            // the header.
-            builder.AppendLine(bodyHeader.InnerHtml);
-
-
             // Save what remains in the body
             var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");
-
-            var childNodes = body.ChildNodes.Where(t => t.NodeType != HtmlNodeType.Comment);
-
-            var aboveFooter = true;
-            var postFooter = new StringBuilder();
-
-            foreach (var node in childNodes)
-            {
-                if (node.Name.Equals("footer", System.StringComparison.CurrentCultureIgnoreCase))
-                {
-                    aboveFooter = false;
-                    continue;
-                }
-                if (aboveFooter)
-                {
-                    builder.AppendLine(node.OuterHtml);
-                }
-                else
-                {
-                    postFooter.AppendLine(node.OuterHtml);
-                }
-            }
 
             object model = null;
             if (typeof(T) == typeof(Template))
@@ -216,7 +223,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
                 model = new Template()
                 {
-                    Content = builder.ToString(),
+                    Content = body.InnerText,
                     Description = string.Empty,
                     Title = string.Empty
                 };
@@ -226,12 +233,12 @@ namespace CDT.Cosmos.Cms.Data.Logic
             {
                 model = new Article()
                 {
-                    Content = builder.ToString(),
-                    FooterJavaScript = postFooter.ToString(),
+                    Content = body.InnerText,
                     Title = string.Empty,
                     StatusCode = (int)StatusCodeEnum.Active
                 };
-            } else
+            }
+            else
             {
                 throw new Exception($"Type {typeof(T)} not supported for this operation.");
             }
@@ -245,23 +252,46 @@ namespace CDT.Cosmos.Cms.Data.Logic
     /// </summary>
     public class Page
     {
+        /// <summary>
+        /// Template page title
+        /// </summary>
         public string Title { get; set; }
+        /// <summary>
+        /// Type is either home or content
+        /// </summary>
         public string Type { get; set; }
+        /// <summary>
+        /// Description of this page
+        /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// Path where page is located
+        /// </summary>
         public string Path { get; set; }
     }
 
     /// <summary>
     /// Layout catalog item
     /// </summary>
-    public class LayoutCatalog
+    public class LayoutCatalogItem
     {
+        /// <summary>
+        /// Unique ID of the layout
+        /// </summary>
         [Key]
         public string Id { get; set; }
+        /// <summary>
+        /// Layout name
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Description or notes regarding layout
+        /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// License for this layout
+        /// </summary>
         public string License { get; set; }
-        public List<Page> Pages { get; set; }
     }
 
     /// <summary>
@@ -269,7 +299,22 @@ namespace CDT.Cosmos.Cms.Data.Logic
     /// </summary>
     public class Root
     {
-        public List<LayoutCatalog> LayoutCatalog { get; set; }
+        /// <summary>
+        /// Layout catalog
+        /// </summary>
+        public List<LayoutCatalogItem> LayoutCatalog { get; set; }
+    }
+
+    /// <summary>
+    /// Pages used with layout
+    /// </summary>
+    public class PageRoot
+    {
+
+        /// <summary>
+        /// Template pages that can be used with this layout
+        /// </summary>
+        public List<Page> Pages { get; set; }
     }
 
 

@@ -59,6 +59,7 @@ namespace CDT.Cosmos.Cms.Common.Data
         /// </summary>
         [Display(Name = "Header Html Attributes", GroupName = "Header")]
         [StringLength(256)]
+        [Obsolete("This property will be removed in a future release.")]
         public string BodyHeaderHtmlAttributes { get; set; }
 
         /// <summary>
@@ -73,6 +74,7 @@ namespace CDT.Cosmos.Cms.Common.Data
         /// </summary>
         [Display(Name = "Footer Html Attributes", GroupName = "Footer")]
         [StringLength(256)]
+        [Obsolete("This property will be removed in a future release.")]
         public string FooterHtmlAttributes { get; set; }
 
         /// <summary>
@@ -87,6 +89,7 @@ namespace CDT.Cosmos.Cms.Common.Data
         /// </summary>
         [Display(Name = "Post-Footer Code Bloc", GroupName = "Footer")]
         [DataType(DataType.Html)]
+        [Obsolete("This property will be removed in a future release.")]
         public string PostFooterBlock { get; set; }
 
         /// <summary>

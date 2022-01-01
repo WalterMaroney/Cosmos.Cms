@@ -39,6 +39,7 @@
     <script src="https://kendo.cdn.telerik.com/2021.3.1207/js/jquery.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2021.3.1207/js/kendo.all.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2021.3.1207/js/kendo.aspnetmvc.min.js"></script>
+    <script src="https://unpkg.com/emmet-monaco-es/dist/emmet-monaco.min.js"></script>
     @*Application Insights - Client side*@
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
@@ -277,6 +278,7 @@
             $("#EditingField").val(null);
             // Monaco AMD Editor  - https://microsoft.github.io/monaco-editor/
             require.config({ paths: { 'vs': '/lib/monaco-editor/min/vs' } });
+            //require.config({ paths: { vs: '/lib/node_modules/monaco-editor/dist' } }); // Emmet Abbr.
             require(['vs/editor/editor.main'],
                 function() {
                     fieldId = id;
@@ -292,6 +294,7 @@
                     $("#EditingField").val(fieldId);
                     var hiddenInput = $("#" + fieldId);
                     var code = hiddenInput.val();
+                    emmetMonaco.emmetHTML(monaco);
                     editor = monaco.editor.create(document.getElementById('editspace'),
                         {
                             language: mode,

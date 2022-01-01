@@ -16,39 +16,39 @@ namespace CDT.Cosmos.Cms.Common.Tests
         {
             var layoutUtilities = new LayoutUtilities();
 
-            Assert.IsNotNull(layoutUtilities.Catalogs);
+            Assert.IsNotNull(layoutUtilities.CommunityCatalog);
         }
 
         [TestMethod]
-        public void A02_GetDefaultLayout()
+        public async Task A02_GetDefaultLayout()
         {
             var layoutUtilities = new LayoutUtilities();
 
-            var defaultLayout = layoutUtilities.LoadDefaultLayout();
+            var defaultLayout = await layoutUtilities.GetDefaultCommunityLayout();
 
             Assert.IsNotNull(defaultLayout);
         }
 
         [TestMethod]
-        public void A03_GetLayouts()
+        public async Task A03_GetLayouts()
         {
             var layoutUtilities = new LayoutUtilities();
 
-            var layouts = layoutUtilities.GetCommunityLayouts();
+            var layouts = await layoutUtilities.GetAllCommunityLayouts();
 
             Assert.IsTrue(layouts.Count > 1);
         }
 
         [TestMethod]
-        public void A04_GetTemplates()
+        public async Task A04_GetTemplates()
         {
             var layoutUtilities = new LayoutUtilities();
 
-            var layouts = layoutUtilities.GetCommunityLayouts();
+            var layouts = await layoutUtilities.GetAllCommunityLayouts();
 
             foreach(var layout in layouts)
             {
-                var pageTemplates = layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
+                var pageTemplates = await layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
 
                 Assert.IsNotNull(pageTemplates);
                 Assert.IsTrue(pageTemplates.Count > 0);

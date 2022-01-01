@@ -1,18 +1,24 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Azure.Identity;
-using Microsoft.Extensions.Configuration;
-using System;
 
 namespace CDT.Cosmos.Cms
 {
     public class Program
     {
+        /// <summary>
+        /// Program main method.
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
         }
 
+        /// <summary>
+        /// Create host builder
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)

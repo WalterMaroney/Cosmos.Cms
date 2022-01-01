@@ -21,12 +21,15 @@ namespace CDT.Cosmos.Cms.Common.Models
         /// <param name="layout"></param>
         public LayoutViewModel(Layout layout)
         {
-            Id = layout.Id;
-            LayoutName = layout.LayoutName;
-            Notes = layout.Notes;
-            Head = layout.Head;
-            HtmlHeader = layout.HtmlHeader;
-            FooterHtmlContent = layout.FooterHtmlContent;
+            if (layout != null)
+            {
+                Id = layout.Id;
+                LayoutName = layout.LayoutName;
+                Notes = layout.Notes;
+                Head = layout.Head;
+                HtmlHeader = layout.HtmlHeader;
+                FooterHtmlContent = layout.FooterHtmlContent;
+            }
         }
 
         /// <summary>

@@ -83,23 +83,21 @@ namespace CDT.Cosmos.Cms.Data
                     // Load default layout and pages
                     var layoutUtilities = new LayoutUtilities();
 
-                    var layouts = layoutUtilities.GetCommunityLayouts();
-                    dbContext.Layouts.AddRange(layouts);
+                    var layouts = await layoutUtilities.GetAllCommunityLayouts();
+                    var layout = layouts.FirstOrDefault(f => f.IsDefault);
+                    dbContext.Layouts.Add(layout);
                     await dbContext.SaveChangesAsync();
 
-                    foreach (var layout in layouts)
+                    var templates = await layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
+
+                    foreach (var t in templates)
                     {
-                        var templates = layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
-
-                        foreach (var t in templates)
-                        {
-                            t.LayoutId = layout.Id;
-                        }
-
-                        dbContext.Templates.AddRange(templates);
-
-                        await dbContext.SaveChangesAsync();
+                        t.LayoutId = layout.Id;
                     }
+
+                    dbContext.Templates.AddRange(templates);
+
+                    await dbContext.SaveChangesAsync();
                 }
 
                 // Add home page if they don't already exist.

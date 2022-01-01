@@ -10,6 +10,11 @@
     {
       "library": "monaco-editor@0.31.1",
       "destination": "wwwroot/lib/monaco-editor/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "emmet-monaco-es@5.0.2",
+      "destination": "wwwroot/lib/emmet-monaco-es/"
     }
   ]
 }

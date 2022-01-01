@@ -8,14 +8,11 @@ namespace CDT.Cosmos.Cms.Services
     /// </summary>
     public class RNGCryptoRandomGenerator
     {
-        readonly RNGCryptoServiceProvider csp;
-
         /// <summary>
         /// Constructor
         /// </summary>
         public RNGCryptoRandomGenerator()
         {
-            csp = new RNGCryptoServiceProvider();
         }
 
         /// <summary>
@@ -48,8 +45,7 @@ namespace CDT.Cosmos.Cms.Services
 
         private byte[] GenerateRandomBytes(int bytesNumber)
         {
-            byte[] buffer = new byte[bytesNumber];
-            csp.GetBytes(buffer);
+            byte[] buffer = RandomNumberGenerator.GetBytes(bytesNumber);
             return buffer;
         }
     }

@@ -28,6 +28,9 @@ using System.Web;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
+    /// <summary>
+    /// Base controller
+    /// </summary>
     public abstract class BaseController : Controller
     {
         private readonly ArticleEditLogic _articleEditLogic;
@@ -41,6 +44,7 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <param name="dbContext"></param>
         /// <param name="userManager"></param>
         /// <param name="articleLogic"></param>
+        /// <param name="options"></param>
         internal BaseController(ApplicationDbContext dbContext,
             UserManager<IdentityUser> userManager,
             ArticleEditLogic articleLogic,
@@ -214,7 +218,7 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        /// Flushes CDN
+        /// Flushes CDN if one is configured
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="paths"></param>

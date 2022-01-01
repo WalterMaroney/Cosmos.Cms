@@ -7,11 +7,11 @@
 
     <UserSecretsId>6819ac3c-504d-4025-8177-415defbc234e</UserSecretsId>
 
-    <AssemblyVersion>6.0.3.1</AssemblyVersion>
+    <AssemblyVersion>6.0.4.1</AssemblyVersion>
 
-    <FileVersion>6.0.3.1</FileVersion>
+    <FileVersion>6.0.4.1</FileVersion>
 
-    <Version>6.0.3.1</Version>
+    <Version>6.0.4.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
