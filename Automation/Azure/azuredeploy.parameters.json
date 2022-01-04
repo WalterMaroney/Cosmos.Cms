@@ -4,12 +4,6 @@
     "parameters": {
         "sendGridApiKey": {
             "value": ""
-        },
-        "sqlServerAdminName": {
-            "value": "cosmosdbadmin"
-        },
-        "adminEmailAddress": {
-            "value": "yourname@yourdomain.com"
         }
     }
 }

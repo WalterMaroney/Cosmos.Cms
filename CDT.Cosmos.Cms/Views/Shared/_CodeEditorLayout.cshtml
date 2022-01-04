@@ -19,8 +19,7 @@
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.3.1207/styles/kendo.bootstrap-main-dark.min.css" />
 
     <style>
-        /* Sticky footer styles
-                                                                                                                                                        -------------------------------------------------- */
+        /* Sticky footer styles                                                                                                                    -------------------------------------------------- */
         html editor {
             min-height: 100%;
             position: relative;
@@ -82,6 +81,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navBarTabs">
+                <span id="msgBox"></span>
                 <ul id="editorTabs" class="navbar-nav">
                     @*<li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -301,7 +301,7 @@
                             theme: "vs-dark",
                             value: code
                         });
-                    $("#msgBox").html("Editing: " + fieldInfo.FieldName);
+                    $("#msgBox").html("");
                 });
         }
 

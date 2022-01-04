@@ -5,22 +5,17 @@
         "description": "Installs the Cosmos CMS in Microsoft Azure."
     },
     "parameters": {
-        "adminEmailAddress" : {
-            "type": "string",
-            "metadata": {
-                "description": "Email address of this site's system administrator."
-            }
-        },
         "sendGridApiKey": {
             "type": "string",
             "metadata": {
                 "description": "SendGrid account API Key for this application."
             }
         },
-        "sqlServerAdminName": {
+        "newGuid": {
             "type": "string",
+            "defaultValue": "[newGuid()]",
             "metadata": {
-                "description": "SQL Admin Name"
+                "description": "This random value is used to create a unique SQL password. You can change this to something else."
             }
         }
     },
@@ -29,8 +24,9 @@
         "location": "[resourceGroup().location]",
         "storageAccountName": "[concat('files', uniquestring(resourceGroup().id))]",
         "sqlDatabaseName": "cosmosdb",
+        "sqlServerAdminName": "[concat('cosadmin', uniquestring(resourceGroup().id))]",
         "sqlServerName": "[concat('sqlserver', uniquestring(resourceGroup().id))]",
-        "sqlServerPassword": "[concat('P', uniqueString(resourceGroup().id, deployment().name, '95b734ff-a0e1-4252-8171-33d68e03d351'), 'x', '!')]",
+        "sqlServerPassword": "[concat('P', uniqueString(resourceGroup().id, deployment().name, parameters('newGuid')), 'x', '!')]",
         "appServicePlanName": "[concat('appplan', uniquestring(resourceGroup().id))]",
         "editorName": "[concat('editor-', uniquestring(resourceGroup().id))]",
         "publisherName": "[concat('publisher-', uniquestring(resourceGroup().id))]"
@@ -65,7 +61,7 @@
             "location": "[variables('location')]",
             "kind": "v12.0",
             "properties": {
-                "administratorLogin": "[parameters('sqlServerAdminName')]",
+                "administratorLogin": "[variables('sqlServerAdminName')]",
                 "version": "12.0",
                 "minimalTlsVersion": "1.2",
                 "publicNetworkAccess": "Enabled",
@@ -199,13 +195,12 @@
                     "properties": {
                         "CosmosAllowSetup": "true",
                         "CosmosPrimaryCloud": "azure",
-                        "CosmosAdminEmail": "[parameters('adminEmailAddress')]",
                         "CosmosSendGridApiKey": "[parameters('sendGridApiKey')]",
                         "CosmosPublisherUrl": "[concat(variables('publisherName'), '.azurewebsites.net')]",
                         "CosmosEditorUrl": "[concat(variables('editorName'), '.azurewebsites.net')]",
                         "CosmosStorageUrl": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2018-07-01').primaryEndpoints.web]",
-                        "CosmosBlobContainer" : "$web",
-                        "CosmosSecretKey" : "[concat('CSK-', uniqueString(resourceGroup().id), uniqueString(variables('sqlServerPassword')))]",
+                        "CosmosBlobContainer": "$web",
+                        "CosmosSecretKey": "[concat('CSK-', uniqueString(resourceGroup().id), uniqueString(variables('sqlServerPassword')))]",
                         "DOCKER_REGISTRY_SERVER_PASSWORD": "",
                         "DOCKER_REGISTRY_SERVER_URL": "https://index.docker.io",
                         "DOCKER_REGISTRY_SERVER_USERNAME": "",
@@ -225,7 +220,7 @@
                             "type": "Custom"
                         },
                         "DefaultConnection": {
-                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2};Password={3};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), variables('sqlServerPassword'))]",
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2};Password={3};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), variables('sqlServerAdminName'), variables('sqlServerPassword'))]",
                             "type": "SQLAzure"
                         }
                     }
@@ -308,7 +303,7 @@
                     ],
                     "properties": {
                         "DefaultConnection": {
-                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2};Password={3};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), parameters('sqlServerAdminName'), variables('sqlServerPassword'))]",
+                            "value": "[format('Data Source=tcp:{0},1433;Initial Catalog={1};User Id={2};Password={3};', reference(resourceId('Microsoft.Sql/servers', variables('sqlserverName'))).fullyQualifiedDomainName, variables('sqlDatabaseName'), variables('sqlServerAdminName'), variables('sqlServerPassword'))]",
                             "type": "SQLAzure"
                         }
                     }
