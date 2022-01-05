@@ -2,12 +2,10 @@
 using Amazon.S3;
 using Azure.Storage.Blobs;
 using CDT.Cosmos.Cms.Common.Data;
-using CDT.Cosmos.Cms.Common.Data.Logic;
 using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Common.Services.Configurations.Storage;
 using CDT.Cosmos.Cms.Data;
-using CDT.Cosmos.Cms.Data.Logic;
 using CDT.Cosmos.Cms.Models;
 using CDT.Cosmos.Cms.Services;
 using Kendo.Mvc.Extensions;
@@ -22,14 +20,15 @@ using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
-
+    /// <summary>
+    /// Controller used for Cosmos setup.
+    /// </summary>
     public class SetupController : Controller
     {
         private readonly ILogger<SetupController> _logger;
@@ -41,6 +40,7 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="options"></param>
+        /// <param name="cosmosStatus"></param>
         public SetupController(ILogger<SetupController> logger,
             IOptions<CosmosConfig> options,
             CosmosConfigStatus cosmosStatus
@@ -64,7 +64,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 return authorized;
             }
 
-            return _options.Value.SiteSettings.AllowSetup ?? false;
+            return _options.Value.SiteSettings.AllowSetup ?? false && _options.Value.SiteSettings.AllowConfigEdit;
         }
 
         /// <summary>
@@ -182,6 +182,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return Unauthorized();
         }
 
+        /// <summary>
+        /// Index post method.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]

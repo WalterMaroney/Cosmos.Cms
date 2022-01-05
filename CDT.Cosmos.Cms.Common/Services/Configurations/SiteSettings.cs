@@ -28,6 +28,11 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
         public bool? AllowSetup { get; set; } = true;
 
         /// <summary>
+        /// Allows the advanced configuration editor to be available to Administrators.
+        /// </summary>
+        public bool AllowConfigEdit { get; set; } = false;
+
+        /// <summary>
         /// URI of the blob public website (can be same as publisher URL).
         /// </summary>
         /// <remarks>

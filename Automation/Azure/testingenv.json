@@ -1,0 +1,194 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "Installs the unit testing resources for Cosmos CMS in Microsoft Azure."
+    },
+    "parameters": {
+        "sqlServerAdminName" : {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Server administrator account name."
+            }
+        },
+        "sqlServerPassword": {
+            "type": "string",
+            "metadata": {
+                "description": "Enter database connection password."
+            }
+        },
+        "sqlServerHostName": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Server host name"
+            }
+        },
+        "storageAccountName1": {
+            "type": "string",
+            "metadata": {
+                "description": "First storage account name."
+            }
+        },
+        "storageAccountName2": {
+            "type": "string",
+            "metadata": {
+                "description": "Second storage account name."
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "location": "[resourceGroup().location]",
+        "sqlDatabaseName1": "cosmosdb1",
+        "sqlDatabaseName2": "cosmosdb2"
+    },
+    "resources": [
+        {
+            "name": "[parameters('storageAccountName1')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "tags": {
+                "displayName": "storage20201023"
+            },
+            "location": "[variables('location')]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            }
+        },
+        {
+            "name": "[parameters('storageAccountName2')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "tags": {
+                "displayName": "storage20201023"
+            },
+            "location": "[variables('location')]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-04-01",
+            "name": "[format('{0}/default/{1}', parameters('storageAccountName1'), '$web')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName1'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-04-01",
+            "name": "[format('{0}/default/{1}', parameters('storageAccountName2'), '$web')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName2'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[parameters('sqlServerHostName')]",
+            "location": "[variables('location')]",
+            "kind": "v12.0",
+            "properties": {
+                "administratorLogin": "[parameters('sqlServerAdminName')]",
+                "version": "12.0",
+                "minimalTlsVersion": "1.2",
+                "publicNetworkAccess": "Enabled",
+                "restrictOutboundNetworkAccess": "Disabled",
+                "administratorLoginPassword": "[parameters('sqlServerPassword')]"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[concat(parameters('sqlServerHostName'), '/', variables('sqlDatabaseName1'))]",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlServerHostName'))]"
+            ],
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic",
+                "capacity": 5
+            },
+            "kind": "v12.0,user",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 2147483648,
+                "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "requestedBackupStorageRedundancy": "Geo",
+                "maintenanceConfigurationId": "/subscriptions/aec61f6c-81f1-4589-b4a5-c743876b4847/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default",
+                "isLedgerOn": false
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[concat(parameters('sqlServerHostName'), '/', variables('sqlDatabaseName2'))]",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlServerHostName'))]"
+            ],
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic",
+                "capacity": 5
+            },
+            "kind": "v12.0,user",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 2147483648,
+                "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "requestedBackupStorageRedundancy": "Geo",
+                "maintenanceConfigurationId": "/subscriptions/aec61f6c-81f1-4589-b4a5-c743876b4847/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default",
+                "isLedgerOn": false
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "apiVersion": "2021-02-01-preview",
+            "name": "[format('{0}/{1}', parameters('sqlServerHostName'), 'AllowAllWindowsAzureIps')]",
+            "properties": {
+                "endIpAddress": "0.0.0.0",
+                "startIpAddress": "0.0.0.0"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlServerHostName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "storageAccountConnString1": {
+            "type": "string",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName1'), ';AccountKey=', listKeys(resourceId(resourceGroup().name,'Microsoft.Storage/storageAccounts', parameters('storageAccountName1')), '2019-04-01').keys[0].value,';EndpointSuffix=core.windows.net')]"
+        },
+        "storageAccountConnString2": {
+            "type": "string",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName2'), ';AccountKey=', listKeys(resourceId(resourceGroup().name,'Microsoft.Storage/storageAccounts', parameters('storageAccountName2')), '2019-04-01').keys[0].value,';EndpointSuffix=core.windows.net')]"
+        },
+        "sqlServerPassword": {
+            "type": "string",
+            "value": "[parameters('sqlServerPassword')]"
+        },
+        "sqlServerHost": {
+            "type": "string",
+            "value": "[parameters('sqlServerHostName')]"
+        },
+        "sqlDatabase1": {
+            "type": "string",
+            "value": "[variables('sqlDatabaseName1')]"
+        },
+        "sqlDatabase2": {
+            "type": "string",
+            "value": "[variables('sqlDatabaseName2')]"
+        }
+    }
+}

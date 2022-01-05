@@ -145,6 +145,10 @@ else
                         menuButtons.Add().Text("Diagnostics");
                         menuButtons.Add().Text("Configure");
                     }
+                    if (options.Value.SiteSettings.AllowConfigEdit)
+                    {
+                        menuButtons.Add().Text("Configure");
+                    }
                     if (options.Value.SiteSettings.AllowReset.HasValue && options.Value.SiteSettings.AllowReset.Value)
                     {
                         menuButtons.Add().Text("Reset Site");

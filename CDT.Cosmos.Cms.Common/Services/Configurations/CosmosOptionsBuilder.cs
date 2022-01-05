@@ -330,6 +330,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             model.PrimaryCloud = _cosmosStartup.PrimaryCloud;
             model.SiteSettings.AllowReset = _cosmosStartup.AllowSiteReset;
             model.SiteSettings.AllowSetup = _cosmosStartup.AllowSetup;
+            model.SiteSettings.AllowConfigEdit = _cosmosStartup.AllowConfigEdit;
 
             if (model.SqlConnectionStrings.Any())
             {

@@ -268,7 +268,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations.BootUp
                 // Optional settings
                 if (_config.Value.SiteSettings != null && _config.Value.SiteSettings.AllowSetup.HasValue)
                 {
-                    var warn = _config.Value.SiteSettings.AllowReset.Value ? "WARNING! " : "";
+                    var warn = _config.Value.SiteSettings.AllowReset ?? false ? "WARNING! " : "";
                     diagnostics.Add(new Diagnostic()
                     {
                         ServiceType = SITESETTINGSSERVICETYPENAME,
@@ -278,14 +278,14 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations.BootUp
                 }
 
                 // Optional settings
-                if (_config.Value.SiteSettings != null && _config.Value.SiteSettings.AllowReset.HasValue)
+                if (_config.Value.SiteSettings != null && _config.Value.SiteSettings.AllowReset.HasValue && _config.Value.SiteSettings.AllowReset.Value)
                 {
-                    var warn = _config.Value.SiteSettings.AllowReset.Value ? "WARNING! " : "";
+                    var warn = _config.Value.SiteSettings.AllowReset ?? false ? "WARNING! " : "";
                     diagnostics.Add(new Diagnostic()
                     {
                         ServiceType = SITESETTINGSSERVICETYPENAME,
                         Success = true,
-                        Message = $"{warn}Allow Reset set to: { _config.Value.SiteSettings.AllowReset.Value }."
+                        Message = $"{warn}Allow Reset set to: { _config.Value.SiteSettings.AllowReset }."
                     });
                 }
             }
