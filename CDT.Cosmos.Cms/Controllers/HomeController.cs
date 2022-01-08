@@ -39,6 +39,12 @@ namespace CDT.Cosmos.Cms.Controllers
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Editor home index method
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="lang"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Index(string id, string lang = "en")
         {
             try
@@ -80,6 +86,10 @@ namespace CDT.Cosmos.Cms.Controllers
                     !User.IsInRole("Administrators") &&
                     !User.IsInRole("Team Members")) return RedirectToAction("AccessPending");
 
+                // If we do not yet have a layout, go to a page where we can select one.
+                if (!await _dbContext.Layouts.AnyAsync()) return RedirectToAction("CommunityLayouts", "Layouts");
+
+                // If there are not web pages yet, let's go create a new home page.
                 if (!await _dbContext.Articles.AnyAsync()) return RedirectToAction("Index", "Editor");
 
                 //

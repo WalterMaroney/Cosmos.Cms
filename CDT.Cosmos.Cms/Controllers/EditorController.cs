@@ -34,6 +34,15 @@ namespace CDT.Cosmos.Cms.Controllers
         private readonly IOptions<CosmosConfig> _options;
         private readonly UserManager<IdentityUser> _userManager;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="userManager"></param>
+        /// <param name="articleLogic"></param>
+        /// <param name="options"></param>
+        /// <param name="syncContext"></param>
         public EditorController(ILogger<EditorController> logger,
             ApplicationDbContext dbContext,
             UserManager<IdentityUser> userManager,
@@ -43,6 +52,11 @@ namespace CDT.Cosmos.Cms.Controllers
         ) :
             base(dbContext, userManager, articleLogic, options)
         {
+
+            if (options.Value.SiteSettings.AllowSetup ?? true)
+            {
+                throw new Exception("Permission denied. Website in setup mode.")
+            }
             if (syncContext.IsConfigured())
                 dbContext.LoadSyncContext(syncContext);
 

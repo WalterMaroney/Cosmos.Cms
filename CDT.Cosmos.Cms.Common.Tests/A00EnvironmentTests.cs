@@ -1,8 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using CDT.Cosmos.Cms.Common.Data;
+﻿using CDT.Cosmos.Cms.Common.Data;
+using Dotmim.Sync.Enumerations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Common.Tests
 {
@@ -17,52 +19,55 @@ namespace CDT.Cosmos.Cms.Common.Tests
             utils = new Utilities();
         }
 
-        //[TestMethod]
-        //public async Task A00_SyncDatabases()
-        //{
-        //    //
-        //    // Setup context.
-        //    //
-        //    var dbContext = utils.GetApplicationDbContext();
+        [TestMethod]
+        public async Task A00_SyncDatabases()
+        {
+            //
+            // Setup context.
+            //
+            var dbContext = utils.GetApplicationDbContext();
 
-        //    //
-        //    // Wipe clean the database before starting.
-        //    //
-        //    dbContext.TeamMembers.RemoveRange(dbContext.TeamMembers.ToList());
-        //    dbContext.Teams.RemoveRange(dbContext.Teams.ToList());
-        //    dbContext.ArticleLogs.RemoveRange(dbContext.ArticleLogs.ToList());
-        //    dbContext.Articles.RemoveRange(dbContext.Articles.ToList());
-        //    dbContext.Users.RemoveRange(dbContext.Users.ToList());
-        //    dbContext.Roles.RemoveRange(dbContext.Roles.ToList());
-        //    await dbContext.SaveChangesAsync();
+            //
+            // Wipe clean the database before starting.
+            //
+            if (dbContext.Database.GetAppliedMigrations().Any())
+            {
+                dbContext.TeamMembers.RemoveRange(dbContext.TeamMembers.ToList());
+                dbContext.Teams.RemoveRange(dbContext.Teams.ToList());
+                dbContext.ArticleLogs.RemoveRange(dbContext.ArticleLogs.ToList());
+                dbContext.Articles.RemoveRange(dbContext.Articles.ToList());
+                dbContext.Users.RemoveRange(dbContext.Users.ToList());
+                dbContext.Roles.RemoveRange(dbContext.Roles.ToList());
+                await dbContext.SaveChangesAsync();
 
-        //    var syncContext = utils.GetSqlDbSyncContext();
-        //    var results = await syncContext.SyncDatabases(SyncDirection.DownloadOnly, new CancellationToken());
+                var syncContext = utils.GetSqlDbSyncContext();
+                var results = await syncContext.SyncDatabases(SyncDirection.DownloadOnly, new CancellationToken());
 
-        //    // The databases might be in sync, so there may be no results, but it should not be null.
-        //    Assert.IsNotNull(results);
-        //}
+                // The databases might be in sync, so there may be no results, but it should not be null.
+                Assert.IsNotNull(results);
+            }
+        }
 
-        //[TestMethod]
-        //public async Task A01_InstallDatabases_Success()
-        //{
-        //    var setupController = utils.GetSetupController();
+        [TestMethod]
+        public async Task A01_InstallDatabases_Success()
+        {
+            var setupController = utils.GetSetupController();
 
-        //    // Now recreate the database and schema
-        //    await setupController.I(true);
+            // Now recreate the database and schema
+            await setupController.Database("NewInstall");
 
-        //    var options = utils.GetCosmosConfigOptions();
+            var options = utils.GetCosmosConfigOptions();
 
-        //    foreach (var connection in options.Value.SqlConnectionStrings)
-        //    {
-        //        var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        //        builder.UseSqlServer(connection.ToString());
-        //        using var dbContext = new ApplicationDbContext(builder.Options);
-        //        // Create database if it does not exist, and schema
-        //        var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
-        //        Assert.IsTrue(migrations.Count() > 1);
-        //    }
-        //}
+            foreach (var connection in options.Value.SqlConnectionStrings)
+            {
+                var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+                builder.UseSqlServer(connection.ToString());
+                using var dbContext = new ApplicationDbContext(builder.Options);
+                // Create database if it does not exist, and schema
+                var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
+                Assert.IsTrue(migrations.Count() > 1);
+            }
+        }
 
         [TestMethod]
         public async Task A02_TestSetup()

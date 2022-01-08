@@ -88,14 +88,7 @@ namespace CDT.Cosmos.Cms.Controllers
             bool editMode = true,
             bool defaultView = false)
         {
-            var iconModel = await _dbContext.FontIcons.OrderBy(o => o.IconCode).Select(s =>
-                new SelectListItem
-                {
-                    Text = s.IconCode,
-                    Value = s.IconCode
-                }).ToListAsync();
-            ViewData["FontIcons"] = iconModel;
-
+            
             var pageModel = (await _articleEditLogic.GetArticleList()).OrderBy(o => o.Title).Select(s =>
                 new SelectListItem
                 {

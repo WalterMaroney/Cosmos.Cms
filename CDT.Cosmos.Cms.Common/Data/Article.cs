@@ -121,17 +121,6 @@ namespace CDT.Cosmos.Cms.Common.Data
         public ICollection<MenuItem> MenuItems { get; set; }
 
         /// <summary>
-        ///     (optional) Icon font Id for this article
-        /// </summary>
-        public int? FontIconId { get; set; }
-
-        /// <summary>
-        ///     (optional) Icon font for this page (will appear in menu if selected)
-        /// </summary>
-        [ForeignKey("FontIconId")]
-        public FontIcon FontIcon { get; set; }
-
-        /// <summary>
         ///     (optional) Team that manages this page.
         /// </summary>
         [ForeignKey("TeamId")]

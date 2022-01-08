@@ -215,11 +215,6 @@ namespace CDT.Cosmos.Cms.Common.Data
         public DbSet<MenuItem> MenuItems { get; set; }
 
         /// <summary>
-        ///     Font icons
-        /// </summary>
-        public DbSet<FontIcon> FontIcons { get; set; }
-
-        /// <summary>
         ///     Web page templates
         /// </summary>
         public DbSet<Template> Templates { get; set; }

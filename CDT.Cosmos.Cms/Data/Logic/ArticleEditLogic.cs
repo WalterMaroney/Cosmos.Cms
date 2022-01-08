@@ -27,7 +27,6 @@ namespace CDT.Cosmos.Cms.Data.Logic
         ///     Constructor
         /// </summary>
         /// <param name="dbContext"></param>
-        /// <param name="distributedCache"></param>
         /// <param name="config"></param>
         /// <param name="syncContext"></param>
         public ArticleEditLogic(ApplicationDbContext dbContext,
@@ -597,9 +596,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
                         FooterJavaScript = null,
                         Layout = null,
                         ArticleLogs = null,
-                        MenuItems = null,
-                        FontIconId = null,
-                        FontIcon = null
+                        MenuItems = null
                     });
 
 
@@ -633,9 +630,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
                             FooterJavaScript = null,
                             Layout = null,
                             ArticleLogs = null,
-                            MenuItems = null,
-                            FontIconId = null,
-                            FontIcon = null
+                            MenuItems = null
                         });
                     }
 

@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -432,20 +431,20 @@ namespace CDT.Cosmos.Cms.Common.Tests
 
             _ = startup.TryRun(out var options);
 
-            if (startup.HasErrors || options == null || options.Value == null || options.Value.SqlConnectionStrings.Any() == false)
-            {
-                var errors = startup.Diagnostics.Where(w => w.Success == false).ToArray();
-                var builder = new StringBuilder();
-                foreach (var error in errors)
-                {
-                    builder.AppendLine(error.Message);
-                }
-                throw new Exception(builder.ToString());
-            }
+            //if (startup.HasErrors || options == null || options.Value == null || options.Value.SqlConnectionStrings.Any() == false)
+            //{
+            //    var errors = startup.Diagnostics.Where(w => w.Success == false).ToArray();
+            //    var builder = new StringBuilder();
+            //    foreach (var error in errors)
+            //    {
+            //        builder.AppendLine(error.Message);
+            //    }
+            //    throw new Exception(builder.ToString());
+            //}
 
             var controller = new SetupController(
                 logger,
-                options, 
+                options,
                 startup.GetStatus()
                 );
 
@@ -501,8 +500,9 @@ namespace CDT.Cosmos.Cms.Common.Tests
 
         private IMemoryCache GetMemoryCache()
         {
-            var options = Options.Create(new MemoryCacheOptions() { 
-              SizeLimit = 20000000 // 20 megabytes decimal
+            var options = Options.Create(new MemoryCacheOptions()
+            {
+                SizeLimit = 20000000 // 20 megabytes decimal
             });
             return new MemoryCache(options);
         }

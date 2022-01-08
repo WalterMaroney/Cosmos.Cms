@@ -12,24 +12,35 @@ using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Services
 {
+    /// <summary>
+    /// Azure CDN Service
+    /// </summary>
     public class AzureCdnService
     {
         private readonly ArticleEditLogic _articleLogic;
-        private readonly AzureCdnConfig _azureCdnConfig;
         private readonly CdnManagement _cdnManagement;
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="articleLogic"></param>
+        /// <param name="logger"></param>
         public AzureCdnService(IOptions<CosmosConfig> options, ApplicationDbContext dbContext,
             ArticleEditLogic articleLogic, ILogger logger = null)
         {
             _dbContext = dbContext;
-            _azureCdnConfig = options.Value.CdnConfig.AzureCdnConfig;
             _cdnManagement = new CdnManagement(options.Value.CdnConfig.AzureCdnConfig);
             _articleLogic = articleLogic;
             _logger = logger;
         }
 
+        /// <summary>
+        /// CDN Provider Property
+        /// </summary>
         public CdnProvider CdnProvider => _cdnManagement.CdnProvider;
 
         /// <summary>

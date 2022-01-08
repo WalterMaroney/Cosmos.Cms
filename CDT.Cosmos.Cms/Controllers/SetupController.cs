@@ -120,12 +120,61 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        ///     Setup home page
+        /// Setup index page
         /// </summary>
         /// <returns></returns>
-        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            var connectionString = _options.Value?.SqlConnectionStrings?.FirstOrDefault();
+
+            if (connectionString == null)
+            {
+                ViewBag.ConnectionStringsMissing = true;
+            }
+            else
+            {
+                ViewBag.ConnectionStringsMissing = false;
+            }
+
+            using var dbContext = GetDbContext(connectionString.ToString());
+
+            var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
+
+            if (migrations.Any())
+            {
+                ViewBag.NoMigrations = false;
+                var pending = await dbContext.Database.GetPendingMigrationsAsync();
+                if (pending.Any())
+                {
+                    ViewBag.PendingMigrations = true;
+                }
+                else
+                {
+                    ViewBag.PendingMigrations = false;
+                }
+            }
+            else
+            {
+                ViewBag.NoMigrations = true;
+            }
+            
+            return View();
+        }
+
+        /// <summary>
+        /// Setup database
+        /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Database([Bind("task")] string task)
+        {
+            if (string.IsNullOrEmpty(task))
+            {
+                return RedirectToAction("Index");
+            }
+
             if (_options.Value.SiteSettings.AllowSetup ?? false)
             {
                 var model = new SetupIndexViewModel();
@@ -136,44 +185,54 @@ namespace CDT.Cosmos.Cms.Controllers
                     return RedirectToAction("Instructions");
                 }
 
-                // If there is a database connection, see if there any users.
-                // If not it is OK to setup admin.
-                if (_options.Value.SqlConnectionStrings != null &&
-                    _options.Value.SqlConnectionStrings.Any(a => a.IsPrimary))
+                try
                 {
-                    // Setup or update the database schema
-                    var setupDatabase = new SetupDatabase(_options);
-                    var migrationsApplied = await setupDatabase.CreateOrUpdateSchema();
-                    // Seed the database with data needed for operations.
-                    await setupDatabase.SeedDatabase();
-
-                    var connectionString = _options.Value.SqlConnectionStrings.FirstOrDefault();
-                    using var dbContext = GetDbContext(connectionString.ToString());
-                    var sqlSyncContext = new SqlDbSyncContext(_options);
-                    dbContext.LoadSyncContext(sqlSyncContext);
-
-                    using var userStore = new UserStore<IdentityUser>(dbContext);
-                    using var userManager = new UserManager<IdentityUser>(userStore, null,
-                        new PasswordHasher<IdentityUser>(), null,
-                        null, null, null, null, null);
-
-                    var results = await userManager.GetUsersInRoleAsync("Administrators");
-
-                    if (results.Count == 0)
+                    // If there is a database connection, see if there any users.
+                    // If not it is OK to setup admin.
+                    if (_options.Value.SqlConnectionStrings != null &&
+                        _options.Value.SqlConnectionStrings.Any(a => a.IsPrimary))
                     {
-                        // No administrators, setup one now.
-                        model.SetupState = SetupState.SetupAdmin;
-                    }
-                    else if (migrationsApplied > 0)
-                    {
-                        model.SetupState = SetupState.Upgrade;
-                    }
-                    else
-                    {
-                        model.SetupState = SetupState.UpToDate;
+                        // Setup or update the database schema
+                        var setupDatabase = new SetupDatabase(_options);
+                        var migrationsApplied = await setupDatabase.CreateOrUpdateSchema();
+                        // Seed the database with data needed for operations.
+
+                        if (task == "NewInstall")
+                        {
+                            await setupDatabase.SeedDatabase();
+                        }
+
+                        var connectionString = _options.Value.SqlConnectionStrings.FirstOrDefault();
+                        using var dbContext = GetDbContext(connectionString.ToString());
+                        var sqlSyncContext = new SqlDbSyncContext(_options);
+                        dbContext.LoadSyncContext(sqlSyncContext);
+
+                        using var userStore = new UserStore<IdentityUser>(dbContext);
+                        using var userManager = new UserManager<IdentityUser>(userStore, null,
+                            new PasswordHasher<IdentityUser>(), null,
+                            null, null, null, null, null);
+
+                        var results = await userManager.GetUsersInRoleAsync("Administrators");
+
+                        if (results.Count == 0)
+                        {
+                            // No administrators, setup one now.
+                            model.SetupState = SetupState.SetupAdmin;
+                        }
+                        else if (migrationsApplied > 0)
+                        {
+                            model.SetupState = SetupState.Upgrade;
+                        }
+                        else
+                        {
+                            model.SetupState = SetupState.UpToDate;
+                        }
                     }
                 }
-
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.Message);
+                }
                 return View(model);
             }
 
@@ -190,7 +249,7 @@ namespace CDT.Cosmos.Cms.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(SetupIndexViewModel model)
+        public async Task<IActionResult> Database(SetupIndexViewModel model)
         {
             if (_options.Value.SiteSettings.AllowSetup ?? false)
             {

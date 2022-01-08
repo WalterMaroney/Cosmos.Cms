@@ -134,11 +134,10 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 CommunityLayoutId = string.Empty,
                 LayoutName = string.Empty,
                 Notes = string.Empty,
-                Head = head.InnerHtml,
+                Head = head?.InnerHtml,
                 BodyHtmlAttributes = ParseAttributes(body?.Attributes),
-                HtmlHeader = bodyHeader.InnerHtml,
-                FooterHtmlAttributes = ParseAttributes(bodyFooter?.Attributes),
-                FooterHtmlContent = bodyFooter.InnerHtml
+                HtmlHeader = bodyHeader?.InnerHtml,
+                FooterHtmlContent = bodyFooter?.InnerHtml
             };
 
             return layout;

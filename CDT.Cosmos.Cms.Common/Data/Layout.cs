@@ -55,14 +55,6 @@ namespace CDT.Cosmos.Cms.Common.Data
         public string BodyHtmlAttributes { get; set; }
 
         /// <summary>
-        ///     Web page header attributes (inside body)
-        /// </summary>
-        [Display(Name = "Header Html Attributes", GroupName = "Header")]
-        [StringLength(256)]
-        [Obsolete("This property will be removed in a future release.")]
-        public string BodyHeaderHtmlAttributes { get; set; }
-
-        /// <summary>
         ///     Web page header content
         /// </summary>
         [Display(Name = "Header Html Content", GroupName = "Header")]
@@ -70,27 +62,11 @@ namespace CDT.Cosmos.Cms.Common.Data
         public string HtmlHeader { get; set; }
 
         /// <summary>
-        ///     Website footer attributes
-        /// </summary>
-        [Display(Name = "Footer Html Attributes", GroupName = "Footer")]
-        [StringLength(256)]
-        [Obsolete("This property will be removed in a future release.")]
-        public string FooterHtmlAttributes { get; set; }
-
-        /// <summary>
         ///     Content injected into the web site footer.
         /// </summary>
         [Display(Name = "Footer Html Content", GroupName = "Footer")]
         [DataType(DataType.Html)]
         public string FooterHtmlContent { get; set; }
-
-        /// <summary>
-        ///     Post footer JavaScript code block
-        /// </summary>
-        [Display(Name = "Post-Footer Code Bloc", GroupName = "Footer")]
-        [DataType(DataType.Html)]
-        [Obsolete("This property will be removed in a future release.")]
-        public string PostFooterBlock { get; set; }
 
         /// <summary>
         ///     Articles assocated with this layout (soon to be depreciated)

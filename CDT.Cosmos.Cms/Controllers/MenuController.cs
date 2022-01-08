@@ -49,14 +49,6 @@ namespace CDT.Cosmos.Cms.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var iconModel = await _dbContext.FontIcons.OrderBy(o => o.IconCode).Select(s =>
-                new SelectListItem
-                {
-                    Text = s.IconCode,
-                    Value = s.IconCode
-                }).ToListAsync();
-            ViewData["FontIcons"] = iconModel;
-
             var pageModel = (await _articleLogic.GetArticleList()).OrderBy(o => o.Title).Select(s =>
                 new SelectListItem
                 {
