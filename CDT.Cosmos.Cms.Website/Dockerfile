@@ -20,7 +20,7 @@ WORKDIR "/src/CDT.Cosmos.Cms.Website"
 # RUN dotnet build "CDT.Cosmos.Cms.Website.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "CDT.Cosmos.Cms.Website.csproj" -c Release -r linux-x64 -p:PublishReadyToRun=true -o /app/publish
+RUN dotnet publish "CDT.Cosmos.Cms.Website.csproj" -c Release -r linux-x64 -p:PublishReadyToRun=true --sc -o /app/publish
 
 FROM base AS final
 WORKDIR /app
