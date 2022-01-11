@@ -18,7 +18,9 @@ using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
-
+    /// <summary>
+    /// Menu or navigation controller
+    /// </summary>
 
     [Authorize(Roles = "Administrators,Editors")]
     public class MenuController : BaseController
@@ -28,6 +30,17 @@ namespace CDT.Cosmos.Cms.Controllers
         private readonly IDistributedCache _distributedCache;
         private readonly ILogger<MenuController> _logger;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="userManager"></param>
+        /// <param name="articleLogic"></param>
+        /// <param name="distributedCache"></param>
+        /// <param name="syncContext"></param>
+        /// <param name="options"></param>
+        /// <exception cref="Exception"></exception>
         public MenuController(
             ILogger<MenuController> logger,
             ApplicationDbContext dbContext,
@@ -41,12 +54,20 @@ namespace CDT.Cosmos.Cms.Controllers
             if (syncContext.IsConfigured())
                 dbContext.LoadSyncContext(syncContext);
 
+            if (options.Value.SiteSettings.AllowSetup ?? true)
+            {
+                throw new Exception("Permission denied. Website in setup mode.");
+            }
             _logger = logger;
             _dbContext = dbContext;
             _distributedCache = distributedCache;
             _articleLogic = articleLogic;
         }
 
+        /// <summary>
+        /// Index page method
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             var pageModel = (await _articleLogic.GetArticleList()).OrderBy(o => o.Title).Select(s =>
@@ -63,6 +84,12 @@ namespace CDT.Cosmos.Cms.Controllers
             return await BaseArticle_Get(null, EnumControllerName.Edit, false, true);
         }
 
+        /// <summary>
+        /// Destroy a meny item
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Destroy([DataSourceRequest] DataSourceRequest request, MenuItemViewModel item)
         {
             if (ModelState.IsValid)
@@ -82,6 +109,12 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(await new[] { item }.ToTreeDataSourceResultAsync(request, ModelState));
         }
 
+        /// <summary>
+        /// Create a menu item
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Create([DataSourceRequest] DataSourceRequest request, MenuItemViewModel item)
         {
             if (ModelState.IsValid)
@@ -98,6 +131,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(new[] { item }.ToTreeDataSourceResult(request, ModelState));
         }
 
+        /// <summary>
+        /// Read menu items
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Read([DataSourceRequest] DataSourceRequest request)
         {
             var items = await _dbContext.MenuItems.OrderBy(o => o.SortOrder).Select(s =>
@@ -119,6 +157,12 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(result);
         }
 
+        /// <summary>
+        /// Update menu items
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Update([DataSourceRequest] DataSourceRequest request, MenuItemViewModel item)
         {
             var entity = await _dbContext.MenuItems.FindAsync(item.Id);

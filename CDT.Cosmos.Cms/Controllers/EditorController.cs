@@ -25,6 +25,9 @@ using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
+    /// <summary>
+    /// Editor controller
+    /// </summary>
     [Authorize(Roles = "Reviewers, Administrators, Editors, Authors, Team Members")]
     public class EditorController : BaseController
     {
@@ -55,7 +58,7 @@ namespace CDT.Cosmos.Cms.Controllers
 
             if (options.Value.SiteSettings.AllowSetup ?? true)
             {
-                throw new Exception("Permission denied. Website in setup mode.")
+                throw new Exception("Permission denied. Website in setup mode.");
             }
             if (syncContext.IsConfigured())
                 dbContext.LoadSyncContext(syncContext);
@@ -142,6 +145,22 @@ namespace CDT.Cosmos.Cms.Controllers
                         Text = s.Title
                     }).ToListAsync()
             });
+        }
+
+        /// <summary>
+        /// Gets template page information.
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Administrators, Editors, Authors, Team Members")]
+        public async Task<IActionResult> GetTemplateInfo(int? Id)
+        {
+            if (Id == null)
+                return Json("");
+
+            var model = await _dbContext.Templates.FirstOrDefaultAsync(f => f.Id == Id.Value);
+
+            return Json(model);
         }
 
         /// <summary>

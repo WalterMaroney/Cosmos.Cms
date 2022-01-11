@@ -45,7 +45,6 @@ namespace CDT.Cosmos.Cms.Controllers
         /// Gets the home page with the specified layout (may not be the default layout)
         /// </summary>
         /// <param name="id">Layout Id (default layout if null)</param>
-        /// <param name="html"></param>
         /// <returns>ViewResult with <see cref="ArticleViewModel"/></returns>
         private async Task<IActionResult> GetLayoutWithHomePage(int? id)
         {
@@ -92,6 +91,11 @@ namespace CDT.Cosmos.Cms.Controllers
             IOptions<CosmosConfig> options,
             ILogger<LayoutsController> logger) : base(dbContext, userManager, articleLogic, options)
         {
+            if (options.Value.SiteSettings.AllowSetup ?? true)
+            {
+                throw new Exception("Permission denied. Website in setup mode.");
+            }
+
             if (syncContext.IsConfigured())
                 dbContext.LoadSyncContext(syncContext);
 

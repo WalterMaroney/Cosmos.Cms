@@ -26,10 +26,22 @@ using System.Web;
 namespace CDT.Cosmos.Cms.Controllers
 {
 
-
+    /// <summary>
+    /// File manager controller
+    /// </summary>
     [Authorize(Roles = "Administrators, Editors, Authors, Team Members")]
     public class FileManagerController : BaseController
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="logger"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="storageContext"></param>
+        /// <param name="userManager"></param>
+        /// <param name="articleLogic"></param>
+        /// <param name="hostEnvironment"></param>
         public FileManagerController(IOptions<CosmosConfig> options,
             ILogger<FileManagerController> logger,
             ApplicationDbContext dbContext,
@@ -43,12 +55,20 @@ namespace CDT.Cosmos.Cms.Controllers
             options
         )
         {
+            if (options.Value.SiteSettings.AllowSetup ?? true)
+            {
+                throw new Exception("Permission denied. Website in setup mode.");
+            }
             _options = options;
             _logger = logger;
             _storageContext = storageContext;
             _hostEnvironment = hostEnvironment;
         }
 
+        /// <summary>
+        /// Index method
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
             _storageContext.CreateFolder("/pub");

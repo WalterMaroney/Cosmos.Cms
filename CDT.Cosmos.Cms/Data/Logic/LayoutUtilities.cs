@@ -213,6 +213,12 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             contentHtmlDocument.LoadHtml(html);
 
+            // Remove layout elements
+            var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-header");
+            var bodyFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-footer");
+            bodyHeader.Remove();
+            bodyFooter.Remove();
+
             // Save what remains in the body
             var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");
 
@@ -222,7 +228,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
                 model = new Template()
                 {
-                    Content = body.InnerText,
+                    Content = body.InnerHtml,
                     Description = string.Empty,
                     Title = string.Empty
                 };
@@ -232,7 +238,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
             {
                 model = new Article()
                 {
-                    Content = body.InnerText,
+                    Content = body.InnerHtml,
                     Title = string.Empty,
                     StatusCode = (int)StatusCodeEnum.Active
                 };

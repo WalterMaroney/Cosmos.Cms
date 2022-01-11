@@ -12,19 +12,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
-
+    /// <summary>
+    /// Templates controller
+    /// </summary>
     [Authorize(Roles = "Administrators, Editors")]
     public class TemplatesController : BaseController
     {
         private readonly ArticleEditLogic _articleLogic;
         private readonly ApplicationDbContext _dbContext;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="options"></param>
+        /// <param name="userManager"></param>
+        /// <param name="articleLogic"></param>
+        /// <param name="syncContext"></param>
+        /// <exception cref="Exception"></exception>
         public TemplatesController(ILogger<TemplatesController> logger, ApplicationDbContext dbContext,
             IOptions<CosmosConfig> options, UserManager<IdentityUser> userManager,
             ArticleEditLogic articleLogic,
@@ -34,10 +47,18 @@ namespace CDT.Cosmos.Cms.Controllers
             if (syncContext.IsConfigured())
                 dbContext.LoadSyncContext(syncContext);
 
+            if (options.Value.SiteSettings.AllowSetup ?? true)
+            {
+                throw new Exception("Permission denied. Website in setup mode.");
+            }
             _dbContext = dbContext;
             _articleLogic = articleLogic;
         }
 
+        /// <summary>
+        /// Index view model
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
 
@@ -56,6 +77,10 @@ namespace CDT.Cosmos.Cms.Controllers
             return await BaseArticle_Get(null, EnumControllerName.Edit, false, true);
         }
 
+        /// <summary>
+        /// Create a template method
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Create()
         {
             var entity = new Template
@@ -70,6 +95,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return RedirectToAction("EditCode", "Templates", new { entity.Id });
         }
 
+        /// <summary>
+        /// Edit template code
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> EditCode(int id)
         {
             var entity = await _dbContext.Templates.FindAsync(id);
@@ -99,6 +129,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Save edited template code
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> EditCode(TemplateCodeEditorViewModel model)
         {
@@ -133,9 +168,14 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(model);
         }
 
-        public async Task<IActionResult> Preview(int id)
+        /// <summary>
+        /// Preview a template
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Preview(int Id)
         {
-            var template = await _dbContext.Templates.FindAsync(id);
+            var template = await _dbContext.Templates.FindAsync(Id);
 
             var model = await _articleLogic.Create("Layout Preview");
             model.Content = template?.Content;
@@ -147,6 +187,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Preview edit mode for a template
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> PreviewEdit(int id)
         {
             var template = await _dbContext.Templates.FindAsync(id);
@@ -210,6 +255,12 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(await model.ToDataSourceResultAsync(request));
         }
 
+        /// <summary>
+        /// Update template information
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="templates"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Templates_Update([DataSourceRequest] DataSourceRequest request,
             [Bind(Prefix = "models")] IEnumerable<TemplateIndexViewModel> templates)
@@ -229,6 +280,12 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(await templates.ToDataSourceResultAsync(request, ModelState));
         }
 
+        /// <summary>
+        /// Delete templates
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="templates"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Templates_Destroy([DataSourceRequest] DataSourceRequest request,
             [Bind(Prefix = "models")] IEnumerable<TemplateIndexViewModel> templates)
@@ -247,6 +304,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(await templates.ToDataSourceResultAsync(request, ModelState));
         }
 
+        /// <summary>
+        /// Real a list of templates
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Layouts_Read([DataSourceRequest] DataSourceRequest request)
         {

@@ -1,4 +1,5 @@
 ﻿using CDT.Cosmos.Cms.Common.Data;
+using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +17,9 @@ namespace CDT.Cosmos.Cms.Controllers
 {
 
     // See: https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/areas?view=aspnetcore-3.1
+    /// <summary>
+    /// User management controller
+    /// </summary>
     [Authorize(Roles = "Administrators, Editors")]
     public class UsersController : Controller
     {
@@ -36,14 +42,18 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <param name="roleManager"></param>
         /// <param name="options"></param>
         /// <param name="dbContext"></param>
-        /// <param name="articleLogic"></param>
         /// <param name="syncContext"></param>
         public UsersController(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             RoleManager<IdentityRole> roleManager,
+            IOptions<CosmosConfig> options,
             ApplicationDbContext dbContext,
             SqlDbSyncContext syncContext)
         {
+            if (options.Value.SiteSettings.AllowSetup ?? true)
+            {
+                throw new Exception("Permission denied. Website in setup mode.");
+            }
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
