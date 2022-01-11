@@ -33,8 +33,8 @@ jobs:
     #  run: dotnet build --no-restore
     #- name: Test
     #  run: dotnet test --no-build --verbosity normal
-    - name: dotnet publish Cosmos Editor
-      run: dotnet publish /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/CDT.Cosmos.Cms.csproj -c Release -o /home/runner/work/app/editor
+    #- name: dotnet publish Cosmos Editor
+    #  run: dotnet publish /home/runner/work/Cosmos.Cms/Cosmos.Cms/CDT.Cosmos.Cms/CDT.Cosmos.Cms.csproj -c Release -o /home/runner/work/app/editor
     #- name: List files
     #  run: ls app/editor
     # - name: dotnet publish Cosmos Publisher

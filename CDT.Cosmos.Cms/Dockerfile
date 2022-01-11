@@ -16,7 +16,7 @@ WORKDIR "/src/CDT.Cosmos.Cms"
 # RUN dotnet build "CDT.Cosmos.Cms.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "CDT.Cosmos.Cms.csproj" -c Release -r linux-x64 -p:PublishReadyToRun=true --sc -o /app/publish
+RUN dotnet publish "CDT.Cosmos.Cms.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
