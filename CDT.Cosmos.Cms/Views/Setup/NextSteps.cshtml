@@ -1,4 +1,5 @@
-﻿@{
+﻿@model SendGrid.Response
+@{
     ViewData["Title"] = "Next Steps";
 }
 <div class="container">
@@ -7,12 +8,28 @@
             <h2>Almost Done!</h2>
             <p>Before using your website please complete the following tasks:</p>
             <ul>
-                <li>Disable setup mode by removing the configuration variable &quot;CosmosAllowSetup&quot; from your Editor website.</li>
+                <li>Disable setup mode by removing configuration variable &quot;CosmosAllowSetup&quot; from your Editor website.</li>
                 <li>Configure SendGrid to allow your website to send Email (<a href="https://sendgrid.com/blog/introducing-ip-access-management/" target="_blank">IP address management</a>).</li>
                 <li>Close all web browsers.</li>
                 <li>Open a new web browser then log into the Editor website as the new administrator</li>
             </ul>
         </div>
+    </div>
+    <div class="row">
+        @if (!Model.IsSuccessStatusCode)
+        {
+            <div class="col">
+                <h4>SendGrid Setup Needed</h4>
+                <p>
+                    An attempt to send email through SendGrid failed or was blocked. Please check the following:
+                </p>
+                <ol>
+                    <li><p>Make sure you have a SendGrid account.</p></li>
+                    <li><p>Authorize the &quot;outbound&quot; IP addresses of your website with your SendGrid account.</p></li>
+                </ol>
+                <p><a class="btn btn-sm btn-primary" href="https://cosmos.moonrise.net/get_started/sendgrid">SendGrid Instructions</a></p>
+            </div>
+        }
     </div>
     <div class="row">
         <div class="col">

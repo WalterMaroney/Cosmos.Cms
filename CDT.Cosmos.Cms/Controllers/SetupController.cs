@@ -300,12 +300,18 @@ namespace CDT.Cosmos.Cms.Controllers
             return Unauthorized();
         }
 
+        /// <summary>
+        /// Installation Next steps
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
-        public IActionResult NextSteps()
+        public async Task<IActionResult> NextSteps()
         {
             if (_options.Value.SiteSettings.AllowSetup ?? false)
             {
-                return View();
+                // Check SendGrid
+                var sendGridResult = await TestSendGrid(_options.Value.SendGridConfig.SendGridKey);
+                return View(sendGridResult);
             }
 
             _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
@@ -1032,27 +1038,13 @@ namespace CDT.Cosmos.Cms.Controllers
 
             var viewModel = new ValConViewModel();
 
-            var client = new SendGridClient(model.SendGridConfig.SendGridKey);
-            var msg = new SendGridMessage
-            {
-                From = new EmailAddress("eric.kauffman@state.ca.gov"),
-                Subject = "Test Email",
-                PlainTextContent = "Hello World!",
-                HtmlContent = "<p>Hello World!</p>"
-            };
-            msg.AddTo("eric.kauffman@state.ca.gov");
-
-            msg.MailSettings = new MailSettings();
-            msg.MailSettings.SandboxMode = new SandboxMode { Enable = true };
-
             var connResult = new ConnectionResult();
-
             connResult.Host = "sendgrid.com";
             connResult.ServiceType = "SendGrid";
+            var result = await TestSendGrid(model.SendGridConfig.SendGridKey);
 
             try
             {
-                var result = await client.SendEmailAsync(msg);
                 switch (result.StatusCode)
                 {
                     case HttpStatusCode.OK:
@@ -1078,6 +1070,26 @@ namespace CDT.Cosmos.Cms.Controllers
             viewModel.Results.Add(connResult);
 
             return Json(viewModel);
+        }
+
+        private async Task<Response> TestSendGrid(string sendGridKey)
+        {
+            var client = new SendGridClient(sendGridKey);
+            var msg = new SendGridMessage
+            {
+                From = new EmailAddress("eric.kauffman@state.ca.gov"),
+                Subject = "Test Email",
+                PlainTextContent = "Hello World!",
+                HtmlContent = "<p>Hello World!</p>"
+            };
+            msg.AddTo("eric.kauffman@state.ca.gov");
+
+            msg.MailSettings = new MailSettings();
+            msg.MailSettings.SandboxMode = new SandboxMode { Enable = true };
+
+            var result = await client.SendEmailAsync(msg);
+
+            return result;
         }
 
         #endregion

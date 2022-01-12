@@ -87,11 +87,26 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
             }
             var skip = pageNo * pageSize;
 
-            var query = DbContext.Articles.Select(s =>
-            new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated })
-                .Where(a => a.Published <= DateTime.UtcNow &&
-                        EF.Functions.Like(a.Title, prefix + "%") &&
-                        (EF.Functions.Like(a.Title, prefix + "%/%") == false)).Distinct();
+            //var query = DbContext.Articles.Select(s =>
+            //new TOCItem { UrlPath = s.UrlPath, Title = s.Title, Published = s.Published.Value, Updated = s.Updated })
+            //    .Where(a => a.Published <= DateTime.UtcNow &&
+            //            EF.Functions.Like(a.Title, prefix + "%") &&
+            //            (EF.Functions.Like(a.Title, prefix + "%/%") == false)).Distinct();
+
+            var query = (from t in DbContext.Articles
+                    where t.Published <= DateTime.UtcNow &&
+                    EF.Functions.Like(t.Title, prefix + "%") &&
+                    (EF.Functions.Like(t.Title, prefix + "%/%") == false)
+                    group t by new { t.Title, t.UrlPath }
+                    into g
+                    select new TOCItem
+                    {
+                        UrlPath = g.Key.UrlPath,
+                        Title = g.Key.Title,
+                        Published = g.Max(a => a.Published.Value),
+                        Updated = g.Max(a => a.Updated)
+                    }).Distinct();
+                    
 
             var model = new TableOfContents();
 
