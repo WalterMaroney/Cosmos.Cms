@@ -1,6 +1,5 @@
 ﻿using CDT.Cosmos.Cms.Common.Data;
 using CDT.Cosmos.Cms.Common.Models;
-using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Data.Logic;
 using CDT.Cosmos.Cms.Models;
@@ -8,7 +7,6 @@ using CDT.Cosmos.Cms.Services;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,7 +19,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -88,7 +85,7 @@ namespace CDT.Cosmos.Cms.Controllers
             bool editMode = true,
             bool defaultView = false)
         {
-            
+
             var pageModel = (await _articleEditLogic.GetArticleList()).OrderBy(o => o.Title).Select(s =>
                 new SelectListItem
                 {
@@ -318,7 +315,7 @@ namespace CDT.Cosmos.Cms.Controllers
             data = builder.ToString();
 
             //var removed = array.Where(c => c.Equals(regex) == false).ToArray();
-            
+
             //data = new string(removed);
 
             using var memStream = new MemoryStream();

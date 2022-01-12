@@ -6,7 +6,7 @@ namespace CDT.Cosmos.Cms.Models
     /// Setup controller index view model.
     /// </summary>
     public class SetupIndexViewModel
-    {   
+    {
         /// <summary>
         /// Setup state we are in.
         /// </summary>

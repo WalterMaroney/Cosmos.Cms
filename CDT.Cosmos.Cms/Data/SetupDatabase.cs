@@ -1,7 +1,5 @@
 ﻿using CDT.Cosmos.Cms.Common.Data;
-using CDT.Cosmos.Cms.Common.Data.Logic;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
-using CDT.Cosmos.Cms.Data.Logic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

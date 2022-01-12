@@ -33,7 +33,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
             IOptions<CosmosConfig> config,
             SqlDbSyncContext syncContext) :
             base(dbContext,
-                config,true)
+                config, true)
         {
             if (syncContext.IsConfigured())
                 DbContext.LoadSyncContext(syncContext);
@@ -386,7 +386,6 @@ namespace CDT.Cosmos.Cms.Data.Logic
         /// <param name="model"></param>
         /// <param name="userId"></param>
         /// <param name="teamId"></param>
-        /// <param name="flushCache">If true, Redis and CDN must be flushed.</param>
         /// <remarks>
         ///     <para>
         ///         If the article number is '0', a new article is inserted.  If a version number is '0', then
@@ -568,7 +567,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
                     // Remove any conflicting redirects
                     var conflictingRedirects = await DbContext.Articles.Where(a => a.Content == newUrl && a.Title.ToLower().Equals("redirect")).ToListAsync();
-                    
+
                     if (conflictingRedirects.Any())
                     {
                         DbContext.Articles.RemoveRange(conflictingRedirects);

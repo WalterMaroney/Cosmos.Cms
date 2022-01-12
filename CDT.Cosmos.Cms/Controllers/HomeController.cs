@@ -17,6 +17,9 @@ using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Controllers
 {
+    /// <summary>
+    /// Home page controller
+    /// </summary>
     [AutoValidateAntiforgeryToken]
     public class HomeController : Controller
     {
@@ -26,6 +29,14 @@ namespace CDT.Cosmos.Cms.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<HomeController> _logger;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="cosmosConfig"></param>
+        /// <param name="bootConfigOptions"></param>
+        /// <param name="dbContext"></param>
+        /// <param name="articleLogic"></param>
         public HomeController(ILogger<HomeController> logger,
             IOptions<CosmosConfig> cosmosConfig,
             IOptions<CosmosStartup> bootConfigOptions,
@@ -161,6 +172,10 @@ namespace CDT.Cosmos.Cms.Controllers
             }
         }
 
+        /// <summary>
+        /// Error page
+        /// </summary>
+        /// <returns></returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -191,6 +206,10 @@ namespace CDT.Cosmos.Cms.Controllers
 
         #region STATIC WEB PAGES
 
+        /// <summary>
+        /// Returns if a user has not been granted access yet.
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         public IActionResult AccessPending()
         {

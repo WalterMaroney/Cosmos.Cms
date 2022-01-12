@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Net;
-using System.Text;
-
-namespace CDT.Cosmos.Cms.Services
+﻿namespace CDT.Cosmos.Cms.Services
 {
     //public class AkamaiCdnClient
     //{

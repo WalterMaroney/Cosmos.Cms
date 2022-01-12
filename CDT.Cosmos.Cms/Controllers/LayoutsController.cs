@@ -622,7 +622,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 var utilities = new LayoutUtilities();
                 var layout = await utilities.GetCommunityLayout(id, false);
                 var communityPages = await utilities.GetCommunityTemplatePages(id);
-
+                layout.IsDefault = (await _dbContext.Layouts.AnyAsync(a => a.IsDefault)) == false;
                 _dbContext.Layouts.Add(layout);
                 await _dbContext.SaveChangesAsync();
 

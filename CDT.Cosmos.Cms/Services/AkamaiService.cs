@@ -1,6 +1,6 @@
-﻿using CDT.Cosmos.Cms.Common.Services.Configurations;
+﻿using CDT.Akamai.Cdn;
+using CDT.Cosmos.Cms.Common.Services.Configurations;
 using Microsoft.Extensions.Options;
-using CDT.Akamai.Cdn;
 
 namespace CDT.Cosmos.Cms.Services
 {

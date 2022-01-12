@@ -212,6 +212,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(model);
         }
 
+        /// <summary>
+        /// File browser used by Kendo file manager.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public async Task<IActionResult> ImageBrowserRead(string path)
         {
             return await FileBrowserRead(path, "i");
@@ -265,6 +270,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(jsonModel.Select(s => new KendoFileBrowserEntry(s)).ToList());
         }
 
+        /// <summary>
+        /// Create an image thumbnail
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         [ResponseCache(Duration = 30, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new[] { "path" })]
         public async Task<IActionResult> CreateThumbnail(string path)
         {
@@ -335,7 +345,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 {
                     newName = $"{newName}.{entry.Extension.TrimStart('.')}";
                 }
-            }    
+            }
 
             // Encode using our own rules
             newName = TrimPathPart(UrlEncode(newName));
@@ -431,7 +441,11 @@ namespace CDT.Cosmos.Cms.Controllers
 
 
         #region EDIT (CODE | IMAGE) FUNCTIONS
-
+        /// <summary>
+        /// Edit code for a file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public async Task<IActionResult> EditCode(string path)
         {
             try
@@ -497,7 +511,11 @@ namespace CDT.Cosmos.Cms.Controllers
                 throw;
             }
         }
-
+        /// <summary>
+        /// Edit an image
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public async Task<IActionResult> EditImage(string path)
         {
             var extension = Path.GetExtension(path.ToLower());

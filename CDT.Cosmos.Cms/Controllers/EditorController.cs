@@ -300,12 +300,6 @@ namespace CDT.Cosmos.Cms.Controllers
             return RedirectToAction("Edit", "Editor", new { result.Model.Id });
         }
 
-        [Authorize(Roles = "Administrators, Editors, Authors, Team Members")]
-        public IActionResult MonacoEditor()
-        {
-            return View();
-        }
-
         /// <summary>
         ///     Creates a <see cref="CreatePageViewModel" /> used to create a new article.
         /// </summary>
@@ -324,6 +318,11 @@ namespace CDT.Cosmos.Cms.Controllers
             });
         }
 
+        /// <summary>
+        /// Make a web page the new home page
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Administrators, Editors")]
         public async Task<IActionResult> NewHome(NewHomeViewModel model)
@@ -334,9 +333,14 @@ namespace CDT.Cosmos.Cms.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Open trash
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrators, Editors, Authors, Team Members")]
         public IActionResult Trash()
         {
+            // TODO: Complete the trash bin UI
             return View();
         }
 
@@ -360,6 +364,10 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Update date/time stamps on all published pages (articles).
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Administrators, Editors")]
         public override async Task<JsonResult> UpdateTimeStamps()
@@ -391,6 +399,10 @@ namespace CDT.Cosmos.Cms.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Open Cosmos CMS logs
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrators, Editors")]
         public async Task<IActionResult> Logs()
         {
@@ -403,6 +415,11 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Read logs
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrators, Editors")]
         public async Task<IActionResult> Read_Logs([DataSourceRequest] DataSourceRequest request)
         {
@@ -527,7 +544,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 // Flush Redis and CDN if required 
                 // New: Delay CDN 10 seconds to allow for local memory cache(s) to drain
                 //
-                if (result.Urls.Any() && 
+                if (result.Urls.Any() &&
                     (_options.Value?.CdnConfig.AzureCdnConfig.ClientId != null) || _options.Value?.CdnConfig.AkamaiContextConfig.AccessToken != null)
                 {
 
@@ -596,76 +613,10 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        ///     Private, internal method that saves changes to an article.
+        /// Flush CDN (if present).
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="controllerName"></param>
+        /// <param name="paths"></param>
         /// <returns></returns>
-        /// <remarks>
-        ///     <para>If a user is a member of the 'Team Members' role, ensures that user has ability to save article.</para>
-        ///     <para>
-        ///         If this is an article (or regular page) content being saved, the method
-        ///         <see cref="Data.Logic.ArticleEditLogic.UpdateOrInsert" /> is used. Saving a template uses method
-        ///         <see cref="SaveTemplateChanges" />.
-        ///     </para>
-        ///     <para>Errors are recorded using <see cref="ILogger" /> and with <see cref="ControllerBase.ModelState" />.</para>
-        /// </remarks>
-        //private async Task<ArticleEditViewModel> SaveArticleChanges3(ArticleViewModel model,
-        //    EnumControllerName controllerName)
-        //{
-
-        //    CdnPurgeViewModel cdnResult = null;
-
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    // Get a new copy of the model
-        //    var result = await _articleLogic.UpdateOrInsert(model, user.Id);
-
-        //    model = result.Model;
-
-        //    // Re-enable editable sections.
-        //    model.Content = model.Content.Replace(" crx=\"", " contenteditable=\"",
-        //        StringComparison.CurrentCultureIgnoreCase);
-
-        //    //
-        //    // Flush Redis and CDN if the article is published
-        //    //
-        //    if (model.Published.HasValue)
-        //    {
-        //        var result = await FlushRedis(model.UrlPath);
-
-        //        // Now get all the languages that were flushed
-        //        // TODO: This needs to be improved.
-        //        // Not sure this is the best way to do this.
-        //        var paths = new List<string>();
-        //        foreach (var key in result.Keys)
-        //        {
-        //            if (key.Contains(model.UrlPath))
-        //            {
-        //                var parts = RedisCacheService.ParsePageCacheKey(key);
-
-        //                paths.Add($"/{parts.UrlPath}?lang={parts.Language}");
-        //                if (parts.Language.StartsWith("en"))
-        //                {
-        //                    paths.Add($"/{parts.UrlPath}");
-        //                }
-        //            }
-        //        }
-
-        //        var json = await FlushCdn(paths.ToArray());
-        //        cdnResult = (CdnPurgeViewModel)json.Value;
-
-        //    }
-
-        //    var menu = await _articleLogic.BuildMenu("en-US");
-
-        //    ViewData["MenuContent"] = menu;
-        //    ViewData["PreviewMode"] = false;
-
-        //    var resultModel = new ArticleEditViewModel(model, cdnResult);
-
-        //    return resultModel;
-        //}
         [HttpPost]
         [Authorize(Roles = "Administrators, Editors")]
         public async Task<JsonResult> FlushCdn(string[] paths = null)
@@ -674,41 +625,10 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        ///     This private method is used by <see cref="SaveArticleChanges" /> to save a <see cref="Template" />.
+        /// Edit web page code with Monaco editor.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns>
-        ///     <para>Returns an <see cref="ArticleViewModel" /> where:</para>
-        ///     <para></para>
-        ///     <para>
-        ///         * <see cref="ArticleViewModel.ReadWriteMode" /> is set using
-        ///         <see cref="IOptions{SiteCustomizationsConfig}" /> injected into <see cref="BaseController" />.
-        ///     </para>
-        ///     <para>Errors are recorded using <see cref="ILogger" /> and with <see cref="ControllerBase.ModelState" />.</para>
-        /// </returns>
-        //private async Task<ArticleViewModel> SaveTemplateChanges(ArticleViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        model.Title = BaseValidateHtml("Title", model.Title, ModelState);
-        //        model.Content = BaseValidateHtml("Content", model.Content, ModelState);
-        //        //model.SubSection1 = ValidateHtml("SubSection1", model.SubSection1, ModelState);
-
-        //        //var userId = UserManager.GetUserId(User);
-        //        // Get a new copy of the model
-        //        var template = await _dbContext.Templates.FindAsync(model.Id) ?? new Template();
-
-        //        template.Content = model.Content;
-        //        template.Title = model.Title;
-
-        //        if (template.Id == 0) _dbContext.Templates.Add(template);
-
-        //        await _dbContext.SaveChangesAsync();
-        //    }
-
-        //    model.ReadWriteMode = true;
-        //    return model;
-        //}
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrators, Editors, Authors, Team Members")]
         public async Task<IActionResult> EditCode(int id)
         {
@@ -855,7 +775,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 try
                 {
                     // If no HTML errors were thrown, save here.
-                    
+
                     await _dbContext.SaveChangesAsync();
                     //
                     // Pull back out of the database, so user can see exactly what was saved.
@@ -899,6 +819,10 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(jsonModel);
         }
 
+        /// <summary>
+        /// Preload the website (useful if CDN configured).
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Authorize(Roles = "Administrators")]
         public IActionResult Preload()
@@ -906,6 +830,12 @@ namespace CDT.Cosmos.Cms.Controllers
             return View(new PreloadViewModel());
         }
 
+        /// <summary>
+        /// Execute preload.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="primaryOnly"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Administrators")]
         public async Task<IActionResult> Preload(PreloadViewModel model, bool primaryOnly = false)
@@ -952,6 +882,12 @@ namespace CDT.Cosmos.Cms.Controllers
 
         #region Data Services
 
+        /// <summary>
+        /// Check to see if a page title is already taken.
+        /// </summary>
+        /// <param name="articleNumber"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
         [HttpGet]
         [HttpPost]
         public async Task<IActionResult> CheckTitle(int articleNumber, string title)
@@ -960,7 +896,7 @@ namespace CDT.Cosmos.Cms.Controllers
 
             if (result) return Json(true);
 
-            return Json($"Email {title} is already taken.");
+            return Json($"Title '{title}' is already taken.");
         }
 
         /// <summary>
@@ -1032,6 +968,12 @@ namespace CDT.Cosmos.Cms.Controllers
             return Json(await list.ToDataSourceResultAsync(request));
         }
 
+        /// <summary>
+        /// Sends an article (or page) to trash bin.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Trash_Article([DataSourceRequest] DataSourceRequest request,
             ArticleListItem model)
