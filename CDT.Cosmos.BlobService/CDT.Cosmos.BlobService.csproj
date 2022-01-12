@@ -2,17 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyVersion>6.0.5.3</AssemblyVersion>
-    <FileVersion>6.0.5.3</FileVersion>
-    <Version>6.0.5.3</Version>
+    <AssemblyVersion>6.0.5.4</AssemblyVersion>
+    <FileVersion>6.0.5.4</FileVersion>
+    <Version>6.0.5.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="nuget.config" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.1207" />
   </ItemGroup>
 
   <ItemGroup>

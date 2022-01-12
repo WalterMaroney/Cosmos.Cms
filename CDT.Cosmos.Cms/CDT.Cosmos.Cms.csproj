@@ -7,10 +7,10 @@
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
 		<RepositoryUrl>https://github.com/CosmosSoftware/Cosmos.Cms</RepositoryUrl>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<Version>6.0.5.3</Version>
+		<Version>6.0.5.4</Version>
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-		<AssemblyVersion>6.0.5.3</AssemblyVersion>
-		<FileVersion>6.0.5.3</FileVersion>
+		<AssemblyVersion>6.0.5.4</AssemblyVersion>
+		<FileVersion>6.0.5.4</FileVersion>
 		<Authors></Authors>
 		<ApplicationInsightsResourceId>/subscriptions/9bdb8e29-156f-4fc9-a1fe-1bb6a915a4f0/resourceGroups/CosmosCMS/providers/microsoft.insights/components/edit-cosmos-cms202107021426</ApplicationInsightsResourceId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -56,7 +56,8 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-		<PackageReference Include="NUglify" Version="1.17.3" />
+		<PackageReference Include="NUglify" Version="1.17.5" />
+		<PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.1207" />
 	</ItemGroup>
 
 	<ItemGroup>

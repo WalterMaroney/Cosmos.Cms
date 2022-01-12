@@ -130,8 +130,8 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <param name="target"></param>
         /// <param name="entry"></param>
-        /// <returns><see cref="JsonResult" />(<see cref="FileManagerEntry" />)</returns>
-        public async Task<ActionResult> Create(string target, FileManagerEntry entry)
+        /// <returns><see cref="JsonResult" />(<see cref="BlobService.FileManagerEntry" />)</returns>
+        public async Task<ActionResult> Create(string target, BlobService.FileManagerEntry entry)
         {
             target = target == null ? "" : target.ToLower();
             entry.Path = target;
@@ -176,7 +176,7 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <param name="entry">Item to delete using relative path</param>
         /// <returns></returns>
-        public async Task<ActionResult> Destroy(FileManagerEntry entry)
+        public async Task<ActionResult> Destroy(BlobService.FileManagerEntry entry)
         {
             var path = entry.Path.ToLower();
 
@@ -316,7 +316,7 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <returns>An empty <see cref="ContentResult" />.</returns>
         /// <exception cref="Exception">Forbidden</exception>
         [HttpPost]
-        public async Task<ActionResult> Update(FileManagerEntry entry)
+        public async Task<ActionResult> Update(BlobService.FileManagerEntry entry)
         {
             entry.Path = entry.Path?.ToLower();
             entry.Name = entry.Name?.ToLower();

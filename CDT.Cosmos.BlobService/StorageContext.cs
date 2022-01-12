@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using CDT.Cosmos.BlobService.Drivers;
 using CDT.Cosmos.BlobService.Models;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
-using Kendo.Mvc.UI;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
