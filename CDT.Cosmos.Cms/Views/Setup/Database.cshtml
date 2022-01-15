@@ -20,8 +20,7 @@
                 </div>
                 <div class="card-body">
                     <p>Please use the form below to register an administrator account for this website.</p>
-                    <div asp-validation-summary="All" class="text-danger" id="validation-summary"></div>
-                    <form id="frmAccount" asp-action="Database" method="post" kendo-validator="true">
+                    <form id="frmAccount" asp-action="Database" method="post">
                         @Html.AntiForgeryToken()
                         <div class="form-group">
                             <label asp-for="AdminEmail"></label>
