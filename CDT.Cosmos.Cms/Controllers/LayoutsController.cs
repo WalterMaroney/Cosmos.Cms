@@ -619,6 +619,11 @@ namespace CDT.Cosmos.Cms.Controllers
         {
             try
             {
+                if (_dbContext.Layouts.Any(c => c.CommunityLayoutId == id))
+                {
+                    throw new Exception("Layout already loaded.");
+                }
+
                 var utilities = new LayoutUtilities();
                 var layout = await utilities.GetCommunityLayout(id, false);
                 var communityPages = await utilities.GetCommunityTemplatePages(id);
