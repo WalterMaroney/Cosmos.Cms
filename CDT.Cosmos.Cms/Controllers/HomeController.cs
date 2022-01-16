@@ -77,6 +77,11 @@ namespace CDT.Cosmos.Cms.Controllers
 
                 if (User.Identity?.IsAuthenticated == false)
                 {
+                    var migrations = await _dbContext.Database.GetAppliedMigrationsAsync();
+                    if (migrations == null || !migrations.Any())
+                    {
+                        return View(viewName: "DatabaseNotSetup");
+                    }
                     //
                     // See if we need to register a new user.
                     //
