@@ -5,13 +5,13 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyVersion>6.0.5.6</AssemblyVersion>
+    <AssemblyVersion>6.0.5.7</AssemblyVersion>
 
-    <FileVersion>6.0.5.6</FileVersion>
+    <FileVersion>6.0.5.7</FileVersion>
 
     <UserSecretsId>31db3e16-30f0-4d36-9fe8-01c2ce54d6ad</UserSecretsId>
 
-    <Version>6.0.5.6</Version>
+    <Version>6.0.5.7</Version>
   </PropertyGroup>
 
   <ItemGroup>

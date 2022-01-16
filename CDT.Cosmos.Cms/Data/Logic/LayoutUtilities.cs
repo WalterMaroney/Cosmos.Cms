@@ -216,9 +216,15 @@ namespace CDT.Cosmos.Cms.Data.Logic
             // Remove layout elements
             var bodyHeader = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-header");
             var bodyFooter = contentHtmlDocument.DocumentNode.SelectSingleNode("//body/cosmos-layout-footer");
-            bodyHeader.Remove();
-            bodyFooter.Remove();
-
+            if (bodyHeader != null)
+            {
+                bodyHeader.Remove();
+            }
+            if (bodyFooter != null)
+            {
+                bodyFooter.Remove();
+            }
+            
             // Save what remains in the body
             var body = contentHtmlDocument.DocumentNode.SelectSingleNode("//body");
 
