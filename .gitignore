@@ -345,3 +345,4 @@ healthchecksdb
 
 *cosmosconfig.json
 *jsconfig1.json
+/.claudiaideconfig

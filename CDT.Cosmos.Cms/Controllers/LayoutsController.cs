@@ -136,7 +136,7 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Create()
         {
-            var layout = LayoutDefaults.GetOceanside();
+            var layout = new Layout();
             layout.IsDefault = false;
             layout.LayoutName = "New Layout " + await _dbContext.Layouts.CountAsync();
             layout.Notes = "New layout created. Please customize using code editor.";
