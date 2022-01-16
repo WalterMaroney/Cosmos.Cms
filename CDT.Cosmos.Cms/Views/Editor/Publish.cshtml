@@ -10,8 +10,7 @@
         height: 386px;
         margin: 0 auto 30px auto;
         text-align: center;
-        @*background: transparent url("@Url.Content("~/shared/dataviz/gauge/gauge-container-partial.png")") no-repeat 50% 50%;*@
-        width: 386px;
+    @*background: transparent url("@Url.Content("~/shared/dataviz/gauge/gauge-container-partial.png")") no-repeat 50% 50%;*@ width: 386px;
     }
 
     #gauge {
@@ -44,7 +43,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <br/>
+                <br />
                 <button id="btnPublish" class="btn btn-sm btn-success" onclick="publish()">Publish Website</button>
             </div>
         </div>
@@ -81,26 +80,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="card2" class="card text-white bg-secondary  mb-4">
-                            <div class="card-header" id="card2header">
-                                <h6 class="card-title">Redis Cache</h6>
-                            </div>
-                            <div class="card-body" id="card2body">
-                                <div>
-                                    Redis is the in-memory caching service used by C/CMS to speed up web page publishing.
-                                </div>
-                                <div id="spinner2" style="display: none">
-                                    @(Html.Kendo().Loader().Name("loader-redis").Size(LoaderSize.Medium).ThemeColor(LoaderThemeColor.Primary).Type(LoaderType.InfiniteSpinner).Messages(m => m.Loading("Running...")))
-                                </div>
-                            </div>
-                        </div>
                         <div id="card3" class="card text-white bg-secondary  mb-4">
                             <div class="card-header" id="card3header">
                                 <h6 class="card-title">CDN</h6>
                             </div>
                             <div class="card-body" id="card3body">
                                 <div>
-                                    C/CMS uses Content Delivery Networks (CDN) to speed up delivery of web content to users.
+                                    C/CMS can integrate with Content Delivery Networks (CDN) to speed up delivery of web content to users.
                                 </div>
                                 <div id="spinner3" style="display: none">
                                     @(Html.Kendo().Loader().Name("loader-cdn").Size(LoaderSize.Medium).ThemeColor(LoaderThemeColor.Primary).Type(LoaderType.InfiniteSpinner).Messages(m => m.Loading("Running...")))
@@ -156,44 +142,24 @@
                     " pages updated.</p><br />" +
                     "<div class='btn btn-large btn-success'><i class='fa fa-check-square-o' aria-hidden='true'></i></div>"
                 );
-                // Next Redis Cache
+                // Now handle CDN
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("FlushRedis")",
-                    success: function(json1) {
-                        if (json1.CacheConnected === true) {
-                            //$("#msgBox").html("<p>Working, please wait .... </p><ul><li>Redis refreshed</li><li>" + json1.Keys.length + " item(s) flushed.</li><li>Refreshing CDN...</li></ul>");
-                            $("#card2body").html(
-                                "<p>Removed " +
-                                json1.Keys.length +
-                                " items from Redis cache.</p><br />" +
-                                "<div class='btn btn-large btn-success'><i class='fa fa-check-square-o' aria-hidden='true'></i></div>"
-                            );
-                        }
+                    url: "@Url.Action("FlushCdn")",
+                    success: function(json2) {
+                        //$("#msgBox").html("<p>Finished publishing.</p><ul><li>REDIS Refreshed</li><li>" + json1.Keys.length + " item(s) flushed.</li><li>CDN Result: " + json2.Detail + "</li></ul>");
 
-                        $("#card2header").attr("class", "card-header text-white bg-secondary");
-                        $("#card3header").attr("class", "card-header text-white bg-primary");
-                        // Now handle CDN
-                        $.ajax({
-                            type: "POST",
-                            url: "@Url.Action("FlushCdn")",
-                            success: function(json2) {
-                                //$("#msgBox").html("<p>Finished publishing.</p><ul><li>REDIS Refreshed</li><li>" + json1.Keys.length + " item(s) flushed.</li><li>CDN Result: " + json2.Detail + "</li></ul>");
-
-                                $("#card3header").attr("class", "card-header text-white bg-secondary");
-                                //$("#msgBox").html("<p>Working, please wait .... </p><ul><li>Redis refreshed</li><li>" + json1.Keys.length + " item(s) flushed.</li><li>Refreshing CDN...</li></ul>");
-                                $("#card3body").html(
-                                    "<p>" +
-                                    " CDN purge will complete in about " +
-                                    json2.EstimatedSeconds +
-                                    " seconds.</p>" +
-                                    "<div class='btn btn-large btn-success'><i class='fa fa-check-square-o' aria-hidden='true'></i></div>"
-                                );
-                                $("#purgeDetails").html("<p>" + json2.Detail + ".</p>")
-                                $("#btnPublish").show();
-                            },
-                            dataType: "json"
-                        });
+                        $("#card3header").attr("class", "card-header text-white bg-secondary");
+                        //$("#msgBox").html("<p>Working, please wait .... </p><ul><li>Redis refreshed</li><li>" + json1.Keys.length + " item(s) flushed.</li><li>Refreshing CDN...</li></ul>");
+                        $("#card3body").html(
+                            "<p>" +
+                            " CDN purge will complete in about " +
+                            json2.EstimatedSeconds +
+                            " seconds.</p>" +
+                            "<div class='btn btn-large btn-success'><i class='fa fa-check-square-o' aria-hidden='true'></i></div>"
+                        );
+                        $("#purgeDetails").html("<p>" + json2.Detail + ".</p>")
+                        $("#btnPublish").show();
                     },
                     dataType: "json"
                 });
@@ -203,4 +169,6 @@
 
 </script>
 
-@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}

@@ -215,6 +215,8 @@ namespace CDT.Cosmos.Cms.Controllers
         {
             var results = new List<Template>();
 
+            var layout = await _dbContext.Layouts.FirstOrDefaultAsync(f => f.IsDefault);
+
             if (templates != null && ModelState.IsValid)
                 foreach (var template in templates)
                 {
@@ -223,7 +225,9 @@ namespace CDT.Cosmos.Cms.Controllers
                         Id = 0,
                         Content = "",
                         Description = template.Description,
-                        Title = template.Title
+                        Title = template.Title,
+                        LayoutId = layout.Id,
+                        CommunityLayoutId = layout.CommunityLayoutId
                     };
                     _dbContext.Templates.Add(entity);
                     await _dbContext.SaveChangesAsync();

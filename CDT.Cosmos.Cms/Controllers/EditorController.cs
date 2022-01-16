@@ -103,6 +103,15 @@ namespace CDT.Cosmos.Cms.Controllers
         [Authorize(Roles = "Administrators, Editors, Authors, Team Members")]
         public async Task<IActionResult> Create()
         {
+            var layout = await _dbContext.Layouts.FirstOrDefaultAsync(l => l.IsDefault);
+
+            var templates = await _dbContext.Templates.Where(t => t.LayoutId == layout.Id).Select(s =>
+                        new SelectListItem
+                        {
+                            Value = s.Id.ToString(),
+                            Text = s.Title
+                        }).ToListAsync();
+
             if (User.IsInRole("Team Members"))
             {
                 var identityUser = await _userManager.GetUserAsync(User);
@@ -124,12 +133,7 @@ namespace CDT.Cosmos.Cms.Controllers
                     Id = 0,
                     Title = string.Empty,
                     TeamId = teams.FirstOrDefault()?.Id,
-                    Templates = await _dbContext.Templates.Select(s =>
-                        new SelectListItem
-                        {
-                            Value = s.Id.ToString(),
-                            Text = s.Title
-                        }).ToListAsync()
+                    Templates = templates
                 });
             }
 
@@ -138,12 +142,7 @@ namespace CDT.Cosmos.Cms.Controllers
             {
                 Id = 0,
                 Title = string.Empty,
-                Templates = await _dbContext.Templates.Select(s =>
-                    new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = s.Title
-                    }).ToListAsync()
+                Templates = templates
             });
         }
 

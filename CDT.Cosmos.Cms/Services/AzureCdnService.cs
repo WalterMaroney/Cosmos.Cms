@@ -76,16 +76,16 @@ namespace CDT.Cosmos.Cms.Services
 
             // Run this asynchronously so we can continue.
             //task.Start();
-            var result = await SubmitPurge(purgePaths.OrderBy(o => o).ToList());
+            var result = SubmitPurge(purgePaths.OrderBy(o => o).ToList());
 
             var pathString = string.Join(',', paths.ToList()).Replace(",", ", ");
 
             var model = new CdnPurgeViewModel()
             {
                 Detail = $"Paths purged: { pathString }.",
-                HttpStatus = result.Response.StatusCode.ToString(),
-                PurgeId = result.RequestId,
-                SupportId = result.RequestId
+                HttpStatus = System.Net.HttpStatusCode.OK.ToString(),
+                PurgeId = result.Id.ToString(),
+                SupportId = DateTimeOffset.UtcNow.ToString()
             };
             switch (profile.Sku.Name)
             {

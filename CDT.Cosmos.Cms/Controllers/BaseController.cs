@@ -257,7 +257,7 @@ namespace CDT.Cosmos.Cms.Controllers
             {
                 model = new CdnPurgeViewModel
                 {
-                    Detail = "No CDN",
+                    Detail = "No CDN configured",
                     EstimatedSeconds = 0,
                     HttpStatus = "OK",
                     PurgeId = "",
