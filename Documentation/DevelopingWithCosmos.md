@@ -17,7 +17,7 @@ For developing with publisher, any IDE that can be used with ASP.NET (Core) will
 
 ## Developing with Editor
 
-If you would like to make contributions to the Editor certain things will be necessary to run the unit tests and work with the Telerik components.  
+If you would like to make contributions to the Editor you will need a Telerik UI for ASP.NET Core developer's license. [If you do not have a license, you can get a free trial](https://www.telerik.com/).  You DO NOT need a Telerik license to develop with the Publisher or any other of Cosmos CMS repositories.
 
 
 ## Unit Testing Requirements
