@@ -1,4 +1,4 @@
-# Cosmos CMS
+# Cosmos CMS (Editor and Publisher)
 
 Note: This is the full repository for Cosmos Editor and Publisher.  Please see also our [stand-alone Publisher repository](https://github.com/CosmosSoftware/CDT.Cosmos.Cms.Website).  Most users will want to extend that project.
 
