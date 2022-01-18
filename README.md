@@ -31,6 +31,10 @@ The publisher repository is a "stock" out of the box Visual Studio application. 
 
 If you would like to know the the Cosmos CMS architecture came about, please read [the origin story](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Origin.md).
 
+## Developing with Cosmos
+
+If you would like to download and work with the code in this repository, please see our documentation on how to get started.
+
 ## Getting Started
 
 You can deploy Cosmos to Azure by clicking the following button (recommended) or manually install by following the directions below.
