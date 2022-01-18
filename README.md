@@ -33,7 +33,7 @@ If you would like to know the the Cosmos CMS architecture came about, please rea
 
 ## Developing with Cosmos
 
-If you would like to download and work with the code in this repository, please see our documentation on how to get started.
+If you would like to download and work with the code in this repository, [please see our documentation on how to get started](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md).
 
 ## Getting Started
 
