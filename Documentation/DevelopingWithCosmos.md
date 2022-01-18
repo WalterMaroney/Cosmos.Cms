@@ -12,6 +12,8 @@ The "Editor" is where web content is created and managed. It is your tool to man
 
 Most people will build customizations using the publisher and/or Cosmos Common NuGet package.  It is with publisher that people can "mash up" the functionality it comes with, with their own creative works.
 
+The "Publisher" [repository is found on GitHub](https://github.com/CosmosSoftware/CDT.Cosmos.Cms.Website).
+
 For developing with publisher, any IDE that can be used with ASP.NET (Core) will do.  Examples include Visual Studio Code, or Visual Studio Community or Professional or Enterprise Editions.
 
 
@@ -26,6 +28,72 @@ As of this writing, the Editor repository  has just over 100 unit tests containe
 
 You will also need access to database, Redis cache, blob storage, web application services in Azure and Amazon Web Services.  You will also need CDN and SendGrid resources from Microsoft Azure, and, an Akamai developer account.
 
+### Secrets Files
+
+To run and debug Cosmos CMS on a development server you will need to use a "secrets file" to hold your development configuration.
+
+PLEASE! Do NOT put this information in the appsettings.json file!!
+
+Here is and example of an "Editor" secrets file.
+
+```JSONC
+{
+  //
+  // This is an example "secrets" JSON file for an "EDITOR."
+  // 
+  // Normally this information would not appear in a repository.
+  // Keep this file safe!
+  // 
+  // When in development, this JSON file would be kept in "User Secrets" on the local 
+  // machine. 
+  // When in development, the variables in this JSON file would be kept in "Secrets."
+  // 
+  // WARNING!!!!
+  //
+  // NEVER EVER put this information in the "appsettings.json" file. Exposure risk is HIGH!
+  //
+  "CosmosAllowSetup": "false", // When an app is in production, either set this to false or remove it.
+  "CosmosAllowConfigEdit": "true", // When true this enables the configuration editor. Set to false it disables it.
+  "CosmosPrimaryCloud": "azure", // Put the cloud name this is installed. Values can be "amazon" or "azure".
+  "CosmosAdminEmail": "your@email.com", // Put the main administrator name here. This may be depreciated in the future
+  "CosmosSendGridApiKey": "[YOUR SEND GRID KEY GOES HERE]",
+  "CosmosPublisherUrl": "https://publisher.yourdomain.com",
+  "CosmosStorageUrl": "https://publicurl.tostorageaccountwebsite.com", // This will depend on the S3 or Azure Storage account
+  "CosmosBlobContainer": "$web", // Try and use this name in either Amazon S3 and Azure Storage
+  "CosmosEditorUrl": "https://editor.yourdomain.com",
+  "CosmosSecretKey": "[Create a random LONG string of characters here]", // This is used with "distributed publishing units."
+  "ConnectionStrings": {
+    "DefaultConnection": "[Standard connection string to your SQL server]",
+    // The following is only for Azure.  This will be updated for S3
+    "BlobConnection": "[Your connection string]"
+  }
+}
+```
+
+Here is an example of a JSON file for a "Publisher." Note the simplicity.
+
+```JSONC
+{
+  //
+  // This is an example "secrets" JSON file for an "EDITOR."
+  // 
+  // Normally this information would not appear in a repository.
+  // Keep this file safe!
+  // 
+  // When in development, this JSON file would be kept in "User Secrets" on the local 
+  // machine. 
+  // When in development, the variables in this JSON file would be kept in "Secrets."
+  // 
+  // WARNING!!!!
+  //
+  // NEVER EVER put this information in the "appsettings.json" file. Exposure risk is HIGH!
+  //
+  "CosmosPrimaryCloud": "azure", // Put the cloud name this is installed. Values can be "amazon" or "azure".
+  "ConnectionStrings": {
+    "DefaultConnection": "[Standard connection string to your SQL server]"
+  }
+}
+```
 
 ### Cloud Resources
 
