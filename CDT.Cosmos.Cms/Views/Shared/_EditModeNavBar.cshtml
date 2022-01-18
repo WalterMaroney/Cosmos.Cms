@@ -25,7 +25,7 @@
     var isAdministrator = false;
     var isTeamMember = teamMemberLogic != null;
 
-    var accountBtnTemplate = "<div id='userAcctMenu'><span class='fa fa-user'></span> " + User?.Identity.Name + "</div>";
+    var accountBtnTemplate = "<div id='userAcctMenu' style='font-size:0.8em'><span class='fa fa-user'></span> " + User?.Identity.Name + "</div>";
 
     if (User != null && (User.IsInRole("Authors") || teamMemberLogic?.IsInRole(TeamRoleEnum.Author, teamName) == true))
     {
@@ -56,6 +56,12 @@
             border: 1px dashed blue;
             box-sizing: inherit;
         }
+        .k-success {
+            background-color: #06c91a;
+        }
+        .k-alert {
+            background-color: #be4d25;
+        }
     </style>
     @* EDITING TOOL BAR *@
     @(Html.Kendo().ToolBar()
@@ -65,7 +71,7 @@
                 items.Add().Type(CommandType.SplitButton).Text("Menu").Id("ddMenu").MenuButtons(menuButtons =>
                 {
                     menuButtons.Add().Text("Save");
-                    menuButtons.Add().Text("Code");
+                    menuButtons.Add().Text("Code View");
                     menuButtons.Add().Text("Files");
                     menuButtons.Add().Text("Preview");
                     menuButtons.Add().Text("Versions");
@@ -73,17 +79,18 @@
                     menuButtons.Add().Text("Permissions").Hidden(!User.IsInRole("Editors") && !User.IsInRole("Administrators"));
                     menuButtons.Add().Text("Help");
                 }).Click("bgEditClick").Hidden(controllerName == "Templates");
-                items.Add().Template("<span>Title: </span>");
-                items.Add().Template(Html.Kendo().TextBox().Name("tbTitle").Value(Model.Title).HtmlAttributes(new {style = "width: 265px;"}).ToHtmlString());
-                items.Add().Template($"(v.<span for='versionLbl'>{Model.VersionNumber}</span>)");
-                items.Add().Template($"<a class='k-button k-button-sm k-button-primary' title='This page can only be edited with the code editor.' onclick='openCodeEditorDialog()'>Open Code Editor</a>").Hidden(htmlEditorEnabled);
+                
                 if (isEditor || isAdministrator)
                 {
                     items.Add().Type(CommandType.Button).Template("<div onclick='openSchedulerDialog()' id='btnPublish'></div>");
-                    items.Add().Type(CommandType.Button).Template("<div class='badge badge-secondary' onclick='openPermissionsDialog()' id='btnPermissions'><span class='fa fa-shield'></span></div>");
+                    items.Add().Type(CommandType.Button).Template("<div onclick='openPermissionsDialog()' style='height:32px' id='btnPermissions'><span class='fa fa-shield'></span></div>");
                 }
+
                 items.Add().Template("<div id='pendingChangesBadge' class='badge badge-warning' style='display:none'>Changes Pending Save</div>");
 
+                items.Add().Template("<span>Title: </span>");
+                items.Add().Template(Html.Kendo().TextBox().Name("tbTitle").Value(Model.Title).HtmlAttributes(new {style = "width: 32vw;"}).ToHtmlString());
+                
                 items.Add().Type(CommandType.SplitButton).Template(accountBtnTemplate).MenuButtons(menuButtons =>
                 {
                     menuButtons.Add().Text("User Account");
@@ -91,19 +98,21 @@
                 }).Click("bgCmsClick");
                 if (isAuthor)
                 {
-                    items.Add().Type(CommandType.Button).Template("<a title='Your role with this page is that of an Author'>(Author)</a>");
+                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Author'>(Author)</a>");
                 }
                 else if (isEditor)
                 {
-                    items.Add().Type(CommandType.Button).Template("<a title='Your role with this page is that of an Editor'>(Editor)</a>");
+                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Editor)</a>");
                 }
                 else if (isAdministrator)
                 {
-                    items.Add().Type(CommandType.Button).Template("<a title='Your role with this page is that of an Editor'>(Administrator)</a>");
+                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Administrator)</a>");
                 }
                 items.Add().Type(CommandType.Button).Template("<div style='padding-top:4px;display:none;' class='k-button k-button-sm k-button-secondary' id='cdnLbl'></div> <div id='progressBar' style='width:80px'></div>");
-                items.Add().Template($"<div id='versInfo' class='badge rounded-pill bg-secondary'>({assemblyName.Version})</div>");
-            }))
+                
+                items.Add().Template("<div><span for='versionLbl' style='margin-right:10px;font-size:0.6em;>Page version:" + @Model.VersionNumber + "</span><span id='versInfo' style='margin-right:10px;font-size:0.6em'>" + @assemblyName.Version + "</span> <a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a' title='Need with us using Cosmos CMS? Ask a question!'>Get Help</a><a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/issues/new?assignees=&labels=&template=bug_report.md&title=' title='All bug reports are appreciated!'>Report a Bug</a></div>").HtmlAttributes(new { style = "position:absolute;right:10px;"});
+            
+                }))
 
 }
 else
@@ -170,7 +179,8 @@ else
                     menuButtons.Add().Text("Log Out");
                 }).Click("bgCmsClick");
             }
-            items.Add().Template($"<div id='versInfo' class='badge rounded-pill bg-secondary'>({assemblyName.Version})</div>");
+            items.Add().Template("<div><span id='versInfo' style='margin-right:10px;font-size:0.6em;'>" + @assemblyName.Version + "</span> <a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a' title='Need with us using Cosmos CMS? Ask a question!'>Get Help</a><a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/issues/new?assignees=&labels=&template=bug_report.md&title=' title='All bug reports are appreciated!'>Report a Bug</a></div>").HtmlAttributes(new { style = "position:absolute;right:10px;"});
+            
         }))
     <div style="display: none">
         @* This is the hidden log out form executed by the log out drop down menu pick above*@
@@ -618,23 +628,23 @@ else
                         var now = new Date();
 
                         if (now < localDateTime) {
-                            publishButton.attr("class", "k-button cosmos-btn-blue");
-                            publishButton.html(localDateTime.toLocaleString());
+                            publishButton.attr("class", "k-button k-primary");
+                            publishButton.html("Pending");
                             $(publishButton).kendoTooltip({
-                                content: "This version is set to be published in the future."
+                                content: "This version is set to be published in the future at: " + localDateTime.toLocaleString() + ". Click to change."
                             });
                         } else {
-                            publishButton.attr("class", "k-button cosmos-btn-success");
-                            publishButton.html(localDateTime.toLocaleString());
+                            publishButton.attr("class", "k-button k-success");
+                            publishButton.html("Published");
                             $(publishButton).kendoTooltip({
-                                content: "This version is now published and available on the web."
+                                content: "This version is now published and available on the web as of: " + localDateTime.toLocaleString() + ". Click to change."
                             });
                         }
                     } else {
-                        publishButton.attr("class", "k-button cosmos-btn-blue");
-                        publishButton.html("Publish");
+                        publishButton.attr("class", "k-button k-alert");
+                        publishButton.html("DRAFT!");
                         $(publishButton).kendoTooltip({
-                            content: "This version is not yet published."
+                            content: "This version is not yet published. Click to schedule publishing date and time."
                         });
                     }
                 }
@@ -667,9 +677,9 @@ else
                         var datetime = new Date(dateTimeValue);
                         var utcString = datetime.toUTCString();
                         $("#Published").val(utcString);
-                        $("#btnPublish").html(datetime.toLocaleString());
+                        $("#btnPublish").html("Published");
                     } else {
-                        $("#btnPublish").html("");
+                        $("#btnPublish").html("DRAFT");
                         $("#Published").val("");
                     }
 
@@ -692,7 +702,7 @@ else
                     case "Save":
                         handlePost();
                         break;
-                    case "Code":
+                    case "Code View":
                         $("#editCodeDialog").data("kendoDialog").open();
                         break;
                     case "Files":
@@ -922,9 +932,8 @@ else
     <p>Assembly: @assemblyName.Name</p>
     <p>Version: @assemblyName.Version</p>
     <p>@Assembly.GetEntryAssembly()</p>
-    <p>Cosmos CMS is an open source project of the State of California,
-    Department of Technology.</p>
-    <p>Copyright &copy; 2021 State of California</p>
+    <p>Cosmos CMS is an open source project on 
+     <a target="_blank" href="https://github.com/CosmosSoftware/Cosmos.Cms">GitHub</a>.</p>
 </script>
 @(Html.Kendo().Tooltip()
     .For("#versInfo")
