@@ -1,4 +1,6 @@
-# Cosmos CMS
+# Cosmos CMS (Editor and Publisher)
+
+Note: This is the full repository for Cosmos Editor and Publisher.  Please see also our [stand-alone Publisher repository](https://github.com/CosmosSoftware/CDT.Cosmos.Cms.Website).  Most users will want to extend that project.
 
 [![ubunto build](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/CosmosSoftware/Cosmos.Cms/actions/workflows/codeql-analysis.yml) 
 [![NuGet Badge](https://buildstats.info/nuget/CDT.Cosmos.Cms.Common)](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/)
