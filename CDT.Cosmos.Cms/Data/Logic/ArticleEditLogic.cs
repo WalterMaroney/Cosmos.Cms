@@ -559,8 +559,8 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 // This will either be used to create a new version (detached then added as new),
                 // or updated in place.
                 //
-                article = await DbContext.Articles.Include(i => i.ArticleLogs)
-                    .FirstOrDefaultAsync(a => a.Id == model.Id);
+                article = await DbContext.Articles.FirstOrDefaultAsync(a => a.Id == model.Id);
+
 
                 //
                 // We are adding a new version.
@@ -752,6 +752,11 @@ namespace CDT.Cosmos.Cms.Data.Logic
             article.FooterJavaScript = model.FooterJavaScript;
 
             article.RoleList = model.RoleList;
+
+            // Enforce the default layout here
+            var defaultLayout = await DbContext.Layouts.FirstOrDefaultAsync(l => l.IsDefault);
+            article.LayoutId = defaultLayout.Id;
+            article.Layout = defaultLayout;
 
             // Save changes to database.
             await DbContext.SaveChangesAsync();
