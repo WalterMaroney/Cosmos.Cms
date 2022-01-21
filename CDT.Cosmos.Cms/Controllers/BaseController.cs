@@ -95,7 +95,7 @@ namespace CDT.Cosmos.Cms.Controllers
             ViewData["PageUrls"] = pageModel;
 
             //
-            // Determine if we are getting an article, or a template.
+            // Get an article, or a template based on the controller name.
             //
             var model = await _articleEditLogic.Get(id, controllerName);
 
@@ -314,13 +314,12 @@ namespace CDT.Cosmos.Cms.Controllers
 
             data = builder.ToString();
 
-            //var removed = array.Where(c => c.Equals(regex) == false).ToArray();
-
-            //data = new string(removed);
+            // Search for and eliminate BOM
+            var filtered = new string(data.ToArray().Where(c => c != '\uFEFF').ToArray());
 
             using var memStream = new MemoryStream();
             using var writer = new StreamWriter(memStream, new UTF8Encoding(false));
-            writer.Write(data);
+            writer.Write(filtered);
             writer.Flush();
 
             var clean = Encoding.UTF8.GetString(memStream.ToArray());

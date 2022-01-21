@@ -4,6 +4,7 @@ using CDT.Cosmos.Cms.Common.Models;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Controllers;
 using CDT.Cosmos.Cms.Models;
+using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -76,6 +77,8 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
         #endregion
 
+        #region PRIVATE METHODS
+
         /// <summary>
         ///     Gets a template represented as an <see cref="ArticleViewModel" />.
         /// </summary>
@@ -97,6 +100,82 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 FooterJavaScript = string.Empty,
                 ReadWriteMode = true
             };
+        }
+
+        private async Task<int> GetNextVersionNumber(int articleNumber)
+        {
+            return await DbContext.Articles.Where(a => a.ArticleNumber == articleNumber)
+                .MaxAsync(m => m.VersionNumber) + 1;
+        }
+
+        private async Task<int> GetNextArticleNumber()
+        {
+            if (await DbContext.Articles.AnyAsync())
+                return await DbContext.Articles.MaxAsync(m => m.ArticleNumber) + 1;
+
+            return 1;
+        }
+
+        private void HandleLogEntry(Article article, string note, string userId)
+        {
+            article.ArticleLogs ??= new List<ArticleLog>();
+            article.ArticleLogs.Add(new ArticleLog
+            {
+                ArticleId = article.Id,
+                IdentityUserId = userId,
+                ActivityNotes = note,
+                DateTimeStamp = DateTime.Now.ToUniversalTime()
+            });
+        }
+
+        /// <summary>
+        /// Make sure all content editble DIVs have a unique C/CMS ID (attribute 'data-ccms-ceid').
+        /// </summary>
+        /// <param name="article"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// <para>
+        /// The WYSIWYG editor is designed to only edit portions of an article content that are marked 
+        /// with the attribute "contenteditable='true'".
+        /// </para>
+        /// <para>
+        /// When an article is saved by the WYSIWYG editor only those portions within the DIV tags
+        /// marked editable are saved.
+        /// </para>
+        /// <para>
+        /// This allows editing of a web page with dynamic client-side functionality (JavaScript)
+        /// like a map, chart, graph, etc. to be uneditable on a page while the text around it is.
+        /// </para>
+        /// </remarks>
+        private async Task<Article> Ensure_ContentEditable_HasId(Article article)
+        {
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(article.Content);
+
+            var elements = htmlDoc.DocumentNode.SelectNodes("//*/div[@crx='true']");
+
+            var count = 0;
+
+            if (elements != null)
+            {
+                foreach (var element in elements)
+                {
+                    if (!element.Attributes.Contains("data-ccms-ceid"))
+                    {
+                        element.Attributes.Add("data-ccms-ceid", Guid.NewGuid().ToString());
+                        count++;
+                    }
+                }
+
+                // If we had to add at least one ID, then re-save the article.
+                if (count > 0)
+                {
+                    article.Content = htmlDoc.DocumentNode.OuterHtml;
+                    await DbContext.SaveChangesAsync();
+                }
+            }
+
+            return article;
         }
 
         private async Task<List<ArticleListItem>> PrivateGetArticleList(IQueryable<Article> query)
@@ -147,32 +226,6 @@ namespace CDT.Cosmos.Cms.Data.Logic
             return model.ToList();
         }
 
-        private async Task<int> GetNextVersionNumber(int articleNumber)
-        {
-            return await DbContext.Articles.Where(a => a.ArticleNumber == articleNumber)
-                .MaxAsync(m => m.VersionNumber) + 1;
-        }
-
-        private async Task<int> GetNextArticleNumber()
-        {
-            if (await DbContext.Articles.AnyAsync())
-                return await DbContext.Articles.MaxAsync(m => m.ArticleNumber) + 1;
-
-            return 1;
-        }
-
-        private void HandleLogEntry(Article article, string note, string userId)
-        {
-            article.ArticleLogs ??= new List<ArticleLog>();
-            article.ArticleLogs.Add(new ArticleLog
-            {
-                ArticleId = article.Id,
-                IdentityUserId = userId,
-                ActivityNotes = note,
-                DateTimeStamp = DateTime.Now.ToUniversalTime()
-            });
-        }
-
         private async Task ResetVersionExpirations(int articleNumber)
         {
             var list = await DbContext.Articles.Where(a => a.ArticleNumber == articleNumber).ToListAsync();
@@ -188,6 +241,8 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             await DbContext.SaveChangesAsync();
         }
+
+        #endregion
 
         #region CREATE METHODS
 
@@ -872,6 +927,9 @@ namespace CDT.Cosmos.Cms.Data.Logic
             var article = await DbContext.Articles
                 .Include(l => l.Layout)
                 .FirstOrDefaultAsync(a => a.Id == id && a.StatusCode != 2);
+
+            article = await Ensure_ContentEditable_HasId(article);
+
 
             if (controllerName == EnumControllerName.Edit)
                 if (!string.IsNullOrEmpty(article.Content))

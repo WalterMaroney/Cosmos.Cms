@@ -5,6 +5,7 @@ using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Data.Logic;
 using CDT.Cosmos.Cms.Models;
 using CDT.Cosmos.Cms.Services;
+using HtmlAgilityPack;
 using Kendo.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -453,7 +454,7 @@ namespace CDT.Cosmos.Cms.Controllers
         #region EDIT ARTICLE FUNCTIONS
 
         /// <summary>
-        ///     Gets an article to edit by ID.
+        ///     Gets an article to edit by ID for the HTML (WYSIWYG) Editor.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -510,12 +511,65 @@ namespace CDT.Cosmos.Cms.Controllers
             // Strip Byte Order Marks (BOM)
             model.Content = StripBOM(model.Content);
 
+
             //
             // The HTML editor edits the title and Content fields.
             // Next two lines detect any HTML errors with each.
             // Errors are saved in ModelState.
             model.Title = BaseValidateHtml("Title", model.Title);
             model.Content = BaseValidateHtml("Content", model.Content);
+
+            //
+            // The WYSIWYG editor should only be allowed to edit content within the div tags
+            // marked with the attribute contenteditable="true"
+            //
+            // First pull out the editable DIVs from the model just submitted.
+            var modelHtmlDoc = new HtmlDocument();
+            modelHtmlDoc.LoadHtml(model.Content);
+            var modelEditableDivs = modelHtmlDoc.DocumentNode.SelectNodes("//*/div[@data-ccms-ceid]");
+
+
+            // Next pull the original.
+            var original = await _articleLogic.Get(model.Id, EnumControllerName.Edit);
+
+            // No editable divs, then don't do anything.
+            if (modelEditableDivs == null)
+            {
+                // Nothing should be edited because there are no editable DIVs.
+                model.Content = original.Content;
+            }
+            else
+            {
+                var originalHtmlDoc = new HtmlDocument();
+                originalHtmlDoc.LoadHtml(original.Content);
+                var originalEditableDivs = originalHtmlDoc.DocumentNode.SelectNodes("//*/div[@data-ccms-ceid]");
+
+                // The number of editable DIVs incoming should match the number in the original.
+                if (modelEditableDivs.Count == originalEditableDivs.Count)
+                {
+                    foreach (var originaDiv in originalEditableDivs)
+                    {
+                        var id = originaDiv.Attributes["data-ccms-ceid"].Value;
+                        var inputDiv = modelEditableDivs.FirstOrDefault(w => w.Attributes["data-ccms-ceid"].Value == id);
+                        if (inputDiv != null)
+                        {
+                            originaDiv.InnerHtml = inputDiv.InnerHtml; // Modify the original
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Content", $"Could not match editable div '{id}' with original.");
+                        }
+                    }
+
+                    // Now carry over what's beein updated to the original.
+                    model.Content = originalHtmlDoc.DocumentNode.OuterHtml;
+                }
+                else
+                {
+                    ModelState.AddModelError("Content", "The number of editable sections in this page does not match the original. Cannot save.");
+                }
+            }
+
 
             // Make sure model state is valid
             if (ModelState.IsValid)
@@ -530,9 +584,18 @@ namespace CDT.Cosmos.Cms.Controllers
                 //    model.FooterJavaScript = MinifyHtml(model.FooterJavaScript);
                 //}
 
+
+
+
+                // START SAVE TO DATABASE ********
                 //
                 // Now save the changes to the database here.
+                //
                 var result = await _articleLogic.UpdateOrInsert(model, user.Id);
+                //
+                // END  SAVE TO  DATABASE ********
+
+
                 model = result.Model;
 
                 // Re-enable editable sections.
@@ -748,6 +811,7 @@ namespace CDT.Cosmos.Cms.Controllers
 
             // Strip Byte Order Marks (BOM)
             model.Content = StripBOM(model.Content);
+
             model.HeaderJavaScript = StripBOM(model.HeaderJavaScript);
             model.FooterJavaScript = StripBOM(model.FooterJavaScript);
 
