@@ -86,7 +86,7 @@
     @Html.Raw(htmlHeader.DocumentNode.ChildNodes[0].InnerHtml)
 
     @*
-       Page specific header content    
+        Page specific header content
     *@
     @Html.Raw(Model.HeaderJavaScript)
 
@@ -104,12 +104,50 @@
     @RenderBody()
     @(await RenderSectionAsync("Scripts", false))
     <script>
-    var ccmsLangDisplayName = "@(Model.LanguageName ?? "US English")";
+        var ccmsLangDisplayName = "@(Model.LanguageName ?? "US English")";
     </script>
     @Html.Raw(htmlFooter.DocumentNode.ChildNodes[0].InnerHtml)
     @if (Model?.EditModeOn == false)
     {
         <script src="~/ccms/js/GoogleTranslations.js" id="ccms-lang-script" data-lang="@Model.LanguageName"></script>
     }
+    <script type="text/javascript">
+        //
+        // Detects z-index range
+        //
+        function zIndexRange() {
+            var highestZ;
+            var lowestZ;
+            var onefound = false;
+            var divs = document.getElementsByTagName('*');
+            if( ! divs.length ) { return Array(highestZ,lowestZ); }
+            for( var i=0; i<divs.length; i++ ) {
+                if( divs[i].style.position && divs[i].style.zIndex ) {
+                    if( ! onefound ) {
+                        highestZ = lowestZ = parseInt(divs[i].style.zIndex);
+                        onefound = true;
+                        }
+                    else {
+                        var ii = parseInt(divs[i].style.zIndex);
+                        if( ii > highestZ ) { highestZ = ii; }
+                        if( ii < lowestZ ) { lowestZ = ii; }
+                        }
+                    }
+                }
+            return Array(highestZ,lowestZ);
+        }
+
+        $(document).ready(function() {
+            var kCcmsToolBar = $("#k-ccms-ToolBar");
+            if (typeof kCcmsToolBar != "undefined" && kCcmsToolBar != null) {
+                var range = zIndexRange();
+                var top = 999999;
+                if (typeof range[0] != "undefined") {
+                    top = top + range[0];
+                }
+                kCcmsToolBar.css("z-index", top);
+            }
+        });
+    </script>
 </body>
 </html>

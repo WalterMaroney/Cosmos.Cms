@@ -15,9 +15,9 @@
 		<AnalysisLevel>5.0</AnalysisLevel>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<RepositoryUrl>https://github.com/CosmosSoftware/Cosmos.Cms</RepositoryUrl>
-		<Version>6.0.8.2</Version>
-		<AssemblyVersion>6.0.8.2</AssemblyVersion>
-		<FileVersion>6.0.8.2</FileVersion>
+		<Version>6.0.9.1</Version>
+		<AssemblyVersion>6.0.9.1</AssemblyVersion>
+		<FileVersion>6.0.9.1</FileVersion>
 		<UserSecretsId>498e495c-d772-4d44-870d-92009f01de57</UserSecretsId>
 		<PackageProjectUrl>https://github.com/CosmosSoftware/Cosmos.Cms</PackageProjectUrl>
 		<NeutralLanguage></NeutralLanguage>
@@ -72,7 +72,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AWSSDK.S3" Version="3.7.7.14" />
+		<PackageReference Include="AWSSDK.S3" Version="3.7.7.15" />
 		<PackageReference Include="AWSSDK.SecretsManager" Version="3.7.1.70" />
 		<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.1" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />

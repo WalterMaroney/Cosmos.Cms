@@ -90,11 +90,13 @@ $(function() {
 
     $("body").append(toast);
 
-    $(langDropDownCtrl).on("show.bs.dropdown",
-        function() {
-            // do something…
-            loadLangList();
-        });
+    if (typeof langDropDownCtrl != "undefined") {
+        $(langDropDownCtrl).on("show.bs.dropdown",
+            function () {
+                // do something…
+                loadLangList();
+            });
+    }
 });
 
 function getPrefixes() {

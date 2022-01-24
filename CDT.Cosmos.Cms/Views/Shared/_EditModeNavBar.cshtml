@@ -47,148 +47,175 @@
     Icons:
     https://fontawesome.com/icons?from=io
 *@
-@if (editorToolBar)
-{
-    <style>
-        .k-widget.k-editor.k-editor-inline {
-            background-color: inherit;
-            color: inherit;
-            border: 1px dashed blue;
-            box-sizing: inherit;
-        }
-        .k-success {
-            background-color: #06c91a;
-        }
-        .k-alert {
-            background-color: #be4d25;
-        }
-    </style>
-    @* EDITING TOOL BAR *@
-    @(Html.Kendo().ToolBar()
-            .Name("ToolBar")
-            .Items(items =>
-            {
+<nav class="navbar" id="k-ccms-ToolBar">
+    <div class="container-fluid">
+        <div id="ccmsToolBar" class="col-11">
+            @if (editorToolBar)
+                {
+                    <style>
+                        .k-widget.k-editor.k-editor-inline {
+                            background-color: inherit;
+                            color: inherit;
+                            border: 1px dashed blue;
+                            box-sizing: inherit;
+                        }
+
+                        .k-success {
+                            background-color: #06c91a;
+                        }
+
+                        .k-alert {
+                            background-color: #be4d25;
+                        }
+                    </style>
+                    @* EDITING TOOL BAR *@
+                    @(Html.Kendo().ToolBar()
+                .Name("toolBar")
+                .Items(items =>
+                {
                 items.Add().Type(CommandType.SplitButton).Text("Menu").Id("ddMenu").MenuButtons(menuButtons =>
                 {
-                    menuButtons.Add().Text("Save");
-                    menuButtons.Add().Text("Code View");
-                    menuButtons.Add().Text("Files");
-                    menuButtons.Add().Text("Preview");
-                    menuButtons.Add().Text("Versions");
-                    menuButtons.Add().Text("Close");
-                    menuButtons.Add().Text("Permissions").Hidden(!User.IsInRole("Editors") && !User.IsInRole("Administrators"));
-                    menuButtons.Add().Text("Help");
+                menuButtons.Add().Text("Save");
+                menuButtons.Add().Text("Code View");
+                menuButtons.Add().Text("Files");
+                menuButtons.Add().Text("Preview");
+                menuButtons.Add().Text("Versions");
+                menuButtons.Add().Text("Close");
+                menuButtons.Add().Text("Permissions").Hidden(!User.IsInRole("Editors") && !User.IsInRole("Administrators"));
+                menuButtons.Add().Text("Help");
                 }).Click("bgEditClick").Hidden(controllerName == "Templates");
-                
+
                 if (isEditor || isAdministrator)
                 {
-                    items.Add().Type(CommandType.Button).Template("<div onclick='openSchedulerDialog()' id='btnPublish'></div>");
-                    items.Add().Type(CommandType.Button).Template("<div onclick='openPermissionsDialog()' style='height:32px' id='btnPermissions'><span class='fa fa-shield'></span></div>");
+                items.Add().Type(CommandType.Button).Template("<div onclick='openSchedulerDialog()' id='btnPublish'></div>");
+                items.Add().Type(CommandType.Button).Template("<div onclick='openPermissionsDialog()' style='height:32px' id='btnPermissions'><span class='fa fa-shield'></span></div>");
                 }
 
                 items.Add().Template("<div id='pendingChangesBadge' class='badge badge-warning' style='display:none'>Changes Pending Save</div>");
 
                 items.Add().Template("<span>Title: </span>");
                 items.Add().Template(Html.Kendo().TextBox().Name("tbTitle").Value(Model.Title).HtmlAttributes(new {style = "width: 32vw;"}).ToHtmlString());
-                
+
                 items.Add().Type(CommandType.SplitButton).Template(accountBtnTemplate).MenuButtons(menuButtons =>
                 {
-                    menuButtons.Add().Text("User Account");
-                    menuButtons.Add().Text("Log Out");
+                menuButtons.Add().Text("User Account");
+                menuButtons.Add().Text("Log Out");
                 }).Click("bgCmsClick");
                 if (isAuthor)
                 {
-                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Author'>(Author)</a>");
+                items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Author'>(Author)</a>");
                 }
                 else if (isEditor)
                 {
-                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Editor)</a>");
+                items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Editor)</a>");
                 }
                 else if (isAdministrator)
                 {
-                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Administrator)</a>");
+                items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Administrator)</a>");
                 }
                 items.Add().Type(CommandType.Button).Template("<div style='padding-top:4px;display:none;' class='k-button k-button-sm k-button-secondary' id='cdnLbl'></div> <div id='progressBar' style='width:80px'></div>");
-                
-                items.Add().Template("<div><span for='versionLbl' style='margin-right:10px;font-size:0.6em;>Page version:" + @Model.VersionNumber + "</span><span id='versInfo' style='margin-right:10px;font-size:0.6em'>" + @assemblyName.Version + "</span> <a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a' title='Need with us using Cosmos CMS? Ask a question!'>Get Help</a><a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/issues/new?assignees=&labels=&template=bug_report.md&title=' title='All bug reports are appreciated!'>Report a Bug</a></div>").HtmlAttributes(new { style = "position:absolute;right:10px;"});
-            
-                }))
 
-}
-else
-{
-    @* NOT EDITING TOOL BAR *@
-    @(Html.Kendo().ToolBar()
-        .Name("ToolBar")
-        .Items(items =>
-        {
-            items.Add().Type(CommandType.SplitButton).Text("Menu").Id("menuBtn").ImageUrl("/images/CosmosBearIcon.png").MenuButtons(menuButtons =>
-            {
+                items.Add().Template("<div><span for='versionLbl' style='margin-right:10px;font-size:0.6em;>Page version:" + @Model.VersionNumber + "</span><span id='versInfo' style='margin-right:10px;font-size:0.6em'>" + @assemblyName.Version + "</span> <a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a' title='Need with us using Cosmos CMS? Ask a question!'>Get Help</a><a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/issues/new?assignees=&labels=&template=bug_report.md&title=' title='All bug reports are appreciated!'>Report a Bug</a></div>").HtmlAttributes(new { style = "position:absolute;right:10px;"});
+
+                }))
+                }
+                else
+                {
+                    @* NOT EDITING TOOL BAR *@
+                    @(Html.Kendo().ToolBar()
+                .Name("toolBar")
+                .Items(items =>
+                {
+                items.Add().Type(CommandType.SplitButton).Text("Menu").Id("menuBtn").ImageUrl("/images/CosmosBearIcon.png").MenuButtons(menuButtons =>
+                {
                 menuButtons.Add().Text("Home Page");
                 menuButtons.Add().Text("Help");
                 if (Model != null && controllerName == "Home" && actionName == "Index" && (isAuthor && Model?.Published == null || isEditor || isAdministrator))
                 {
-                    menuButtons.Add().Text("Edit");
+                menuButtons.Add().Text("Edit");
                 }
                 if (isAdministrator || isEditor || isAuthor || isTeamMember)
                 {
-                    menuButtons.Add().Text("Files");
-                    menuButtons.Add().Text("Pages");
+                menuButtons.Add().Text("Files");
+                menuButtons.Add().Text("Pages");
                 }
                 if (isAdministrator || isEditor && isTeamMember == false)
                 {
-                    menuButtons.Add().Text("Templates");
-                    menuButtons.Add().Text("Preload");
-                    menuButtons.Add().Text("Publish");
-                    menuButtons.Add().Text("Navigation");
-                    menuButtons.Add().Text("Layouts");
-                    menuButtons.Add().Text("Logs");
-                    menuButtons.Add().Text("Teams");
+                menuButtons.Add().Text("Templates");
+                menuButtons.Add().Text("Preload");
+                menuButtons.Add().Text("Publish");
+                menuButtons.Add().Text("Navigation");
+                menuButtons.Add().Text("Layouts");
+                menuButtons.Add().Text("Logs");
+                menuButtons.Add().Text("Teams");
                 }
                 if (isAdministrator && isTeamMember == false)
                 {
-                    menuButtons.Add().Text("Users");
-                    if (options.Value.SiteSettings != null && options.Value.SiteSettings.AllowSetup.HasValue && options.Value.SiteSettings.AllowSetup.Value)
-                    {
-                        menuButtons.Add().Text("Setup");
-                        menuButtons.Add().Text("Diagnostics");
-                        menuButtons.Add().Text("Configure");
-                    }
-                    if (options.Value.SiteSettings.AllowConfigEdit)
-                    {
-                        menuButtons.Add().Text("Configure");
-                    }
-                    if (options.Value.SiteSettings.AllowReset.HasValue && options.Value.SiteSettings.AllowReset.Value)
-                    {
-                        menuButtons.Add().Text("Reset Site");
-                    }
+                menuButtons.Add().Text("Users");
+                if (options.Value.SiteSettings != null && options.Value.SiteSettings.AllowSetup.HasValue && options.Value.SiteSettings.AllowSetup.Value)
+                {
+                menuButtons.Add().Text("Setup");
+                menuButtons.Add().Text("Diagnostics");
+                menuButtons.Add().Text("Configure");
+                }
+                if (options.Value.SiteSettings.AllowConfigEdit)
+                {
+                menuButtons.Add().Text("Configure");
+                }
+                if (options.Value.SiteSettings.AllowReset.HasValue && options.Value.SiteSettings.AllowReset.Value)
+                {
+                menuButtons.Add().Text("Reset Site");
+                }
                 }
                 if (User.Identity.IsAuthenticated)
                 {
-                    menuButtons.Add().Text("User Account");
-                    menuButtons.Add().Text("Log Out");
+                menuButtons.Add().Text("User Account");
+                menuButtons.Add().Text("Log Out");
                 }
-            }).Click("bgCmsClick");
-            items.Add().Template("<a id='timeZone' title='Dates and times are in this time zone.' class='k-button .cosmos-btn-blue'></a>");
+                }).Click("bgCmsClick");
+                items.Add().Template("<a id='timeZone' title='Dates and times are in this time zone.' class='k-button .cosmos-btn-blue'></a>");
 
-            if (User.Identity.IsAuthenticated)
-            {
+                if (User.Identity.IsAuthenticated)
+                {
                 items.Add().Type(CommandType.SplitButton).Text(accountBtnTemplate).MenuButtons(menuButtons =>
                 {
-                    menuButtons.Add().Text("User Account");
-                    menuButtons.Add().Text("Log Out");
+                menuButtons.Add().Text("User Account");
+                menuButtons.Add().Text("Log Out");
                 }).Click("bgCmsClick");
-            }
-            items.Add().Template("<div><span id='versInfo' style='margin-right:10px;font-size:0.6em;'>" + @assemblyName.Version + "</span> <a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a' title='Need with us using Cosmos CMS? Ask a question!'>Get Help</a><a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/issues/new?assignees=&labels=&template=bug_report.md&title=' title='All bug reports are appreciated!'>Report a Bug</a></div>").HtmlAttributes(new { style = "position:absolute;right:10px;"});
-            
-        }))
-    <div style="display: none">
-        @* This is the hidden log out form executed by the log out drop down menu pick above*@
-        <form id="frmLogout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
-        </form>
-    </div>
-}
+                }
+                items.Add().Template("<div><span id='versInfo' style='margin-right:10px;font-size:0.6em;'>" + @assemblyName.Version + "</span> <a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a' title='Need with us using Cosmos CMS? Ask a question!'>Get Help</a><a target='_blank' class='k-button k-button-sm k-button-secondary' href='https://github.com/CosmosSoftware/Cosmos.Cms/issues/new?assignees=&labels=&template=bug_report.md&title=' title='All bug reports are appreciated!'>Report a Bug</a></div>").HtmlAttributes(new { style = "position:absolute;right:10px;"});
 
+                }))
+                    <div style="display: none">
+                        @* This is the hidden log out form executed by the log out drop down menu pick above*@
+                        <form id="frmLogout" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+                        </form>
+                    </div>
+                }
+        </div>
+        <div class="col-1">
+            <button id="btnCcmsShowToolBar"
+                    title="Show Cosmos Menu"
+                    class="k-button k-success"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="ccmsToolBar"
+                    onclick="toggleToolBar('show')"
+                    style="display:none">
+                    <i class="fas fa-angle-double-right"></i>
+            </button>
+            <button id="btnCcmsHideToolBar"
+                    title="Hide Cosmos Menu"
+                    class="k-button k-success"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="ccmsToolBar"
+                    onclick="toggleToolBar('hide')">
+                    <i class="fas fa-angle-double-left"></i>
+            </button>
+        </div>
+    </div>
+</nav>
 @if (editorToolBar)
 {
     <div style="display:none">
@@ -932,7 +959,7 @@ else
     <p>Assembly: @assemblyName.Name</p>
     <p>Version: @assemblyName.Version</p>
     <p>@Assembly.GetEntryAssembly()</p>
-    <p>Cosmos CMS is an open source project on 
+    <p>Cosmos CMS is an open source project on
      <a target="_blank" href="https://github.com/CosmosSoftware/Cosmos.Cms">GitHub</a>.</p>
 </script>
 @(Html.Kendo().Tooltip()
@@ -965,6 +992,21 @@ else
         }).data("kendoNotification");
 
     });
+
+    function toggleToolBar(e) {
+        var toolBar = $("#ccmsToolBar");
+        var btnCcmsShowToolBar = $("#btnCcmsShowToolBar");
+        var btnCcmsHideToolBar = $("#btnCcmsHideToolBar");
+        if (e === "hide") {
+            toolBar.hide();
+            btnCcmsHideToolBar.hide();
+            btnCcmsShowToolBar.show();
+        } else {
+            toolBar.show();
+            btnCcmsHideToolBar.show();
+            btnCcmsShowToolBar.hide();
+        }
+    }
 
     function getLocalTimeZone() {
         var datetime = new Date();
