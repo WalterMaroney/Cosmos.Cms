@@ -5,7 +5,9 @@
     Layout = "_DynamicLayout";
     ViewData["Title"] = Model.Title;
 }
+<div id="eContent">
 @Html.Raw(Model.Content)
+</div>
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
