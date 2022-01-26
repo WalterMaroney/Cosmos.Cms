@@ -441,133 +441,134 @@ namespace CDT.Cosmos.Cms.Controllers
 
 
         #region EDIT (CODE | IMAGE) FUNCTIONS
-        /// <summary>
-        /// Edit code for a file
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public async Task<IActionResult> EditCode(string path)
-        {
-            try
-            {
-                var extension = Path.GetExtension(path.ToLower());
 
-                var filter = _options.Value.SiteSettings.AllowedFileTypes.Split(',');
-                var editorField = new EditorField
-                {
-                    FieldId = "Content",
-                    FieldName = Path.GetFileName(path)
-                };
+        ///// <summary>
+        ///// Edit code for a file
+        ///// </summary>
+        ///// <param name="path"></param>
+        ///// <returns></returns>
+        //public async Task<IActionResult> EditCode(string path)
+        //{
+        //    try
+        //    {
+        //        var extension = Path.GetExtension(path.ToLower());
 
-                if (!filter.Contains(extension)) return new UnsupportedMediaTypeResult();
+        //        var filter = _options.Value.SiteSettings.AllowedFileTypes.Split(',');
+        //        var editorField = new EditorField
+        //        {
+        //            FieldId = "Content",
+        //            FieldName = Path.GetFileName(path)
+        //        };
 
-                switch (extension)
-                {
-                    case ".js":
-                        editorField.EditorMode = EditorMode.JavaScript;
-                        editorField.IconUrl = "/images/seti-ui/icons/javascript.svg";
-                        break;
-                    case ".css":
-                        editorField.EditorMode = EditorMode.Css;
-                        editorField.IconUrl = "/images/seti-ui/icons/css.svg";
-                        break;
-                    default:
-                        editorField.EditorMode = EditorMode.Html;
-                        editorField.IconUrl = "/images/seti-ui/icons/html.svg";
-                        break;
-                }
+        //        if (!filter.Contains(extension)) return new UnsupportedMediaTypeResult();
 
-                //
-                // Get the blob now, so we can determine the type, or use this client as-is
-                //
-                //var properties = blob.GetProperties();
+        //        switch (extension)
+        //        {
+        //            case ".js":
+        //                editorField.EditorMode = EditorMode.JavaScript;
+        //                editorField.IconUrl = "/images/seti-ui/icons/javascript.svg";
+        //                break;
+        //            case ".css":
+        //                editorField.EditorMode = EditorMode.Css;
+        //                editorField.IconUrl = "/images/seti-ui/icons/css.svg";
+        //                break;
+        //            default:
+        //                editorField.EditorMode = EditorMode.Html;
+        //                editorField.IconUrl = "/images/seti-ui/icons/html.svg";
+        //                break;
+        //        }
 
-                // Open a stream
-                await using var memoryStream = new MemoryStream();
+        //        //
+        //        // Get the blob now, so we can determine the type, or use this client as-is
+        //        //
+        //        //var properties = blob.GetProperties();
 
-                await using (var stream = await _storageContext.OpenBlobReadStreamAsync(path))
-                {
-                    // Load into memory and release the blob stream right away
-                    await stream.CopyToAsync(memoryStream);
-                }
+        //        // Open a stream
+        //        await using var memoryStream = new MemoryStream();
 
-                return View(new FileManagerEditCodeViewModel
-                {
-                    Id = 1,
-                    Path = path,
-                    EditorTitle = Path.GetFileName(Path.GetFileName(path)),
-                    EditorFields = new List<EditorField>
-                    {
-                        editorField
-                    },
-                    Content = Encoding.UTF8.GetString(memoryStream.ToArray()),
-                    EditingField = "Content",
-                    CustomButtons = new List<string>()
-                });
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message, e);
-                throw;
-            }
-        }
-        /// <summary>
-        /// Edit an image
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public async Task<IActionResult> EditImage(string path)
-        {
-            var extension = Path.GetExtension(path.ToLower());
+        //        await using (var stream = await _storageContext.OpenBlobReadStreamAsync(path))
+        //        {
+        //            // Load into memory and release the blob stream right away
+        //            await stream.CopyToAsync(memoryStream);
+        //        }
 
-            var filter = new[] { ".png", ".jpg", ".gif", ".jpeg" };
-            if (filter.Contains(extension))
-            {
-                EditorMode mode;
-                switch (extension)
-                {
-                    case ".js":
-                        mode = EditorMode.JavaScript;
-                        break;
-                    case ".css":
-                        mode = EditorMode.Css;
-                        break;
-                    default:
-                        mode = EditorMode.Html;
-                        break;
-                }
+        //        return View(new FileManagerEditCodeViewModel
+        //        {
+        //            Id = 1,
+        //            Path = path,
+        //            EditorTitle = Path.GetFileName(Path.GetFileName(path)),
+        //            EditorFields = new List<EditorField>
+        //            {
+        //                editorField
+        //            },
+        //            Content = Encoding.UTF8.GetString(memoryStream.ToArray()),
+        //            EditingField = "Content",
+        //            CustomButtons = new List<string>()
+        //        });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logger.LogError(e.Message, e);
+        //        throw;
+        //    }
+        //}
+        ///// <summary>
+        ///// Edit an image
+        ///// </summary>
+        ///// <param name="path"></param>
+        ///// <returns></returns>
+        //public async Task<IActionResult> EditImage(string path)
+        //{
+        //    var extension = Path.GetExtension(path.ToLower());
 
-                // Open a stream
-                await using var memoryStream = new MemoryStream();
+        //    var filter = new[] { ".png", ".jpg", ".gif", ".jpeg" };
+        //    if (filter.Contains(extension))
+        //    {
+        //        EditorMode mode;
+        //        switch (extension)
+        //        {
+        //            case ".js":
+        //                mode = EditorMode.JavaScript;
+        //                break;
+        //            case ".css":
+        //                mode = EditorMode.Css;
+        //                break;
+        //            default:
+        //                mode = EditorMode.Html;
+        //                break;
+        //        }
 
-                await using (var stream = await _storageContext.OpenBlobReadStreamAsync(path))
-                {
-                    // Load into memory and release the blob stream right away
-                    await stream.CopyToAsync(memoryStream);
-                }
+        //        // Open a stream
+        //        await using var memoryStream = new MemoryStream();
 
-                return View(new FileManagerEditCodeViewModel
-                {
-                    Id = 1,
-                    Path = path,
-                    EditorTitle = Path.GetFileName(Path.GetFileName(path)),
-                    EditorFields = new List<EditorField>
-                    {
-                        new()
-                        {
-                            FieldId = "Content",
-                            FieldName = "Html Content",
-                            EditorMode = mode
-                        }
-                    },
-                    Content = Encoding.UTF8.GetString(memoryStream.ToArray()),
-                    EditingField = "Content",
-                    CustomButtons = new List<string>()
-                });
-            }
+        //        await using (var stream = await _storageContext.OpenBlobReadStreamAsync(path))
+        //        {
+        //            // Load into memory and release the blob stream right away
+        //            await stream.CopyToAsync(memoryStream);
+        //        }
 
-            return new UnsupportedMediaTypeResult();
-        }
+        //        return View(new FileManagerEditCodeViewModel
+        //        {
+        //            Id = 1,
+        //            Path = path,
+        //            EditorTitle = Path.GetFileName(Path.GetFileName(path)),
+        //            EditorFields = new List<EditorField>
+        //            {
+        //                new()
+        //                {
+        //                    FieldId = "Content",
+        //                    FieldName = "Html Content",
+        //                    EditorMode = mode
+        //                }
+        //            },
+        //            Content = Encoding.UTF8.GetString(memoryStream.ToArray()),
+        //            EditingField = "Content",
+        //            CustomButtons = new List<string>()
+        //        });
+        //    }
+
+        //    return new UnsupportedMediaTypeResult();
+        //}
 
         #endregion
 

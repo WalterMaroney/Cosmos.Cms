@@ -1,14 +1,14 @@
 ﻿@model TemplateCodeEditorViewModel
 @addTagHelper *, Kendo.Mvc
 @{
-    Layout = "_CodeEditorLayout";
+    Layout = "_LayoutCodeEditor";
     ViewData["Title"] = Model.EditorTitle;
 }
 
 <form id="codeForm" asp-action="EditCode" asp-controller="Templates">
-    <input type="hidden" asp-for="Id"/>
-    <input type="hidden" asp-for="EditorTitle"/>
-    <input type="hidden" asp-for="Content"/>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="EditorTitle" />
+    <input type="hidden" asp-for="Content" />
 </form>
 <script>
     function showValue() {

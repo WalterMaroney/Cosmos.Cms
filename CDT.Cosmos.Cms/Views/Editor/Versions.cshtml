@@ -2,88 +2,81 @@
 @using CDT.Cosmos.Cms.Services
 @addTagHelper *, Kendo.Mvc
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = "Versions";
-    Html.ViewContext.ViewBag.BrowserTitle = "Versions";
-    var teamMemberLogic = (TeamIdentityLogic) ViewData["TeamLogic"];
-    var teamName = (string) ViewData["TeamName"];
+    ViewData["Title"] = @ViewData["ArticleTitle"] + "Page Versions";
+    var teamMemberLogic = (TeamIdentityLogic)ViewData["TeamLogic"];
+    var teamName = (string)ViewData["TeamName"];
     var isReviewer = User.IsInRole("Reviewers") || teamMemberLogic?.IsInRole(TeamRoleEnum.Reviewer, teamName) == true;
     var isAuthor = User.IsInRole("Authors") || teamMemberLogic?.IsInRole(TeamRoleEnum.Author, teamName) == true;
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <h6>Version list for page:</h6>
-        <h1>@ViewData["ArticleTitle"]</h1>
-        <p class="text-muted">Page ID Number: @ViewData["ArticleId"]</p>
-    </div>
-</div>
-@if (!isReviewer)
-{
+<div class="container">
     <div class="row">
         <div class="col-md-12">
-            <a id="btnNewVersion" class="btn btn-sm btn-secondary"
-               title="Creates a new version of this article using the lastest version, and puts it in edit mode."
-               asp-action="CreateVersion" asp-route-id="@ViewData["ArticleId"]">
-                Create new version from latest version
-            </a>
-            <br/><br/>
+            <h3>@ViewData["ArticleTitle"]</h3>
+            <h5>Version List</h5>
         </div>
     </div>
-}
-<div class="row">
-    <div class="col-md-12">
-        <p>Shown below are all the version(s) of this page. You can view individual versions, or, base a new version on an old one.</p>
-        <p>Each version shows if it is a draft, or when it was published (made visible to the public).</p>
-        <br/>
-        @(Html.Kendo().Grid<ArticleVersionInfo>().Name("grid")
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <p>Shown below are all the different version(s) of this page.  Each shows if it a &quot;draf&quot;t or the data/time when it was &quot;published.&quot;</p>
+            <p>&quot;Expires&quot; date/time is when a previously published version is replaced by a new published version.</p>
+            <br />
+            @if (!isReviewer)
+            {
+                <a id="btnNewVersion" class="btn btn-primary"
+               title="Creates a new version of this article using the lastest version, and puts it in edit mode."
+               asp-action="CreateVersion" asp-route-id="@ViewData["ArticleId"]">
+                    Create new version from latest version
+                </a>
+            }
+            @(Html.Kendo().Grid<ArticleVersionInfo>().Name("grid")
             .Columns(c =>
             {
-                c.Bound(b => b.Id).Hidden(true);
-                c.Template($"<a target=\"_blank\" class=\"btn btn-sm btn-primary\" href=\"{Url.Action("Preview", "Home")}/#: Id #\" title=\"Click to preview\"><span class=\"fa fa-external-link\"></span> #: VersionNumber #</a>").Width(59).Title("Version");
-                c.Template($"<a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('HTML', #: Id #, '#: Published #') \" title=\"Edit online with Kendo WSYWIG editor.\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, UsesHtmlEditor) #>HTML View</a> <a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('CODE', #: Id #, '#: Published #')\" title=\"Edit code using Monaco Editor.\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, true) #>Code View</a>").Title("Edit Tools");
-                c.Template("#= formatPublishedDate(Published) #").Title("Published");
-                c.Template("#= kendo.toString(Updated, 'G') #").Title("Last Edited");
-                c.Template("#= formatExpiredDate(Expires) #").Title("Expires");
-                c.Template($"<a class=\"btn btn-sm btn-success\" title=\"Promote this version to the latest version and put it in edit mode.\" href=\"{Url.Action("CreateVersion")}?id={ViewData["ArticleId"]}&entityId=#: Id #\"><span class=\"text-white fa fa-arrow-circle-up\" aria-hidden=\"true\"></span></a>").Title("Promote").Width(50);
-                
+            c.Bound(b => b.Id).Hidden(true);
+            c.Template($"<a target=\"_blank\" class=\"btn btn-sm btn-primary\" href=\"{Url.Action("Preview", "Home")}/#: Id #\" title=\"Click to preview\"><span class=\"fa fa-external-link\"></span> #: VersionNumber #</a>").Width(100).Title("Version");
+            c.Template($"<a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('HTML', #: Id #, '#: Published #') \" title=\"Edit online with Kendo WSYWIG editor.\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, UsesHtmlEditor) #>HTML View</a> <a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('CODE', #: Id #, '#: Published #')\" title=\"Edit code using Monaco Editor.\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, true) #>Code View</a>").Title("Edit Tools");
+            c.Template("#= formatPublishedDate(Published) #").Title("Published");
+            c.Template("#= kendo.toString(Updated, 'G') #").Title("Last Edited");
+            c.Template("#= formatExpiredDate(Expires) #").Title("Expires");
+            c.Template($"<a class=\"btn btn-sm btn-success\" title=\"Promote this version to the latest version and put it in edit mode.\" href=\"{Url.Action("CreateVersion")}?id={ViewData["ArticleId"]}&entityId=#: Id #\"><span class=\"text-white fa fa-arrow-circle-up\" aria-hidden=\"true\"></span></a>").Title("Promote").Width(50);
+
             })
             .Sortable()
             .Filterable()
             .Pageable()
             .DataSource(dataSource => { dataSource.Ajax().Read(read => read.Action("Get_Versions", "Editor", new {id = (int) ViewData["ArticleId"]})); })
             )
+        </div>
     </div>
 </div>
 
-<div style="display: none">
-    <kendo-dialog name="editPublishedPageDialog" title="Editing Published Page" modal="true" visible="false" width="450">
-        <content>
-            <h4>Editing Published Page</h4>
-            <p><span class="badge badge-warning">Warning:</span> You are about to edit a page that already has been published.</p>
-            <hr class="text-light"/>
-            <h4>Tip <span class="fa fa-lightbulb-o"></span></h4>
-            <p>
-                Rather than editing a <em>published</em> page, create a new version and
-                edit that. Then publish it when ready
-            </p>
-            <p>That way you can make changes and not affect what people see now.</p>
-            <p>It also lets you control when new content goes live.</p>
-        </content>
-        <popup-animation>
-            <open duration="500" effects="fade:in"/>
-            <close duration="500" effects="fade:out"/>
-        </popup-animation>
-        <actions>
-            <action text="Cancel">
-            </action>
-            <action action="editNewVersion" text="New Version" title="Edit new version of page">
-            </action>
-            <action action="editPublishedVersion" text="Edit Published" title="Edit already published version of page">
-            </action>
-        </actions>
-    </kendo-dialog>
-</div>
+<kendo-dialog name="editPublishedPageDialog" title="Editing Published Page" modal="true" visible="false" width="450">
+    <content>
+        <h4>Editing Published Page</h4>
+        <p><span class="badge badge-warning">Warning:</span> You are about to edit a page that already has been published.</p>
+        <hr class="text-light" />
+        <h4>Tip <span class="fa fa-lightbulb-o"></span></h4>
+        <p>
+            Rather than editing a <em>published</em> page, create a new version and
+            edit that. Then publish it when ready
+        </p>
+        <p>That way you can make changes and not affect what people see now.</p>
+        <p>It also lets you control when new content goes live.</p>
+    </content>
+    <popup-animation>
+        <open duration="500" effects="fade:in" />
+        <close duration="500" effects="fade:out" />
+    </popup-animation>
+    <actions>
+        <action text="Cancel">
+        </action>
+        <action action="editNewVersion" text="New Version" title="Edit new version of page">
+        </action>
+        <action action="editPublishedVersion" text="Edit Published" title="Edit already published version of page">
+        </action>
+    </actions>
+</kendo-dialog>
 <script>
     function visibleStyle(isReviewer, isAuthor, isPublished, usesEditor) {
         if (isReviewer === "True" || usesEditor === false || (isAuthor === "True" && isPublished !== null)) {

@@ -1,0 +1,24 @@
+﻿@model ArticleViewModel
+<!DOCTYPE html>
+<html lang="@Model.LanguageCode">
+<head>
+    <title>@Model.Title</title>
+    @Html.Raw(Model.Layout.Head)
+    @*
+        Page specific header
+    *@
+    @Html.Raw(Model.HeaderJavaScript)
+
+    @*
+        Application Insights Scripts
+    *@
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+<body>
+    @RenderBody()
+    @*
+        Application Insights Scripts
+    *@
+    @await RenderSectionAsync("Scripts", false)
+</body>
+</html>

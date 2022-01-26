@@ -4,36 +4,37 @@
     ViewData["Title"] = "Team Membership";
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <h4>Team: @Model.TeamName</h4>
-        <hr/>
-        <ul>
-            <li>Use this page to add and remove members, and assign roles.</li>
-            <li>Change a role, click on it, then use the drop down to select the new role.</li>
-            <li><span class="badge badge-warning">Important!</span> Don't forget to click &quot;Save Changes&quot; when done.</li>
-        </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Team: @Model.TeamName</h4>
+            <hr />
+            <ul>
+                <li>Use this page to add and remove members, and assign roles.</li>
+                <li>Change a role, click on it, then use the drop down to select the new role.</li>
+                <li><span class="badge badge-warning">Important!</span> Don't forget to click &quot;Save Changes&quot; when done.</li>
+            </ul>
 
-        <p>
-            <a asp-action="Index" class="btn btn-sm btn-secondary">Back to Teams</a>
-        </p>
+            <p>
+                <a asp-action="Index" class="btn btn-sm btn-secondary">Back to Teams</a>
+            </p>
+        </div>
     </div>
-</div>
-<div class="row">
-    @(Html.Kendo().Grid<TeamMemberViewModel>()
+    <div class="row">
+        @(Html.Kendo().Grid<TeamMemberViewModel>()
         .Name("grid")
         .Columns(columns =>
         {
-            columns.Bound(p => p.Id).Visible(false);
-            columns.Bound(p => p.Team).Visible(false);
-            columns.Bound(p => p.Member).ClientTemplate("#= Member.UserEmail #").Width(180);
-            columns.Bound(p => p.TeamRole).ClientTemplate("#= TeamRole.TeamRoleName #").Width(150);
-            columns.Command(command => command.Destroy()).Width(150);
+        columns.Bound(p => p.Id).Visible(false);
+        columns.Bound(p => p.Team).Visible(false);
+        columns.Bound(p => p.Member).ClientTemplate("#= Member.UserEmail #").Width(180);
+        columns.Bound(p => p.TeamRole).ClientTemplate("#= TeamRole.TeamRoleName #").Width(150);
+        columns.Command(command => command.Destroy()).Width(150);
         })
         .ToolBar(toolBar =>
         {
-            toolBar.Create().Text("Add member");
-            toolBar.Save();
+        toolBar.Create().Text("Add member");
+        toolBar.Save();
         })
         .Editable(editable => editable.Mode(GridEditMode.InCell))
         .Pageable()
@@ -41,27 +42,28 @@
         .Scrollable()
         .HtmlAttributes(new {style = "height:550px;"})
         .DataSource(dataSource => dataSource
-            .Ajax()
-            .Batch(true)
-            .PageSize(20)
-            .ServerOperation(false)
-            .Events(events => events.Error("errorHandler"))
-            .Model(model =>
-            {
-                model.Id(p => p.Id);
-                model.Field(p => p.Member).DefaultValue(new TeamMemberLookupItem
-                {
-                    UserId = Guid.Empty.ToString(),
-                    UserEmail = "* choose one *"
-                });
-                model.Field(p => p.TeamRole).DefaultValue(new TeamRoleLookupItem(TeamRoleEnum.Reviewer));
-            })
-            .Read(read => read.Action("TeamMembers_Read", "Teams", new {id = Model.Id}))
-            .Update(update => update.Action("TeamMembers_Update", "Teams", new {id = Model.Id}))
-            .Create(create => create.Action("TeamMembers_Create", "Teams", new {id = Model.Id}))
-            .Destroy(destroy => destroy.Action("TeamMembers_Destroy", "Teams", new {id = Model.Id}))
+        .Ajax()
+        .Batch(true)
+        .PageSize(20)
+        .ServerOperation(false)
+        .Events(events => events.Error("errorHandler"))
+        .Model(model =>
+        {
+        model.Id(p => p.Id);
+        model.Field(p => p.Member).DefaultValue(new TeamMemberLookupItem
+        {
+        UserId = Guid.Empty.ToString(),
+        UserEmail = "* choose one *"
+        });
+        model.Field(p => p.TeamRole).DefaultValue(new TeamRoleLookupItem(TeamRoleEnum.Reviewer));
+        })
+        .Read(read => read.Action("TeamMembers_Read", "Teams", new {id = Model.Id}))
+        .Update(update => update.Action("TeamMembers_Update", "Teams", new {id = Model.Id}))
+        .Create(create => create.Action("TeamMembers_Create", "Teams", new {id = Model.Id}))
+        .Destroy(destroy => destroy.Action("TeamMembers_Destroy", "Teams", new {id = Model.Id}))
         )
         )
+    </div>
 </div>
 
 

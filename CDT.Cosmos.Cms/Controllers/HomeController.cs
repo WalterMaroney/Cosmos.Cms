@@ -164,7 +164,7 @@ namespace CDT.Cosmos.Cms.Controllers
                         article.ReadWriteMode = false;
                         article.EditModeOn = false;
 
-                        return View("CosmosIndex", article);
+                        return View("Preview", article);
                     }
                 }
 

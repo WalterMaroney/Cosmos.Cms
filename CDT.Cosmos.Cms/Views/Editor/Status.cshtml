@@ -1,27 +1,32 @@
 ﻿@model ConfigureIndexViewModel
+@{
+    ViewData["Title"] = "Website Configuration Check";
+}
+<div class="container">
+    <form id="wizard">
+        <input type="hidden" />
+    </form>
+    <h3>Website Configuration Check</h3>
+    <p>Click the &quot;Check&quot; button below to validate database, file storage, Redis and CDN connection settings.</p>
+    <p>If check is successful, the &quot;Build&quot; button will appear. Click on it to generate the configuration.</p>
+    <button id="btnCheck" type="button" class="btn btn-primary" onclick="btnCheckOnClick(event)">Check</button>
+    <div id="loader1"></div>
+    <button id="btnBuild" type="submit" class="btn btn-sm btn-success" style="display:none">Build</button>
+    <br />
+    <br />
+    <div id="testStatus"></div>
+    <table id="resultsTbl" class="table table-dark" style="width: 100%;display:none;">
+        <thead>
+            <tr>
+                <th scope="col">Status</th>
+                <th scope="col">Service</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody id="resultTblBody"></tbody>
+    </table>
+</div>
 
-<form id="wizard">
-    <input type="hidden" />
-</form> 
-<h3>Check Configuration</h3>
-<p>Click the &quot;Check&quot; button below to validate database, file storage, Redis and CDN connection settings.</p>
-<p>If check is successful, the &quot;Build&quot; button will appear. Click on it to generate the configuration.</p>
-<button id="btnCheck" type="button" class="btn btn-primary" onclick="btnCheckOnClick(event)">Check</button>
-<div id="loader1"></div>
-<button id="btnBuild" type="submit" class="btn btn-sm btn-success" style="display:none">Build</button>
-<br />
-<br />
-<div id="testStatus"></div>
-<table id="resultsTbl" class="table table-dark" style="width: 100%;display:none;">
-    <thead>
-        <tr>
-            <th scope="col">Status</th>
-            <th scope="col">Service</th>
-            <th scope="col">Description</th>
-        </tr>
-    </thead>
-    <tbody id="resultTblBody"></tbody>
-</table>
 
 <script>
 

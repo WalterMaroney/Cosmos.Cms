@@ -399,7 +399,7 @@ namespace CDT.Cosmos.Cms.Controllers
             model.ReadWriteMode = false;
             model.PreviewMode = true;
 
-            return View("~/Views/Home/CosmosIndex.cshtml", model);
+            return View("~/Views/Home/Preview.cshtml", model);
         }
 
         /// <summary>

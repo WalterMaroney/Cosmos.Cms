@@ -10,8 +10,8 @@
     .Title("Image Preview")
     .Visible(false)
     .Content(@<text>
-                 <img id="imagePreview" src="#" alt="Image Preview"/>
-              </text>)
+        <img id="imagePreview" src="#" alt="Image Preview" />
+    </text>)
     .Draggable()
     .Resizable()
     .Actions(actions => actions.Pin().Minimize().Maximize().Close())
@@ -23,98 +23,96 @@
         vertical-align: top;
     }
 </style>
-<div id="main-content">
-    <main>
-        <div class="row">
-            <div class="col-md-12">
-                <a id="frmEditFile" class="btn btn-primary btn-sm" style="display: none" href="javascript:editCode()">Edit File</a> <a id="frmEditImage" class="btn btn-primary btn-sm" style="display: none" href="javascript:editImage()">Edit Image</a>
-                <button id="btnCopyUrl" style="display: none" class="clipboard btn btn-sm btn-success" data-clipboard-text="" title="Click to copy url">Click to copy URL <span class="ca-gov-icon-clipboard"></span></button>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <a id="frmEditFile" class="btn btn-primary btn-sm" style="display: none" href="javascript:editCode()">Edit File</a> <a id="frmEditImage" class="btn btn-primary btn-sm" style="display: none" href="javascript:editImage()">Edit Image</a>
+            <button id="btnCopyUrl" style="display: none" class="clipboard btn btn-sm btn-success" data-clipboard-text="" title="Click to copy url">Click to copy URL <span class="ca-gov-icon-clipboard"></span></button>
         </div>
-        <div class="row" id="uploaderRow" style="display:none">
-            <div class="col-md-12">
-                <div class="form-row align-items-center">
-                    <div class="col-11">
-                        <label class="sr-only" for="inlineFormInputGroup">Folder</label>
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text">Uploading to: </div>
-                            </div>
-                            <div type="text" class="form-control" id="folderPath" placeholder="Folder path">
-                            </div>
+    </div>
+    <div class="row" id="uploaderRow" style="display:none">
+        <div class="col-md-12">
+            <div class="form-row align-items-center">
+                <div class="col-11">
+                    <label class="sr-only" for="inlineFormInputGroup">Folder</label>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">Uploading to: </div>
+                        </div>
+                        <div type="text" class="form-control" id="folderPath" placeholder="Folder path">
                         </div>
                     </div>
-                    <div class="col-1">
-                        <button type="button" id="btnCloseUpload" class="btn btn-secondary mb-2">Close</button>
-                    </div>
                 </div>
-                <p>INSTRUCTIONS: Drag and drop files into box below or click &quot;Select files ...&quot;. When done click &quot;Close.&quot;</p>
+                <div class="col-1">
+                    <button type="button" id="btnCloseUpload" class="btn btn-secondary mb-2">Close</button>
+                </div>
+            </div>
+            <p>INSTRUCTIONS: Drag and drop files into box below or click &quot;Select files ...&quot;. When done click &quot;Close.&quot;</p>
 
-                @(Html.Kendo().Upload()
-                    .Name("files")
-                    .Async(a => a
-                        .Save("Upload", "FileManager")
-                        .Remove("Remove", "FileManager")
-                        .AutoUpload(true)
-                        .ChunkSize(5242880) // bytes (5 MB) - AWS S3 multi upload requires 5 MB parts. Last part can be any size
-                    )
-                    .Events(e =>
-                        e.Upload("getPath")
-                            .Success("onUploadSuccess")
-                            .Remove("getPath")
-                            .Error("onError")
-                    )
-                    )
-            </div>
+            @(Html.Kendo().Upload()
+            .Name("files")
+            .Async(a => a
+            .Save("Upload", "FileManager")
+            .Remove("Remove", "FileManager")
+            .AutoUpload(true)
+            .ChunkSize(5242880) // bytes (5 MB) - AWS S3 multi upload requires 5 MB parts. Last part can be any size
+            )
+            .Events(e =>
+            e.Upload("getPath")
+            .Success("onUploadSuccess")
+            .Remove("getPath")
+            .Error("onError")
+            )
+            )
         </div>
-        <div class="row" id="fileManagerRow">
-            <div class="col-md-12 dropZoneElement">
-                @(Html.Kendo().FileManager().Name("fileManager")
-                    .Draggable(false)
-                    .DataSource(ds =>
-                    {
-                        ds.Read(operation => operation
-                            .Type(HttpVerbs.Post)
-                            .Action("Read", "FileManager")
-                            );
-                        ds.Destroy(operation => operation
-                            .Type(HttpVerbs.Post)
-                            .Action("Destroy", "FileManager")
-                            );
-                        ds.Create(operation => operation
-                            .Type(HttpVerbs.Post)
-                            .Action("Create", "FileManager")
-                            );
-                        ds.Update(operation => operation
-                            .Type(HttpVerbs.Post)
-                            .Action("Update", "FileManager")
-                            );
-                    })
-                    .Toolbar(tb => tb.Items(items =>
-                    {
-                        items.Add("createFolder");
-                        items.Add("sortDirection");
-                        items.Add("sortField");
-                        items.Add("changeView");
-                        items.Add("spacer");
-                        items.Add("details");
-                        items.Add("search");
-                        items.Add("").Type("button").Name("OpenUpload").Text("Upload Files").Command("OpenUploader");
-                    }))
-                    .ContextMenu(context => context.Items(items =>
-                    {
-                        items.Add("rename");
-                        items.Add("delete");
-                    }))
-                    .Events(eve =>
-                        eve.Select("onSelect")
-                            .Navigate("onNavigate")
-                            .Open("onOpen")
-                            .Error("onError"))
-                    )
-            </div>
+    </div>
+    <div class="row" id="fileManagerRow">
+        <div class="col-md-12 dropZoneElement">
+            @(Html.Kendo().FileManager().Name("fileManager")
+            .Draggable(false)
+            .DataSource(ds =>
+            {
+            ds.Read(operation => operation
+            .Type(HttpVerbs.Post)
+            .Action("Read", "FileManager")
+            );
+            ds.Destroy(operation => operation
+            .Type(HttpVerbs.Post)
+            .Action("Destroy", "FileManager")
+            );
+            ds.Create(operation => operation
+            .Type(HttpVerbs.Post)
+            .Action("Create", "FileManager")
+            );
+            ds.Update(operation => operation
+            .Type(HttpVerbs.Post)
+            .Action("Update", "FileManager")
+            );
+            })
+            .Toolbar(tb => tb.Items(items =>
+            {
+            items.Add("createFolder");
+            items.Add("sortDirection");
+            items.Add("sortField");
+            items.Add("changeView");
+            items.Add("spacer");
+            items.Add("details");
+            items.Add("search");
+            items.Add("").Type("button").Name("OpenUpload").Text("Upload Files").Command("OpenUploader");
+            }))
+            .ContextMenu(context => context.Items(items =>
+            {
+            items.Add("rename");
+            items.Add("delete");
+            }))
+            .Events(eve =>
+            eve.Select("onSelect")
+            .Navigate("onNavigate")
+            .Open("onOpen")
+            .Error("onError"))
+            )
         </div>
-    </main>
+    </div>
 </div>
 <kendo-dialog name="eventDialog" title="Upload Messages" modal="true" max-width="400" visible="false">
     <content>
@@ -130,7 +128,6 @@
         <close duration="500" effects="fade:out" />
     </popup-animation>
 </kendo-dialog>
-
 <script>
 
     function openUploader(path) {
@@ -143,6 +140,27 @@
     // prior to creating the file manager widget.
 
     var filemanagerNS = kendo.ui.filemanager;
+    var path;
+    var blobRelativePath = "";
+    var awsUploadId = "";
+
+    var clipboard = new ClipboardJS('.clipboard');
+
+    clipboard.on('success',
+        function(e) {
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            alert("Copied: " + e.text);
+            e.clearSelection();
+        });
+
+    function getPath(e) {
+        e.data = {
+            path: blobRelativePath,
+            awsUploadId: awsUploadId
+        };
+    }
 
     filemanagerNS.commands.OpenUploader = filemanagerNS.FileManagerCommand.extend({
         exec: function () {
@@ -183,31 +201,6 @@
             }
         });
         notification.show(message, status);
-    }
-
-    // end extend
-</script>
-<script>
-    var path;
-    var blobRelativePath = "";
-    var awsUploadId = "";
-
-    var clipboard = new ClipboardJS('.clipboard');
-
-    clipboard.on('success',
-        function(e) {
-            console.info('Action:', e.action);
-            console.info('Text:', e.text);
-            console.info('Trigger:', e.trigger);
-            alert("Copied: " + e.text);
-            e.clearSelection();
-        });
-
-    function getPath(e) {
-        e.data = {
-            path: blobRelativePath,
-            awsUploadId: awsUploadId
-        };
     }
 
     function onComplete(e) {

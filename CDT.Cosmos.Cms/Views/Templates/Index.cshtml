@@ -13,43 +13,43 @@
     </div>
     <div class="row">
         @(Html.Kendo().Grid<TemplateIndexViewModel>().Name("grid")
-            .Columns(columns =>
-            {
-                columns.Command(command =>
-                {
-                    command.Custom("Code").Click("editDetails").IconClass("fa fa-edit").Text(" ");
-                    command.Custom("Preview").Click("clickPreview");
-                    command.Custom("Preview Edit").Click("clickEditPreview");
-                }).Width(300);
-                columns.Bound(m => m.Id).Hidden(true);
-                columns.Bound(m => m.LayoutName);
-                columns.Bound(m => m.Title);
-                columns.Command(command => { command.Destroy(); });
-            })
-            .ToolBar(toolbar =>
-            {
-                toolbar.Save().SaveText("Save");
-                toolbar.Create().Text("New");
-            })
-            .HtmlAttributes(new {style = "width:100%;"})
-            .Editable(editable => editable.Mode(GridEditMode.InCell))
-            .Pageable()
-            .Navigatable()
-            .Sortable()
-            .DataSource(dataSource => dataSource
-                .Ajax()
-                .Batch(true)
-                .PageSize(20)
-                .ServerOperation(false)
-                .Events(events => events.Error("error_handler"))
-                .Model(model => model.Id(p => p.Id))
-                .Create("Templates_Create", "Templates")
-                .Read("Templates_Read", "Templates")
-                .Update("Templates_Update", "Templates")
-                .Destroy("Templates_Destroy", "Templates")
-            )
-            .ClientDetailTemplateId("detail-template")
-            )
+        .Columns(columns =>
+        {
+        columns.Command(command =>
+        {
+        command.Custom("Code").Click("editDetails").IconClass("fa fa-edit").Text(" ");
+        command.Custom("Preview").Click("clickPreview");
+        command.Custom("Preview Edit").Click("clickEditPreview");
+        }).Width(300);
+        columns.Bound(m => m.Id).Hidden(true);
+        columns.Bound(m => m.LayoutName);
+        columns.Bound(m => m.Title);
+        columns.Command(command => { command.Destroy(); });
+        })
+        .ToolBar(toolbar =>
+        {
+        toolbar.Save().SaveText("Save");
+        toolbar.Create().Text("New");
+        })
+        .HtmlAttributes(new {style = "width:100%;"})
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Pageable()
+        .Navigatable()
+        .Sortable()
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .Batch(true)
+        .PageSize(20)
+        .ServerOperation(false)
+        .Events(events => events.Error("error_handler"))
+        .Model(model => model.Id(p => p.Id))
+        .Create("Templates_Create", "Templates")
+        .Read("Templates_Read", "Templates")
+        .Update("Templates_Update", "Templates")
+        .Destroy("Templates_Destroy", "Templates")
+        )
+        .ClientDetailTemplateId("detail-template")
+        )
     </div>
 </div>
 <script type="text/javascript">
