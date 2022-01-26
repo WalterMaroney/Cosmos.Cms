@@ -115,10 +115,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 _dbContext.Layouts.AddRange(LayoutDefaults.GetStarterLayouts());
                 await _dbContext.SaveChangesAsync();
             }
-
-            var model = await _articleLogic.Create("Layouts");
-            model.Title = "Layouts";
-            return View(model);
+            return View();
         }
 
         /// <summary>
