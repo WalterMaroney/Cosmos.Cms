@@ -9,15 +9,13 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 # What Makes Cosmos Different?
 
-Plenty of content management systems (CMS) already exist. They are easy to use and are very convenient.  Problems can arise however, when a CMS hosts a website with a large number of concurrent users. These websites may run slow and sometimes crash under the load.
+Plenty of content management systems (CMS) already exist that are easy to use and are very convenient.  There is a problem with CMS' when their website are put under load. Reason is they are generating content dynamically--which can be problematic as the number of concurrent users increases.
 
-The reason is simple: generating web pages dynamically on-the-fly can be challenging.
-
-A common way to tune a CMS to handle load is to install “plugins,” “modules,” “components” or “proxies” that capture dynamically generated webpages and save them as “static” files.
+CMS' can be modified to handle the traffic. One common way is to install “plugins,” “modules,” “components” or “proxies” that capture dynamically generated webpages and save them as “static” files.
 
 Now the CMS is performing much better because it is behaving more like a static website rather than a dynamic one.
 
-Cosmos takes a different approach. At it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle what needs to be generated on the fly.
+Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle what needs to be generated on the fly.
 
 The result is a CMS that performans as well as a static website without modification.
 
