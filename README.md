@@ -15,7 +15,7 @@ CMS' can have performance problems when they are serving web pages to a large nu
 
 Performance problems can be overcome through the installation of “plugins” or “modules” or “components” or “proxies” that capture dynamically generated web pages and other content, and save them as “static” files.
 
-Now the CMS is performing much better because it now modified to behave more like a static website rather than a dynamic one.
+Now the CMS is performing much better because it has been modified to be more like a static website rather than a dynamic one.
 
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle what needs to be generated on the fly.
 
@@ -25,9 +25,9 @@ The result is a CMS that performans as well as a static website without modifica
 
 # Hybrid Design
 
-Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) website.  The result is a _dynamic_ content management system that performes as well as a static website.
+Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) website.  The two work in concert and are controlled by a third website called the "Editor."  
 
-Content is managed by a third website called the "Editor."  It maintains files on the static website and makes edits to web pages on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally it can synchronize content between Cosmos instances in real time.
+The editor maintains files on the static website and makes edits to web pages on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally it can synchronize content between Cosmos instances in real time.
 
 Performance-wise Cosmos CMS can match or slightly exceed that of a static website backed with either Amazon S3 or Azure Storage accounts.
  
