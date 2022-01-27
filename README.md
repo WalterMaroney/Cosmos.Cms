@@ -11,11 +11,11 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 Plenty of content management systems (CMS) already exist that are easy to use as they allow for web pages to be dynamically generated and served to the public.  They allow for web pages to be added, deleted or modified at any time.  This makes it easy to keep web content "fresh."
 
-The dynamic nature of these websites does have it's downside.  Because web pages are generated "on demand," performance problems can occur when the number of concurrent users scales up. This is generally true of most "dynamic" websites--not just CMS'.
+The dynamic nature has it's downside. Dynamically generating web content can consume relatively higher levels of compute power than serving up static web pages.  At low numbers of concurrent users performance of a dynamic website will likely be fine.  But as the number of users climbs, website performance can decline.  It is an inverse relationship--more users means slower websites.
 
-Performance problems can be overcome by modifying the CMS. A common solution is the installation of “plugins” or “modules” or “components” or “proxies” that capture dynamically generated web pages and other content, and saving them as “static” files.  The static files are served up instead of the dynamic content.
+A common solution is to modify the website through the installation of “plugins” or “modules” or “components” or the addition of “proxies.” Each in it's own way captures dynamically generated web content and saving it as “static” files.  The web server serves up static files instead of the dynamic content.
 
-Now the website is performing much better because it is more like a static website rather than a dynamic one.
+Now the website is performing much better.
 
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
 
