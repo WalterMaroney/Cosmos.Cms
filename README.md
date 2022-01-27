@@ -15,7 +15,7 @@ CMS' can have performance problems when they are serving web pages to a large nu
 
 Performance problems can be overcome through the installation of “plugins” or “modules” or “components” or “proxies” that capture dynamically generated web pages and other content, and save them as “static” files.
 
-Now the CMS is performing much better because it is behaving more like a static website rather than a dynamic one.
+Now the CMS is performing much better because it now modified to behave more like a static website rather than a dynamic one.
 
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle what needs to be generated on the fly.
 
