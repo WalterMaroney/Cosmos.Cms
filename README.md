@@ -9,13 +9,11 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 # What Makes Cosmos Different?
 
-Plenty of content management systems (CMS) already exist that are easy to use as they allow for web pages to be dynamically generated and served to the public.  They allow for web pages to be added, deleted or modified at any time.  This makes it easy to keep web content "fresh."
+Plenty of content management systems (CMS) already exist that are easy to use.  Web pages are dynamically created and edited, then served to the public.  They allow for web pages to be modified at any time which makes it easy to keep web content "fresh."
 
-The dynamic nature has it's downside. Dynamically generating web content can consume relatively higher levels of compute power than serving up static web pages.  At low numbers of concurrent users performance of a dynamic website will likely be fine.  But as the number of users climbs, website performance can decline.  It is an inverse relationship--more users means slower websites.
+Dynamic websites have their downside as they can consume relatively higher levels of compute power than a website serving up static web pages.  At low numbers of concurrent users the performance of a dynamic website is likely to be fine.  But as the number of users climb, corresponding website performance can decline.  It is an inverse relationship.
 
-A common solution is to modify the website through the installation of “plugins” or “modules” or “components” or the addition of “proxies.” Each in it's own way captures dynamically generated web content and saving it as “static” files.  The web server serves up static files instead of the dynamic content.
-
-Now the website is performing much better.
+A common solution is to install “plugins” or “modules” or “components” that capture dynamically generated web content and saving it as “static” files.  The web server serves up static files instead of the dynamic content.  This reduces the compute power needed to server up web content, and website performance is improved.
 
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
 
