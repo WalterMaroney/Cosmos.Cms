@@ -7,6 +7,24 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://cosmos.moonrise.net/get_started/install)
 
+# What Makes Cosmos Different?
+
+Plenty of content management systems (CMS) already exist. They are easy to use and are very convenient.  Problems can arise however, when a CMS hosts a website with a large number of concurrent users. These websites may run slow and sometimes crash under the load.
+
+The reason is simple: generating web pages dynamically on-the-fly can be challenging.
+
+A common way to tune a CMS to handle load is to install “plugins,” “modules,” “components” or “proxies” that capture dynamically generated webpages and save them as “static” files.
+
+Now the CMS is performing much better because it is behaving more like a static website rather than a dynamic one.
+
+Cosmos takes a different approach. At it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle what needs to be generated on the fly.
+
+The result is a CMS that performans as well as a static website without modification.
+
+Take 10 minutes to try out Cosmos yourself!
+
+# Hybrid Design
+
 Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) with a hybrid design that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) website.  The result is a _dynamic_ content management system that performes as well as a static website.
 
 Content is managed by a third website called the "Editor."  It maintains files on the static website and makes edits to web pages on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally it can synchronize content between Cosmos instances in real time.
