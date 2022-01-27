@@ -9,7 +9,7 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 # What Makes Cosmos Different?
 
-Plenty of content management systems (CMS) already exist that are easy to use as they allow for web pages to be dynamically generated and served to the public.  They allow for web pages to be added, deleted, modified at any time.  The content on these websites is easy to keep "fresh."
+Plenty of content management systems (CMS) already exist that are easy to use as they allow for web pages to be dynamically generated and served to the public.  They allow for web pages to be added, deleted or modified at any time.  This makes it easy to keep web content "fresh."
 
 The dynamic nature of these websites does have it's downside.  Because web pages are generated "on demand," performance problems can occur when the number of concurrent users scales up. This is generally true of most "dynamic" websites--not just CMS'.
 
