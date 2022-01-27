@@ -13,7 +13,7 @@ Plenty of content management systems (CMS) already exist that are easy to use as
 
 CMS' can have performance problems when they are serving web pages to a large number of concurrent users.
 
-They can be modified to handle higher levels of traffic through the installation of “plugins” or “modules” or “components” or “proxies” that capture dynamically generated web pages and other content, and save them as “static” files.
+Performance problems can be overcome through the installation of “plugins” or “modules” or “components” or “proxies” that capture dynamically generated web pages and other content, and save them as “static” files.
 
 Now the CMS is performing much better because it is behaving more like a static website rather than a dynamic one.
 
