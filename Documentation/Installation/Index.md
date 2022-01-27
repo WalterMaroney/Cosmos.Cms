@@ -1,7 +1,7 @@
 # Installation
 
 The type of Cosmos installation depends on what your needs my be. For many situations a basic installation may suffice,
-but if higher performance or higher availablility is required then Redis, CDN and other options might be considered.
+but if higher performance or higher availablility is required then CDN and other options might be considered.
 
 Note: For installations on Microsoft Azure, please consider using our [automated quick install](https://cosmos.moonrise.net/get_started/install).  It takes about 10 minutes to run.
 
