@@ -56,12 +56,14 @@
             Page specific header content
         *@
         @Html.Raw(articleViewModel.HeaderJavaScript)
+
     }
     else
     {
         <link rel="stylesheet" href="~/lib/mdb-ui-kit/mdb.dark.min.css" />
         <script src="~/lib/mdb-ui-kit/mdb.min.js"></script>
     }
+    <script src="~/js/CosmosTimeZone.js"></script>
     @*
         Telerik/Kendo resources
     *@
