@@ -21,7 +21,7 @@ Cosmos takes a different approach. At it's core is a static website where most c
 
 The result is a CMS that performans as well as a static website without modification.
 
-Take 10 minutes to try out Cosmos yourself!
+[Take 10 minutes to try out Cosmos yourself](https://cosmos.moonrise.net/get_started/install)!
 
 # Hybrid Design
 
