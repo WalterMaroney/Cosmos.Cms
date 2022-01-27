@@ -13,7 +13,7 @@ Plenty of content management systems (CMS) already exist that are easy to use.  
 
 Dynamic websites have their downside as they can consume relatively higher levels of compute power than a website serving up static web pages.  At low numbers of concurrent users the performance of a dynamic website is likely to be fine.  But as the number of users climb, corresponding website performance can decline.  It is an inverse relationship.
 
-A common solution is to install “plugins” or “modules” or “components” that capture dynamically generated web content and saving it as “static” files.  The web server serves up static files instead of the dynamic content.  This reduces the compute power needed to server up web content, and website performance is improved.
+A common solution is to install “plugins” or “modules” or “components” that capture dynamically generated web content and saving it as “static” files.  The web server serves up static files instead of the dynamic content.  This reduces the compute power needed and overall website performance is improved.
 
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at it's core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
 
