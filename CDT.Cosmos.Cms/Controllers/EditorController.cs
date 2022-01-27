@@ -406,13 +406,7 @@ namespace CDT.Cosmos.Cms.Controllers
         [Authorize(Roles = "Administrators, Editors")]
         public async Task<IActionResult> Logs()
         {
-            var layout = await _articleLogic.GetDefaultLayout("en-US");
-            var model = await _articleLogic.Create("Layout Preview");
-            model.Layout = layout;
-            model.EditModeOn = false;
-            model.ReadWriteMode = false;
-            model.PreviewMode = true;
-            return View(model);
+            return View();
         }
 
         /// <summary>

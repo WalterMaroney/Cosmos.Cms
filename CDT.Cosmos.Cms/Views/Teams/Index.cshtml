@@ -3,41 +3,52 @@
     ViewData["Title"] = "Teams";
 }
 
-<div class="container">
+<div class="container mt-4">
     <div class="row">
-        @(Html.Kendo().Grid<TeamViewModel>()
-        .Name("Grid")
-        .Columns(columns =>
-        {
-        columns.Bound(p => p.Id).Title("Team #").Width(80);
-        columns.Template($"<a class=\"btn btn-sm btn-secondary\" href=\"{Url.Action("Membership", "Teams")}/#: Id #\" title=\"Team Members\">Members</span></a>").Width(100);
-        columns.Bound(p => p.TeamName);
-        columns.Bound(p => p.TeamDescription);
-        columns.Command(command => command.Destroy()).Width(100);
-        })
-        .ToolBar(toolbar =>
-        {
-        toolbar.Create().Text("Add Team");
-        toolbar.Save();
-        })
-        .Editable(editable => editable.Mode(GridEditMode.InCell))
-        .Pageable()
-        .Navigatable()
-        .Sortable()
-        .Scrollable()
-        .DataSource(dataSource => dataSource
-        .Ajax()
-        .Batch(true)
-        .PageSize(20)
-        .ServerOperation(false)
-        .Events(events => events.Error("error_handler"))
-        .Model(model => model.Id(p => p.Id))
-        .Create("Teams_Create", "Teams")
-        .Read("Teams_Read", "Teams")
-        .Update("Teams_Update", "Teams")
-        .Destroy("Teams_Destroy", "Teams")
-        )
-        )
+        <div class="col">
+            <h3>@ViewData["Title"]</h3>
+            <hr />
+            <p>Shown below lists the names of teams on this website. 
+                Consider a team as a self contained unit of editors and authors
+                who can manage their own web pages within this website.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @(Html.Kendo().Grid<TeamViewModel>()
+            .Name("Grid")
+            .Columns(columns =>
+            {
+            columns.Bound(p => p.Id).Title("Team #").Width(80);
+            columns.Template($"<a class=\"btn btn-sm btn-secondary\" href=\"{Url.Action("Membership", "Teams")}/#: Id #\" title=\"Team Members\">Members</span></a>").Width(100);
+            columns.Bound(p => p.TeamName);
+            columns.Bound(p => p.TeamDescription);
+            columns.Command(command => command.Destroy()).Width(100);
+            })
+            .ToolBar(toolbar =>
+            {
+            toolbar.Create().Text("Add Team");
+            toolbar.Save();
+            })
+            .Editable(editable => editable.Mode(GridEditMode.InCell))
+            .Pageable()
+            .Navigatable()
+            .Sortable()
+            .Scrollable()
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .Batch(true)
+            .PageSize(20)
+            .ServerOperation(false)
+            .Events(events => events.Error("error_handler"))
+            .Model(model => model.Id(p => p.Id))
+            .Create("Teams_Create", "Teams")
+            .Read("Teams_Read", "Teams")
+            .Update("Teams_Update", "Teams")
+            .Destroy("Teams_Destroy", "Teams")
+            )
+            )
+        </div>
     </div>
 </div>
 <script type="text/javascript">

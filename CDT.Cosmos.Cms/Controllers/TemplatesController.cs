@@ -74,7 +74,7 @@ namespace CDT.Cosmos.Cms.Controllers
             ViewData["EditModeOn"] = false; // Used by page views
             ViewData["Layouts"] = await BaseGetLayoutListItems();
 
-            return await BaseArticle_Get(null, EnumControllerName.Edit, false, true);
+            return View();
         }
 
         /// <summary>
@@ -249,13 +249,17 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <returns>JsonResult</returns>
         public async Task<IActionResult> Templates_Read([DataSourceRequest] DataSourceRequest request)
         {
-            var model = await _dbContext.Templates.Include(i => i.Layout).OrderBy(t => t.Title).Select(s => new TemplateIndexViewModel
-            {
-                Id = s.Id,
-                LayoutName = s.Layout.LayoutName,
-                Description = s.Description,
-                Title = s.Title
-            }).ToListAsync();
+            var defautLayout = await _dbContext.Layouts.FirstOrDefaultAsync(f => f.IsDefault);
+
+            var model = await _dbContext.Templates.Include(i => i.Layout).OrderBy(t => t.Title)
+                .Where(l => l.LayoutId == null ||  l.LayoutId == defautLayout.Id)
+                .Select(s => new TemplateIndexViewModel
+                {
+                    Id = s.Id,
+                    LayoutName = s.Layout.LayoutName,
+                    Description = s.Description,
+                    Title = s.Title
+                }).ToListAsync();
             return Json(await model.ToDataSourceResultAsync(request));
         }
 
