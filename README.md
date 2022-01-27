@@ -11,7 +11,7 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 Plenty of content management systems (CMS) already exist that are easy to use as they allow for web pages to be dynamically generated and served to the public.  They are are very convenient.
 
-Not infrequently, CMS' can have performance problems. Reason is they are generating content dynamically--which can be problematic as the number of concurrent users increases.
+CMS' can have performance problems. Reason is they are generating content dynamically--which can be problematic when serving web pages to a large number of concurrent users increases.
 
 CMS' can be modified to handle the traffic. One common way is to install “plugins,” “modules,” “components” or “proxies” that capture dynamically generated webpages and save them as “static” files.
 
