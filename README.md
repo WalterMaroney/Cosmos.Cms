@@ -23,7 +23,7 @@ But to handle high traffic they often need modification such as "plug-ins," or "
 
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at its core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
 
-The dynamic website is so efficient that tests show it can serve HTML web pages twice as fast as the static website!
+The dynamic website is so efficient that tests show it can serve HTML web pages twice as fast as the static website.
 
 The result is a CMS that performance as well as a static website without modification.
 
