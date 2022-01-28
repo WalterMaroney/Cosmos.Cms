@@ -30,11 +30,11 @@ The result is a CMS that performance as well as a static website without modific
 
 [Take 10 minutes to try out Cosmos yourself](https://cosmos.moonrise.net/get_started/install)!
 
-# Hybrid Design
+## Hybrid Design
 
 As mentioned above Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) website.  The two work in concert and are controlled by a third website called the "Editor."  
 
-The editor maintains files on the static website and makes edits to web pages on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally, it can synchronize content between Cosmos instances in real time.
+The editor maintains files on the static website and [makes edits to web pages](https://cosmos.moonrise.net/examples/web_page_editing) on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally, it can synchronize content between Cosmos instances in real time.
 
 Performance-wise Cosmos CMS can match or slightly exceed that of a static website backed with either Amazon S3 or Azure Storage accounts.
  
