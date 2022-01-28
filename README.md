@@ -17,7 +17,9 @@ But to handle high traffic they often need modification such as "plug-ins," or "
 
 [WP Super Cache](https://wordpress.org/plugins/wp-super-cache/) for WordPress is a typical example.  It captures dynamically generated web content and save it as “static” files.  The web server then serves up static files instead of dynamic content.  This reduces the need for compute power and overall website performance improves.
 
-Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at its core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly. (The dynamic website is so efficient that it serves HTML web pages twice as fast as the static website.)
+Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at its core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
+
+The dynamic website is so efficient that tests show it can serve HTML web pages twice as fast as the static website!
 
 The result is a CMS that performance as well as a static website without modification.
 
