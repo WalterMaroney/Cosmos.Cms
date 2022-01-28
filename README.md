@@ -11,9 +11,9 @@ Quick link: [Developing with Cosmos CMS](https://github.com/CosmosSoftware/Cosmo
 
 # What Makes Cosmos Different?
 
-Content management systems (CMS) are not new, and there are plenty of them. Most are built the same way where there is an "app engine" dynamically serves up web pages.
+Content management systems (CMS) are not new, and there are plenty of them. Most are built as dynamic websites with an "app engine" that serves up web pages on-demand.
 
-They all work well under low web traffic.
+They all work well for low or moderate web traffic.
 
 But to handle high traffic they often need modification such as "plug-ins," or "modules" or extra "components."  These add-ons generally modify the CMS to do things it wasn't originally built to do. 
 
