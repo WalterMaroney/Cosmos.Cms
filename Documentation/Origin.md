@@ -1,4 +1,4 @@
-# Cosmos HL Origin Story
+# Cosmos CMS Origin Story
 
 The 2018 fire season was the worst in California history.  Wind-driven fires ignited by downed power lines caused fires to spread across 2 million acres. Ninety seven citizens and six fire fighters lost thier lives that year, and the fires caused over 25 billion of dollars worth in property damange.  Eighty five fatalities were due to a single fire, called the the "Camp Fire," during which the Butte County town of Paridise burnt to the ground.
 
