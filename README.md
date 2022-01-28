@@ -9,7 +9,7 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 # What Makes Cosmos Different?
 
-Content management systems (CMS) are not new, and there are plenty of them. Most are built the same way, where there is an "app engine" that dynamically serves up web pages.
+Content management systems (CMS) are not new, and there are plenty of them. Most are built the same way where there is an "app engine" dynamically serves up web pages.
 
 They all work well under low web traffic, but under high traffic they are not generally able to handle the load without modification--such as "plug-ins," or adding modules or extra components that improve performance.
 
