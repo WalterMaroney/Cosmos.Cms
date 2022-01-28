@@ -7,7 +7,7 @@ This project is Sponsored by  [![Tek Yantra Logo](https://github.com/CosmosSoftw
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://cosmos.moonrise.net/get_started/install)
 
-Quick link: [Developing with Cosmos CMS](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md)
+Quick links: [Developing with Cosmos CMS](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md)
 
 # What Makes Cosmos Different?
 
@@ -67,6 +67,8 @@ You can deploy Cosmos to Azure by clicking the following button (recommended) or
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](/Documentation/Installation/AzureClickInstall.md)
 
 This documentation is still under development, so check back for more topics as they become available.
+
+## Docker Container Manual Install
 
 * Setup Help
   * [Manual installation instructions](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/Index.md)
