@@ -11,9 +11,11 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 Content management systems (CMS) are not new, and there are plenty of them. Most are built the same way where there is an "app engine" dynamically serves up web pages.
 
-They all work well under low web traffic, but under high traffic they are not generally able to handle the load without modification--such as "plug-ins," or adding modules or extra components that improve performance.
+They all work well under low web traffic.
 
-These "add-on" or "modifications" often do the same thing. That is, capture dynamically generated web content and save it as “static” files.  The web server then serves up static files instead of dynamic content.  This reduces the need for compute power and overall website performance improves.
+But to handle high traffic they often need modification such as "plug-ins," or "modules" or extra "components."  These add-ons generally modify the CMS to do things it wasn't originally built to do. 
+
+[WP Super Cache](https://wordpress.org/plugins/wp-super-cache/) for WordPress is a typical example.  It captures dynamically generated web content and save it as “static” files.  The web server then serves up static files instead of dynamic content.  This reduces the need for compute power and overall website performance improves.
 
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at its core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
 
