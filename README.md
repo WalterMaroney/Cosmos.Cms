@@ -7,6 +7,8 @@ Note: This is the full repository for Cosmos Editor and Publisher.  Please see a
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://cosmos.moonrise.net/get_started/install)
 
+Quick link: [Developing with Cosmos CMS](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md)
+
 # What Makes Cosmos Different?
 
 Content management systems (CMS) are not new, and there are plenty of them. Most are built the same way where there is an "app engine" dynamically serves up web pages.
