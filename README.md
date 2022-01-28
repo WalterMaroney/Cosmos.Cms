@@ -17,6 +17,8 @@ But to handle high traffic they often need modification such as "plug-ins," or "
 
 [WP Super Cache](https://wordpress.org/plugins/wp-super-cache/) for WordPress is a typical example.  It captures dynamically generated web content and save it as “static” files.  The web server then serves up static files instead of dynamic content.  This reduces the need for compute power and overall website performance improves.
 
+## New Architecture
+
 Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  The reason is that at its core is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
 
 The dynamic website is so efficient that tests show it can serve HTML web pages twice as fast as the static website!
@@ -28,7 +30,7 @@ The result is a CMS that performance as well as a static website without modific
 
 # Hybrid Design
 
-Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) website.  The two work in concert and are controlled by a third website called the "Editor."  
+As mentioned above Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) website.  The two work in concert and are controlled by a third website called the "Editor."  
 
 The editor maintains files on the static website and makes edits to web pages on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally, it can synchronize content between Cosmos instances in real time.
 
