@@ -15,7 +15,7 @@ Content management systems (CMS) are not new, and there are plenty of them. Most
 
 They all work well for low or moderate web traffic.
 
-But to handle high traffic they often need modification through "plug-ins," or "modules" or extra "components" that modify the CMS to do things it wasn't originally built to do. 
+But to handle high traffic they often use "plug-ins" or "modules" or other add-ons that modify these systems to do things they were not originally designed to do. 
 
 [WP Super Cache](https://wordpress.org/plugins/wp-super-cache/) for WordPress is a typical example.  It captures dynamically generated web content and save it as “static” files.  The web server then serves up static files instead of dynamic content.  This reduces the need for compute power and overall website performance improves.
 
