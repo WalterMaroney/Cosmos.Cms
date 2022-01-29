@@ -73,9 +73,31 @@
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
-    <nav id="k-ccms-ToolBar" style="z-index:20000000; height: 52px; background:inherit !important">
-        @(Html.Kendo().ToolBar()
-            .Name("toolBar")
+
+    @RenderBody()
+    <script id="verToolTip" type="text/x-kendo-template">
+        <h5>C/CMS Version Information</h5>
+        <div class='card-body'>
+        <p>Assembly: @assemblyName.Name</p>
+        <p>Version: @assemblyName.Version</p>
+        <p>@Assembly.GetEntryAssembly()</p>
+        <p>Cosmos CMS is an open source project on
+         <a target="_blank" href="https://github.com/CosmosSoftware/Cosmos.Cms">GitHub</a>.</p>
+    </script>
+    @(Html.Kendo().Tooltip()
+    .For("#versInfo")
+    .ContentTemplateId("verToolTip")
+    .Position(TooltipPosition.Top)
+    .Width(400)
+    .Height(320)
+    )
+    @*
+        Cosmos toolbar is added last to make sure it is overlayed over everything at the top of this page.
+    *@
+    <nav id="k-ccms-ToolBar" class="navbar navbar-expand-md fixed-top" style="height: 52px; background-color:transparent !important">
+        <div class="container-fluid">
+            @(Html.Kendo().ToolBar()
+            .Name("ccms-kendo-toolBar")
             .Items(items =>
             {
             items.Add().Type(CommandType.SplitButton).Text("Menu").Id("menuBtn").ImageUrl("/images/CosmosBearIcon.png").MenuButtons(menuButtons =>
@@ -137,15 +159,21 @@
             }).Click("bgCmsClick");
             }
             items.Add().Template("<div><span id='versInfo' style='margin-right:10px;font-size:0.6em;'>" + @assemblyName.Version + "</span> </div>");
-            items.Add().Type(CommandType.Button).Click("hideToolBar").Text("&laquo;");
+            items.Add().Type(CommandType.Button).Click("hideToolBar").Text("<span title='Collapse toolbar'>&laquo;</span>");
 
             })
-            .Resizable(true)
             )
+        </div>
     </nav>
-    <div id="k-ccms-showBar" style="display:none;position:absolute;top:0px;left:0px;z-index:2000000">
-        @(Html.Kendo().Button().Name("btnShowToolBar").Events(eve => eve.Click("showToolBar")).Content("&raquo;"))
+
+    <div id="k-ccms-showBar" class="navbar fixed-top" style="display:none;">
+        @(Html.Kendo().Button().Name("btnShowToolBar").Events(eve => eve.Click("showToolBar")).Content("<span title='Expand toolbar'>&raquo;</span>"))
     </div>
+    <style>
+        #ccms-kendo-toolBar {
+            width: 100%;
+        }
+    </style>
     <script>
         function hideToolBar(e){
             $("#k-ccms-ToolBar").hide();
@@ -155,25 +183,7 @@
             $("#k-ccms-ToolBar").show();
             $("#k-ccms-showBar").hide();
         }
-    </script>
-    @RenderBody()
-    <script id="verToolTip" type="text/x-kendo-template">
-        <h5>C/CMS Version Information</h5>
-        <div class='card-body'>
-        <p>Assembly: @assemblyName.Name</p>
-        <p>Version: @assemblyName.Version</p>
-        <p>@Assembly.GetEntryAssembly()</p>
-        <p>Cosmos CMS is an open source project on
-         <a target="_blank" href="https://github.com/CosmosSoftware/Cosmos.Cms">GitHub</a>.</p>
-    </script>
-    @(Html.Kendo().Tooltip()
-    .For("#versInfo")
-    .ContentTemplateId("verToolTip")
-    .Position(TooltipPosition.Top)
-    .Width(400)
-    .Height(320)
-    )
-    <script>
+
         var popupNotification;
         $(document).ready(function() {
             var timeZoneElement = $("#timeZone");
@@ -303,6 +313,9 @@
             }
         }
     </script>
+    <form id="frmLogout" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+        <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+    </form>
     @*
         Application Insights Scripts
     *@

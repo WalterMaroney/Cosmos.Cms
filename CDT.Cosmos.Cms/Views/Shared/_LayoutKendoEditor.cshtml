@@ -6,14 +6,14 @@
 @inject IOptions<CosmosConfig> options
 @model ArticleViewModel
 @{
-    /*
-        This Layout is for use anywhere that Telerik/Kendo 
-        HTML WYSIWYG editor is used.
+                /*
+                This Layout is for use anywhere that Telerik/Kendo
+                HTML WYSIWYG editor is used.
 
-        Currently, this is used in these two places:
-            Edit/Edit
-            Template/Edit
-    */
+                Currently, this is used in these two places:
+                    Edit/Edit
+                    Template/Edit
+            */
     // So we can display Cosmos version in
     var assemblyName = Assembly.GetExecutingAssembly().GetName();
 
@@ -79,69 +79,6 @@
     </style>
 </head>
 <body>
-    <nav id="k-ccms-ToolBar" style="z-index:20000000; height: 52px; background:inherit !important">
-        @(Html.Kendo().ToolBar()
-        .Name("toolBar")
-        .Items(items =>
-        {
-        items.Add().Type(CommandType.SplitButton).Text("Menu").Id("ddMenu").MenuButtons(menuButtons =>
-        {
-        menuButtons.Add().Text("Save");
-        menuButtons.Add().Text("Code View");
-        menuButtons.Add().Text("Files");
-        menuButtons.Add().Text("Preview");
-        menuButtons.Add().Text("Versions");
-        menuButtons.Add().Text("Close");
-        menuButtons.Add().Text("Permissions").Hidden(!User.IsInRole("Editors") && !User.IsInRole("Administrators"));
-        menuButtons.Add().Text("Help");
-        }).Click("bgEditClick").Hidden(controllerName == "Templates");
-
-        items.Add().Type(CommandType.Button).Text("<span id='btnPublish'></span>").Click("openSchedulerDialog").Hidden(isAuthor);
-        items.Add().Type(CommandType.Button).Template("<div class='btn btn-primary' onclick='openPermissionsDialog()' style='height:32px' id='btnPermissions'><span class='fa fa-shield'></span></div>").Hidden(isAuthor);
-
-
-        items.Add().Template("<div id='pendingChangesBadge' class='badge badge-warning' style='display:none'>Changes Pending Save</div>");
-
-        items.Add().Template("<span>Title: </span>");
-        items.Add().Template(Html.Kendo().TextBox().Name("tbTitle").Value(Model.Title).HtmlAttributes(new {style = "width: 32vw;"}).ToHtmlString());
-
-        items.Add().Type(CommandType.SplitButton).Template(accountBtnTemplate).MenuButtons(menuButtons =>
-        {
-        menuButtons.Add().Text("User Account");
-        menuButtons.Add().Text("Log Out");
-        }).Click("bgEditClick");
-
-        if (isAuthor) {
-            items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Author'>(Author)</a>");
-        } else if (isEditor)
-        {
-            items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Editor)</a>");
-        } else if (isAdministrator)
-        {
-            items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Administrator)</a>");
-        }
-
-        items.Add().Type(CommandType.Button).Template("<div style='padding-top:4px;display:none;' class='k-button k-button-sm k-button-secondary' id='cdnLbl'></div> <div id='progressBar' style='width:80px'></div>");
-
-        items.Add().Template("<div><span id='versInfo' style='margin-right:10px;font-size:0.6em;'>" + @assemblyName.Version + "</span> </div>");
-        items.Add().Type(CommandType.Button).Click("hideToolBar").Text("&laquo;");
-        })
-        .Resizable(true)
-        )
-    </nav>
-    <div id="k-ccms-showBar" style="display:none;position:absolute;top:0px;left:0px;z-index:2000000">
-        @(Html.Kendo().Button().Name("btnShowToolBar").Events(eve => eve.Click("showToolBar")).Content("&raquo;"))
-    </div>
-    <script>
-        function hideToolBar(e){
-            $("#k-ccms-ToolBar").hide();
-            $("#k-ccms-showBar").show();
-        }
-        function showToolBar(e){
-            $("#k-ccms-ToolBar").show();
-            $("#k-ccms-showBar").hide();
-        }
-    </script>
     @RenderBody()
     @* Kendo editor elements *@
     <form id="frmEdit" asp-action="Edit" method="post" kendo-validator="true">
@@ -321,6 +258,79 @@
             </action>
         </actions>
     </kendo-dialog>
+    
+    @*
+        Cosmos toolbar is added last to make sure it is overlayed over everything at the top of this page.
+    *@
+    <nav id="k-ccms-ToolBar" class="navbar navbar-expand-md fixed-top" style="height: 52px; background-color:transparent !important">
+       <div class="container-fluid">
+        @(Html.Kendo().ToolBar()
+        .Name("ccms-kendo-toolBar")
+        .Items(items =>
+        {
+        items.Add().Type(CommandType.SplitButton).Text("Menu").Id("ddMenu").MenuButtons(menuButtons =>
+        {
+        menuButtons.Add().Text("Save");
+        menuButtons.Add().Text("Code View");
+        menuButtons.Add().Text("Files");
+        menuButtons.Add().Text("Preview");
+        menuButtons.Add().Text("Versions");
+        menuButtons.Add().Text("Close");
+        menuButtons.Add().Text("Permissions").Hidden(!User.IsInRole("Editors") && !User.IsInRole("Administrators"));
+        menuButtons.Add().Text("Help");
+        }).Click("bgEditClick").Hidden(controllerName == "Templates");
+
+        items.Add().Type(CommandType.Button).Text("<span id='btnPublish'></span>").Click("openSchedulerDialog").Hidden(isAuthor);
+        items.Add().Type(CommandType.Button).Template("<div class='btn btn-primary' onclick='openPermissionsDialog()' style='height:32px' id='btnPermissions'><span class='fa fa-shield'></span></div>").Hidden(isAuthor);
+
+
+        items.Add().Template("<div id='pendingChangesBadge' class='badge badge-warning' style='display:none'>Changes Pending Save</div>");
+
+        items.Add().Template("<span>Title: </span>");
+        items.Add().Template(Html.Kendo().TextBox().Name("tbTitle").Value(Model.Title).HtmlAttributes(new {style = "width: 32vw;"}).ToHtmlString());
+
+        items.Add().Type(CommandType.SplitButton).Template(accountBtnTemplate).MenuButtons(menuButtons =>
+        {
+        menuButtons.Add().Text("User Account");
+        menuButtons.Add().Text("Log Out");
+        }).Click("bgEditClick");
+
+        if (isAuthor) {
+        items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Author'>(Author)</a>");
+        } else if (isEditor)
+        {
+        items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Editor)</a>");
+        } else if (isAdministrator)
+        {
+        items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Administrator)</a>");
+        }
+
+        items.Add().Type(CommandType.Button).Template("<div style='padding-top:4px;display:none;' class='k-button k-button-sm k-button-secondary' id='cdnLbl'></div> <div id='progressBar' style='width:80px'></div>");
+
+        items.Add().Template("<div><span id='versInfo' style='margin-right:10px;font-size:0.6em;'>" + @assemblyName.Version + "</span> </div>");
+        items.Add().Type(CommandType.Button).Click("hideToolBar").Text("<span title='Collapse toolbar'>&laquo;</span>");
+        })
+        )
+       </div>
+    </nav>
+    <div id="k-ccms-showBar" style="display:none;position:absolute;top:0px;left:0px;z-index:2000000">
+        @(Html.Kendo().Button().Name("btnShowToolBar").Events(eve => eve.Click("showToolBar")).Content("<span title='Expand toolbar'>&raquo;</span>"))
+    </div>
+    <style>
+        #ccms-kendo-toolBar {
+            width: 100%;
+        }
+    </style>
+    <script>
+        function hideToolBar(e){
+            $("#k-ccms-ToolBar").hide();
+            $("#k-ccms-showBar").show();
+        }
+        function showToolBar(e){
+            $("#k-ccms-ToolBar").show();
+            $("#k-ccms-showBar").hide();
+        }
+    </script>
 
     @* Bootstrap 5 JS*@
     <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -793,6 +803,9 @@
             dialog.open();
         }
     </script>
+    <form id="frmLogout" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+        <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+    </form>
 
     @await RenderSectionAsync("Scripts", false)
 </body>
