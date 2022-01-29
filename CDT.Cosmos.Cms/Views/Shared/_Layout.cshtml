@@ -23,7 +23,7 @@
 
     ArticleViewModel articleViewModel = null;
 
-    var accountBtnTemplate = "<div id='userAcctMenu' style='font-size:0.8em'><span class='fa fa-user'></span> " + User?.Identity.Name + "</div>";
+    var accountBtnTemplate = "<div id='userAcctMenu' style='font-size:0.8em'><span class='fa fa-user'></span> Account</div>";
 
     if (User != null && (User.IsInRole("Authors") || teamMemberLogic?.IsInRole(TeamRoleEnum.Author, teamName) == true))
     {
