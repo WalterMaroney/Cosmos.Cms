@@ -78,10 +78,8 @@ namespace CDT.Cosmos.Cms.Controllers
                 }).ToList();
             ViewData["PageUrls"] = pageModel;
             await BaseLoadMenuIntoViewData();
-            ViewData["EditModeOn"] = false; // Used by page views
-            ViewData["Layouts"] = await BaseGetLayoutListItems();
 
-            return await BaseArticle_Get(null, EnumControllerName.Edit, false, true);
+            return View();
         }
 
         /// <summary>

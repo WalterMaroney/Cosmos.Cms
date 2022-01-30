@@ -1,35 +1,34 @@
 ﻿@using Kendo.Mvc.UI
 @{
-    ViewData["Title"] = "Import Layout";
+    ViewData["Title"] = "Import Open Source Layout";
 }
-<div class="container">
+<div class="container mt-5 pt-2">
     <div class="row">
-        <div class="col-md-12">
-            <br />
-            <h3>Import Layout</h3>
+        <div class="col">
+            <h3>@ViewData["Title"]</h3>
             <hr />
-            <p>Below is a list of open source layouts you can load intoto your website.</p>
+            <p>
+                Below is a list of open source layouts pre-packaged for you to use in your Cosmos CMS website.  All are open source
+                and have documentation on how to use them.
+            </p>
             <p>You can also <a class="text-light" href="@Url.Action("Create")">create a new layout of your own</a>.</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
+
             @(Html.Kendo().Grid<CDT.Cosmos.Cms.Data.Logic.LayoutCatalogItem>().Name("grid")
             .Columns(col =>
-                {
-                    col.Bound(m => m.Name).Title("").ClientTemplate("<a class='btn btn-primary' title='Import community layout.' href='" + @Url.Action("ImportCommunityLayout") + "/#: Id#'>Import</a>");
-                    col.Bound(m => m.Id).Title("Preview").ClientTemplate("<a target='_blank' title='Open layout' href='https://cosmos-layouts.moonrise.net/Layouts/#: Id#/layout.html'><img  height='120' src='https://cosmos-layouts.moonrise.net/Layouts/#: Id#/preview.jpg' /></a>");
-                    col.Bound(m => m.Name).Title("Name");
-                    col.Bound(m => m.License).Encoded(false).Title("License");
-                    col.Bound(m => m.Description).Encoded(false).Title("Notes/Description").Width("50%");
-                })
+            {
+            col.Bound(m => m.Name).Title("").ClientTemplate("<a class='btn btn-primary' title='Import community layout.' href='" + @Url.Action("ImportCommunityLayout") + "/#: Id#'>Import</a>");
+            col.Bound(m => m.Id).Title("Preview").ClientTemplate("<a target='_blank' title='Open layout' href='https://cosmos-layouts.moonrise.net/Layouts/#: Id#/layout.html'><img  height='120' src='https://cosmos-layouts.moonrise.net/Layouts/#: Id#/preview.jpg' /></a>");
+            col.Bound(m => m.Name).Title("Name");
+            col.Bound(m => m.License).Encoded(false).Title("License");
+            col.Bound(m => m.Description).Encoded(false).Title("Notes/Description").Width("50%");
+            })
             .ClientDetailTemplateId("template")
             .Pageable()
             .ToolBar(tool => { tool.Search(); })
             .DataSource(data =>
-                {
-                    data.Ajax().Model(m => { m.Id("Id"); }).Read("Read_CommunityLayouts", "Layouts");
-                })
+            {
+            data.Ajax().Model(m => { m.Id("Id"); }).Read("Read_CommunityLayouts", "Layouts");
+            })
             )
         </div>
     </div>
@@ -37,7 +36,7 @@
 
 <script id="template" type="text/kendo-tmpl">
     <p>Template pages that come with this layout:</p>
-     @(Html.Kendo().Grid<CDT.Cosmos.Cms.Data.Logic.Page>()
+    @(Html.Kendo().Grid<CDT.Cosmos.Cms.Data.Logic.Page>()
              .Name("grid_#=Id#")
              .Columns(columns =>
              {

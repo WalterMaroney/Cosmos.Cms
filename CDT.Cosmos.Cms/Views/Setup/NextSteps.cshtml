@@ -2,10 +2,11 @@
 @{
     ViewData["Title"] = "Next Steps";
 }
-<div class="container">
+<div class="container mt-5 pt-2">
     <div class="row">
         <div class="col">
-            <h2>Almost Done!</h2>
+            <h3>Almost Done!</h3>
+            <hr />
             <p>Before using your website please complete the following tasks:</p>
             <ul>
                 <li>Disable setup mode by removing configuration variable &quot;CosmosAllowSetup&quot; from your Editor website.</li>
@@ -14,12 +15,10 @@
                 <li>Open a new web browser then log into the Editor website as the new administrator</li>
             </ul>
         </div>
-    </div>
-    <div class="row">
         @if (!Model.IsSuccessStatusCode)
         {
-            <div class="col">
-                <h4>SendGrid Setup Needed</h4>
+            <div class="mt-2">
+                <h5>SendGrid Setup Needed</h5>
                 <p>
                     An attempt to send email through SendGrid failed or was blocked. Please check the following:
                 </p>
@@ -31,14 +30,10 @@
             </div>
         }
     </div>
-    <div class="row">
-        <div class="col">
-            <h4>Notes:</h4>
-            <ol>
-                <li>Removing &quot;CosmosAllowSetup&quot; protects your website by disabling setup.</li>
-                <li>When you need to upgrade your website, temporarily renable &quot;CosmosAllowSetup&quot;.</li>
-                <li>If email fails to send check to see if the IP address of your website <a href="https://sendgrid.com/blog/introducing-ip-access-management/" target="_blank">is being blocked by SendGrid</a>.</li>
-            </ol>
-        </div>
-    </div>
+    <h5>Notes:</h5>
+    <ol>
+        <li>Removing &quot;CosmosAllowSetup&quot; protects your website by disabling setup.</li>
+        <li>When you need to upgrade your website, temporarily renable &quot;CosmosAllowSetup&quot;.</li>
+        <li>If email fails to send check to see if the IP address of your website <a href="https://sendgrid.com/blog/introducing-ip-access-management/" target="_blank">is being blocked by SendGrid</a>.</li>
+    </ol>
 </div>

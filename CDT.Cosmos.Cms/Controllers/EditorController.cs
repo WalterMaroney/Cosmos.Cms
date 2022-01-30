@@ -349,19 +349,9 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Administrators, Editors")]
-        public async Task<IActionResult> Publish()
+        public IActionResult Publish()
         {
-            ViewData["EditModeOn"] = false;
-            ViewData["MenuContent"] = _articleLogic.BuildMenu("en-US").Result;
-
-            var layout = await _articleLogic.GetDefaultLayout("en-US");
-            ViewData["AkamaiStatus"] = "Ready";
-            var model = await _articleLogic.Create("Layout Preview");
-            model.Layout = layout;
-            model.EditModeOn = false;
-            model.ReadWriteMode = false;
-            model.PreviewMode = true;
-            return View(model);
+            return View();
         }
 
         /// <summary>

@@ -9,17 +9,14 @@
     var btnGroup = "<div class=\"btn-group\" role=\"group\" aria-label=\"Basic example\">#= getDefaultButton(IsDefault, Id) #" +
                    previewTemplate + notesTemplate + editCodeTemplate + "</div>";
 }
-<div class="container mt-4">
+<div class="container mt-5 pt-2">
     <div class="row">
         <div class="col">
             <h3>@ViewData["Title"]</h3>
             <hr />
             <p>Shown below lists the layouts loaded into your website.  Each gives your website a specific look for each page in your website.</p>
             <p>Click &quot;Create New&quot; to start building your own style.</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
+        
             <a class="btn btn-sm btn-primary" href="@Url.Action("Create")">Create New</a>
             <a class="btn btn-sm btn-primary" title="Import one of the community layouts." href="@Url.Action("CommunityLayouts")">Import Layout</a>
 
@@ -42,10 +39,6 @@
             .Destroy("Destroy_Layout", "Layouts");
             })
             )
-        </div>
-    </div>
-    <div class="row">
-        <div class="col mt-4">
             <p>Beyond appearance, changing layouts can have far reaching affects on how your site functions. Change layouts with caution.</p>
         </div>
     </div>

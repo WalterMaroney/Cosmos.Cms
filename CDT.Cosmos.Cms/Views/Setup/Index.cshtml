@@ -3,81 +3,80 @@
 @{
     ViewData["Title"] = "Cosmos Setup";
 }
-<div class="container">
+<div class="container mt-5 pt-2">
     <div class="row">
         <div class="col">
-            <div class="card bg-secondary">
-                <div class="card-header">
-                    <h2><i class="fas fa-rocket"></i> Cosmos Setup</h2>
-                </div>
-                <div class="card-body">
-                    <form method="get" asp-action="Database">
-                        @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(false, "", new { @class = "alert-danger"})
-                        <h4 class="card-title">Welcome!</h4>
-                        <p class="card-text">Thank you for choosing Cosmos CMS!</p>
-                        @if ((bool)ViewBag.ConnectionStringsMissing)
-                        {
-                            <div>
-                                <p class="card-text">At lease one database connection string is required to continue with setup.</p>
-                            </div>
-                        }
-                        else if ((bool)ViewBag.NoMigrations)
-                        {
-                            @Html.Hidden("task", "NewInstall")
-                            <p class="card-text">
-                                Click &quot;Go&quot; to setup the database and create your administrator account.
-                            </p>
-                            <button type="submit" class="btn btn-primary" onclick="showDialog(event)">
-                                Go
-                            </button>
-                            @(Html.Kendo().Dialog()
-                                .Name("dialog")
-                                .Visible(false)
-                                .Title("Setting-up Database")
-                                .Content("<p>The database is being setup for first use.</p><p>When that is completed we will setup your administrator account.<p>" +
-                                    Html.Kendo().Loader()
-                                        .Name("loader-medium")
-                                        .Size(LoaderSize.Medium).ToHtmlString()
-                                    )
-                                .Width(400)
-                                .Height(250)
-                                .Modal(true)
-                            )
-                        }
-                        else if ((bool)ViewBag.PendingMigrations)
-                        {
-                            @Html.Hidden("task", "Upgrade")
-                            <p class="card-text">
-                                Database upgrades need to be applied.
-                            </p>
-                            <p class="card-text">
-                                <span class="badge bg-danger">WARNING!</span> Backup your database before applying upgrade as data loss may occur.
-                            </p>
-                            <p class="card-text">
-                                When ready press &quot;Go&quot; to upgrade your database.
-                            </p>
-                            <button type="submit" class="btn btn-primary" onclick="showDialog(event)">
-                                Go
-                            </button>
-                            @(Html.Kendo().Dialog()
-                                .Name("dialog")
-                                .Visible(false)
-                                .Title("Setting-up Database")
-                                .Content("<p>The database is being setup for first use, then we will setup your administrator account.<p>" +
-                                    Html.Kendo().Loader()
-                                        .Name("loader-medium")
-                                        .Size(LoaderSize.Medium).ToHtmlString()
-                                    )
-                                .Width(400)
-                                .Height(250)
-                                .Modal(true)
-                            )
-                        }
-                    </form>
+            <h3>Cosmos Setup</h3>
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form method="get" asp-action="Database">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(false, "", new { @class = "alert-danger"})
+                <h4 class="card-title">Welcome!</h4>
+                <p class="card-text">Thank you for choosing Cosmos CMS!</p>
+                @if ((bool)ViewBag.ConnectionStringsMissing)
+                {
+                    <div>
+                        <p class="card-text">At lease one database connection string is required to continue with setup.</p>
+                    </div>
+                }
+                else if ((bool)ViewBag.NoMigrations)
+                {
+                    @Html.Hidden("task", "NewInstall")
+                    <p class="card-text">
+                        Click &quot;Go&quot; to setup the database and create your administrator account.
+                    </p>
+                    <button type="submit" class="btn btn-primary" onclick="showDialog(event)">
+                        Go
+                    </button>
+                    @(Html.Kendo().Dialog()
+                .Name("dialog")
+                .Visible(false)
+                .Title("Setting-up Database")
+                .Content("<p>The database is being setup for first use.</p><p>When that is completed we will setup your administrator account.<p>" +
+                Html.Kendo().Loader()
+                .Name("loader-medium")
+                .Size(LoaderSize.Medium).ToHtmlString()
+                )
+                .Width(400)
+                .Height(250)
+                .Modal(true)
+                )
+                }
+                else if ((bool)ViewBag.PendingMigrations)
+                {
+                    @Html.Hidden("task", "Upgrade")
+                    <p class="card-text">
+                        Database upgrades need to be applied.
+                    </p>
+                    <p class="card-text">
+                        <span class="badge bg-danger">WARNING!</span> Backup your database before applying upgrade as data loss may occur.
+                    </p>
+                    <p class="card-text">
+                        When ready press &quot;Go&quot; to upgrade your database.
+                    </p>
+                    <button type="submit" class="btn btn-primary" onclick="showDialog(event)">
+                        Go
+                    </button>
+                    @(Html.Kendo().Dialog()
+                .Name("dialog")
+                .Visible(false)
+                .Title("Setting-up Database")
+                .Content("<p>The database is being setup for first use, then we will setup your administrator account.<p>" +
+                Html.Kendo().Loader()
+                .Name("loader-medium")
+                .Size(LoaderSize.Medium).ToHtmlString()
+                )
+                .Width(400)
+                .Height(250)
+                .Modal(true)
+                )
+                }
+            </form>
 
-                </div>
-            </div>
         </div>
     </div>
 </div>

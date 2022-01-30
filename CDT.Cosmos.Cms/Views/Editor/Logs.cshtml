@@ -2,16 +2,13 @@
 @{
     ViewData["Title"] = "Web Site Edit Logs";
 }
-<div class="container mt-4"> 
+<div class="container mt-5 pt-2"> 
     <div class="row">
         <div class="col">
             <h3>@ViewData["Title"]</h3>
             <hr />
             <p>This is a list of actions taken on this website with regards to editing content.</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
+       
             @(Html.Kendo().Grid<ArticleLogJsonModel>().Name("grid")
             .Columns(column =>
             {
