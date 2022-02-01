@@ -9,9 +9,4 @@ function getLocalTimeZone() {
     return timezone;
 }
 
-function convertUtcToLocalDateTime(utcDateTime) {
-    // This will turn UTC to local time
-    var formattedLocalDateTime = kendo.toString(new Date(utcDateTime), "G");
-    return new Date(formattedLocalDateTime);
-}
 

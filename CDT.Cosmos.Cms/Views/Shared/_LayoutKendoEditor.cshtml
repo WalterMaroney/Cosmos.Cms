@@ -517,7 +517,7 @@
             var published = $("#Published").val();
             var publishButton = $("#btnPublish");
             if (published !== null && typeof (published) !== "undefined" && published.trim() !== "") {
-                var localDateTime = convertUtcToLocalDateTime(published); // This will turn UTC to local time
+                var localDateTime = new Date(published + " GMT");
                 var dateTimePicker = $("#dtPublished").data("kendoDateTimePicker");
                 dateTimePicker.value(localDateTime);
                 var now = new Date();
@@ -691,7 +691,6 @@
                         $("#versionLbl").text("Version: " + response.Model.VersionNumber);
 
                         // Published
-                        var pubUtc = kendo.toString(response.Model.Published, "G");
                         $("#Published").val(response.Model.Published);
                         loadPublishLocalDateTime();
 
