@@ -9,46 +9,17 @@ This project is Sponsored by  [![Tek Yantra Logo](https://github.com/CosmosSoftw
 
 Quick links: [Developer Help](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md) | [Manual Docker Install](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/README.md#docker-container-manual-install)
 
-# What Makes Cosmos Different?
+# What Makes Cosmos so Terrific?
 
-Content management systems (CMS) are not new, and there are plenty of them. Most are built as dynamic websites with an "app engine" that serves up web pages on-demand.
+[Please see our blog article](https://cosmos.moonrise.net/blog) on what makes Cosmos CMS different and terrific to use!
 
-They all work well for low or moderate web traffic.
+# Cosmos Repos
 
-But to handle high traffic they often use "plug-ins" or "modules" or other add-ons that modify these systems to do things they were not originally designed to do. 
-
-[WP Super Cache](https://wordpress.org/plugins/wp-super-cache/) for WordPress is a typical example.  It captures dynamically generated web content and save it as “static” files.  The web server then serves up static files instead of dynamic content.  This reduces the need for compute power and overall website performance improves.
-
-## New Architecture
-
-Cosmos takes a different approach.  It doesn't need plugins or other add-ons to improve performance.  Reason is that Cosmos--at its core--is a static website where most content is stored and served from. It is then augmented with a highly efficient dynamic website to handle only what needs to be generated on the fly.
-
-The dynamic website is so efficient that tests show it can serve HTML web pages twice as fast as the static website.
-
-The result is a CMS that performance as well as a static website without modification.
-
-
-[Take 10 minutes to try out Cosmos yourself](https://cosmos.moonrise.net/get_started/install)!
-
-## Hybrid Design
-
-As mentioned above Cosmos is a high performance [web content management system](https://en.wikipedia.org/wiki/Web_content_management_system) that combines a [static](https://en.wikipedia.org/wiki/Static_web_page) with a [dynamic](https://en.wikipedia.org/wiki/Dynamic_web_page) website.  The two work in concert and are controlled by a third website called the "Editor."  
-
-The editor maintains files on the static website and [makes edits to web pages](https://cosmos.moonrise.net/examples/web_page_editing) on the dynamic website.  It also schedules when new content can appear and optionally manages integration with CDNs.  Additionally, it can synchronize content between Cosmos instances in real time.
-
-Performance-wise Cosmos CMS can match or slightly exceed that of a static website backed with either Amazon S3 or Azure Storage accounts.
- 
-Other Key features:
-
-* Can host a single website simultaneously in AWS and Azure clouds with real-time-synchronization.
-* Code editor for web developers and a WSYWIG editor for the non-technical.
-* Cost effective to run.
-* Optionally integrates with Akamai, Microsoft, and Verizon CDNs.
-
-Two repositories are associated with this project:
+Three repositories are associated with this project:
 
 * The [Cosmos](https://github.com/CosmosSoftware/Cosmos.Cms) repository contains the "Editor" and the "Publisher" and all the frameworks common to each.
 * The "[Cosmos Publisher](https://github.com/CosmosSoftware/Cosmos.Cms.Publisher)" repository contains a stand alone "Publisher" website.
+* [Open-source layouts](https://github.com/CosmosSoftware/Cosmos.Starter.Layouts) made ready for use with Cosmos CMS.
 
 The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
 
