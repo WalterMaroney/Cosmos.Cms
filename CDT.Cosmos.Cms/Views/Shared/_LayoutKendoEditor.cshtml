@@ -230,18 +230,21 @@
                     </ul>
                 </li>
             </ul>
-            <div class="form-row">
-                <div class="col">
+            <div class="row">
+                <div class="col-6">
                     @(Html.Kendo().DateTimePicker().Name("dtPublished").Enable(User.IsInRole("Editors") || User.IsInRole("Administrators")))
                 </div>
-                <div class="col">
-                    <a id="timeZone" class="k-button cosmos-btn-blue" title="Dates and times are in this time zone."></a>
+                <div class="col-4">
+                    @Html.Kendo().Button().Name("btnPublishNow").Content("Publish Now").Events(eve => eve.Click("onPubNow"))
                 </div>
+            </div>
+            <div class="col">
+                @Html.Kendo().Button().Name("timeZone")
             </div>
             <p></p>
             <div class="form-row">
                 <div class="col">
-                    <div class="k-button k-button-sm k-button-secondary" onclick="cancelPublish()">Clear Date/Time</div>
+                    <div class="k-button k-button-sm k-button-primary" onclick="cancelPublish()">Clear Date/Time</div>
                 </div>
             </div>
             <p></p>
@@ -512,12 +515,24 @@
             window.location.href = "@Url.Action("Versions", "Editor", new {Id = Model.ArticleNumber})";
         }
 
+        function onPubNow(e) {
+            var now = new Date();
+            now = now.toUTCString();
+            $("#Published").val(now);
+            loadPublishLocalDateTime();
+        }
+
         // SCHEDULING PUBLISHING UTILITIES
         function loadPublishLocalDateTime() {
             var published = $("#Published").val();
             var publishButton = $("#btnPublish");
             if (published !== null && typeof (published) !== "undefined" && published.trim() !== "") {
-                var localDateTime = new Date(published + " GMT");
+
+                if (!published.endsWith("Z") && !published.endsWith("GMT")) {
+                    published += " GMT";
+                }
+
+                var localDateTime = new Date(published);
                 var dateTimePicker = $("#dtPublished").data("kendoDateTimePicker");
                 dateTimePicker.value(localDateTime);
                 var now = new Date();
