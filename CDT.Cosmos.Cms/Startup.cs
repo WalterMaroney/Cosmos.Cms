@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
+using CDT.Cosmos.Cms.Hubs;
 
 namespace CDT.Cosmos.Cms
 {
@@ -212,6 +214,8 @@ namespace CDT.Cosmos.Cms
                 // https://docs.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/5.0/middleware-database-error-page-obsolete
                 //services.AddDatabaseDeveloperPageExceptionFilter();
 
+                // Add the SignalR service.
+                services.AddSignalR();
             }
             else
             {
@@ -248,6 +252,8 @@ namespace CDT.Cosmos.Cms
                     //options.ExcludedHosts.Add("example.com");
                     //options.ExcludedHosts.Add("www.example.com");
                 });
+
+
             }
 
             //
@@ -342,6 +348,9 @@ namespace CDT.Cosmos.Cms
 
             app.UseEndpoints(endpoints =>
             {
+                // Point to the route that will return the SignalR Hub.
+                endpoints.MapHub<ChatHub>("/chat");
+
                 endpoints.MapControllerRoute(
                     "MyArea",
                     "{area:exists}/{controller=Home}/{action=Index}/{id?}");

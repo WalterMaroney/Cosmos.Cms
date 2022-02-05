@@ -394,7 +394,7 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Administrators, Editors")]
-        public async Task<IActionResult> Logs()
+        public IActionResult Logs()
         {
             return View();
         }
