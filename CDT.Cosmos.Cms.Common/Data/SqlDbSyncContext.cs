@@ -148,6 +148,7 @@ namespace CDT.Cosmos.Cms.Common.Data
             return new[]
             {
                 "ArticleLogs",
+                "ArticleLocks",
                 "Articles",
                 "FontIcons",
                 "Layouts",

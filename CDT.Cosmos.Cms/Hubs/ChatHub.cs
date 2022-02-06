@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
 namespace CDT.Cosmos.Cms.Hubs
@@ -6,6 +7,7 @@ namespace CDT.Cosmos.Cms.Hubs
     /// <summary>
     /// Chat hub
     /// </summary>
+    [Authorize]
     public class ChatHub : Hub
     {
         /// <summary>
@@ -30,5 +32,6 @@ namespace CDT.Cosmos.Cms.Hubs
             // Broadcast the typing notification to all clients except the sender
             await Clients.Others.SendAsync("typing", sender);
         }
+
     }
 }
