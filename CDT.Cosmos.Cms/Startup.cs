@@ -214,8 +214,6 @@ namespace CDT.Cosmos.Cms
                 // https://docs.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/5.0/middleware-database-error-page-obsolete
                 //services.AddDatabaseDeveloperPageExceptionFilter();
 
-                // Add the SignalR service.
-                services.AddSignalR();
             }
             else
             {
@@ -252,7 +250,6 @@ namespace CDT.Cosmos.Cms
                     //options.ExcludedHosts.Add("example.com");
                     //options.ExcludedHosts.Add("www.example.com");
                 });
-
 
             }
 
@@ -306,6 +303,9 @@ namespace CDT.Cosmos.Cms
 
             // Save Cosmos configuration status
             services.AddSingleton(cosmosStartup.GetStatus());
+
+            // Add the SignalR service.
+            services.AddSignalR();
         }
 
         /// <summary>
@@ -345,6 +345,7 @@ namespace CDT.Cosmos.Cms
 
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

@@ -10,8 +10,16 @@ namespace CDT.Cosmos.Cms.Common.Data
     /// </summary>
     public class ArticleLock
     {
+        /// <summary>
+        /// Unique ID for this record
+        /// </summary>
         [Key]
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Unique SignalR Connection Id
+        /// </summary>
+        public string ConnectionId { get; set; }
 
         /// <summary>
         /// User ID for this lock

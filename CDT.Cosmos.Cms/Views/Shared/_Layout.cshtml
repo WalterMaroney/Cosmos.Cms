@@ -16,9 +16,6 @@
     var teamMemberLogic = (TeamIdentityLogic)ViewData["TeamLogic"];
     var teamName = (string)ViewData["TeamName"];
 
-    // Used for ChatBot
-    var userName = Context.User.Identity.Name;
-
     var isAuthor = false;
     var isEditor = false;
     var isAdministrator = false;
@@ -70,8 +67,6 @@
         Telerik/Kendo resources
     *@
     <partial name="_KendoHeadPartial" />
-
-    <script src="/lib/signalr/dist/browser/signalr.min.js"></script>
     @*
         Application Insights Scripts
     *@
@@ -168,37 +163,14 @@
 
             })
             )
+            @* This button is required to by the Chat Component *@
             <button id="chat-toast-trigger" type="button" class="btn btn-primary">
                 Chat
             </button>
         </div>
     </nav>
-
     <div id="k-ccms-showBar" class="navbar fixed-top" style="display:none;">
         @(Html.Kendo().Button().Name("btnShowToolBar").Events(eve => eve.Click("showToolBar")).Content("<span title='Expand toolbar'>&raquo;</span>"))
-    </div>
-    <div id="chat-toast" class="toast show bg-dark" style="position: fixed; top:70px;right: 70px;z-index:50000">
-        <div class="toast-header">
-            <strong class="me-auto">Chat</strong>
-            <small>11 mins ago</small>
-            <button id="btn-close-chat" type="button" class="btn-close" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            @(Html.Kendo().Chat()
-            .Name("chatBot")
-            .User(user => user
-            // Each instance of the app will generate a unique username.
-            // In this way, the SignalR Hub "knows" who is the user that sends the message
-            // and who are the clients that have to receive that message.
-            .Name(@userName)
-            .IconUrl("https://demos.telerik.com/kendo-ui/content/chat/avatar.png")
-            )
-            .Events(events => events
-            .TypingStart("onCcmsTypingStart")
-            .Post("onCcmsChatPost")
-            ).HtmlAttributes(new { style = "width:280px;height:460px;"})
-            )
-        </div>
     </div>
     <style>
         #ccms-kendo-toolBar {
@@ -323,25 +295,8 @@
             }
         }
 
-        // Point to the Hub remote endpoint.
-        window.chatHub = new signalR.HubConnectionBuilder().withUrl('/chat').build();
-
-        chatHub.start().catch(function (e) { });
-
-        // The `typingStart` will notify the SignallR Hub that the current client is typing.
-        // The Hub, in turn, will notify all the other clients that the user has started typing.
-        function onCcmsTypingStart(e) {
-            chatHub.invoke("sendTyping", chat.getUser());
-        }
-
-        // The `post` handler will send the user data and the typed text to the SignalR Hub.
-        // The Hub will then forward that info to the other clients.
-        function onCcmsChatPost(args) {
-            chatHub.invoke("send", chat.getUser(), args.text);
-        }
-
-
         $(document).ready(function() {
+
             var timeZoneElement = $("#timeZone");
             timeZoneElement.html(getLocalTimeZone());
 
@@ -360,37 +315,12 @@
             popupNotification = $("#c-n-notifications").kendoNotification({
                 autoHideAfter: 1000
             }).data("kendoNotification");
-
-            chatHub.on('broadcastMessage', function(sender, message) {
-                var message = { type: 'text', text: message };
-
-                // Render the received message in the Chat.
-                chat.renderMessage(message, sender);
-            });
-
-            chatHub.on('typing', function(sender) {
-                // Display the typing notification in the Chat.
-                chat.renderMessage({ type: 'typing' }, sender);
-            });
-
-            window.chat = $("#chatBot").getKendoChat();
-
-            // Chat toast popup
-            document.getElementById("chat-toast-trigger").addEventListener('click', () => {
-                var el = document.getElementById("chat-toast");
-                el.style.display = "block";
-            });
-            document.getElementById("btn-close-chat").addEventListener('click', () => {
-                var el = document.getElementById("chat-toast");
-                el.style.display = "none";
-            });
-
         });
     </script>
     <form id="frmLogout" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
         <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
     </form>
-
+    <partial name="_ChatComponentsPartial" />
     @*
         Application Insights Scripts
     *@

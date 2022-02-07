@@ -20,9 +20,14 @@ namespace CDT.Cosmos.Cms.Models
         public string UserEmail { get; set; }
 
         /// <summary>
-        /// Article ID for this lock
+        /// Article Record ID for this lock
         /// </summary>
-        public int ArticleId { get; set; }
+        public int ArticleRecordId { get; set; }
+
+        /// <summary>
+        /// ID of the Signal R Connection with lock.
+        /// </summary>
+        public string ConnectionId { get; set; }
 
         /// <summary>
         /// When the lock was set
