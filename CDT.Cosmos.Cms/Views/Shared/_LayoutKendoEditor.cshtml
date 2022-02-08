@@ -412,6 +412,7 @@
             var elements = $("[contenteditable='true']");
             $(elements).each(function () {
                 deployEditor(this);
+                $(this).click(function () { ccmsSendSignal("NotifyRoomOfLock"); });
             });
         }
 
@@ -458,7 +459,7 @@
                         read: "@Url.Action("FileBrowserRead", "FileManager")",
                         fileUrl: blobUrl + "{0}"
                     }
-                }
+                } 
             });
 
             // Add to the editor array
@@ -658,7 +659,7 @@
                         $("#pendingChangesBadge").hide();
                         if (response.IsValid) {
                             $("#previewItem").show();
-                            ccmsArticleSaved(); // Defined in the chat componets partial
+                            ccmsSendSignal("ArticleSaved"); // Defined in the chat componets partial
                             if (response.CdnResult !== null && typeof (response.CdnResult) !== "undefined" && response.CdnResult !== "") {
                                 cdnProgress(response.CdnResult.EstimatedSeconds, response.CdnResult.Detail);
                             }

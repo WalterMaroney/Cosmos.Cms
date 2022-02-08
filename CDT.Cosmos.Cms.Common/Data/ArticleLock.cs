@@ -27,7 +27,7 @@ namespace CDT.Cosmos.Cms.Common.Data
         public string IdentityUserId { get; set; }
 
         /// <summary>
-        /// Article ID for this lock
+        /// Article RECORD ID for this lock (Not the Article ID)
         /// </summary>
         public int ArticleId { get; set; }
 

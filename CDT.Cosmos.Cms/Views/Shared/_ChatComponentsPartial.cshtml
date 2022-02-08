@@ -9,6 +9,7 @@
                             */
 }
 <script src="/lib/signalr/dist/browser/signalr.min.js"></script>
+
 <div id="chat-toast" class="toast show bg-dark" style="position: fixed; top:70px;right: 70px;z-index:50000">
     <div class="toast-header">
         <strong class="me-auto">Chat</strong>
@@ -32,20 +33,22 @@
         )
     </div>
 </div>
+
 <script>
     // Point to the Hub remote endpoint.
     window.ccsmsChatHub = new signalR.HubConnectionBuilder().withUrl('/chat').withAutomaticReconnect().build();
+    var myConnectionId
 
-    async function startSignalR() {
+    async function ccmsStartSignalR() {
         try {
             await ccsmsChatHub.start().then( result => {
                console.log("SignalR is now connected.");
             }).then( result => {
-               ccmsJoinEditingRoom();
+               ccmsSendSignal("JoinRoom");
             });
         } catch (err) {
             console.log(err);
-            setTimeout(start, 5000);
+            setTimeout(ccmsStartSignalR, 5000);
         }
     };
 
@@ -57,7 +60,7 @@
         } catch (err) {
             alert(err);
         }
-    }
+    };
 
     // The `post` handler will send the user data and the typed text to the SignalR Hub.
     // The Hub will then forward that info to the other clients.
@@ -67,48 +70,60 @@
         } catch (err) {
             alert(err);
         }
-    }
+    };
 
-    // Has this editor join the editing room.
-    // Helps control article locks.
-    async function ccmsJoinEditingRoom() {
-        var articleId = $("#Id").val();
-        if (articleId !== null && typeof(articleId) !== "undefined" && articleId !== "") {
+    // Sends a signal to server about an action.
+    async function ccmsSendSignal(method) {
+        /// <summary>Sends a signal to the server for the user</summary>
+        /// <param name="method">Signal method to call on server</param>
+        /// <para>
+        /// Valid methods are:
+        /// <list type="bullet">
+        /// <item>ArticleSaved</item>
+        /// <item>JoinRoom</item>
+        /// <item>LeaveRoom</item>
+        /// <item>NotifyRoomOfLock</item>
+        /// <item>RemoveArticleLock</item>
+        /// <item>SetArticleLock</item>
+        /// </list>
+        var id = $("#Id").val();
+        if (id !== null && typeof(id) !== "undefined" && id !== "") {
             try {
-                await ccsmsChatHub.invoke("JoinRoom", articleId);
+                await ccsmsChatHub.invoke(method, id);
             } catch (err) {
                 alert(err);
             }
-            console.log("Now in editing room.");
+            console.log(method + " sent.");
         }
-    }
+    };
 
-    // Let's everyone in the editing room know that the article
-    // has been saved.
-    async function ccmsArticleSaved() {
-        var articleId = $("#Id").val();
-        if (articleId != null && typeof(articleId) != "undefined" && articleId !== "") {
-            try {
-                await ccsmsChatHub.invoke("ArticleSaved", articleId);
-            } catch (err) {
-                alert(err);
-            }
-        }
-    }
-
+    // **************************
+    // Signal R Receivers
+    //
     // Receives a lock message.
     ccsmsChatHub.on("ArticleLock", function(message) {
-        alert(message);
+        var lock = JSON.parse(message);
+        if (typeof(lock) !== "undefined" && lock !== null && lock !== "") {
+            
+            if (lock.ConnectionId === this.connection.connectionId) {
+                alert("I am editing");
+            } else {
+                alert(lock.UserEmail + " is now editing.");
+            }
+        }
     });
 
     // Recives an article reload message.
     ccsmsChatHub.on("ArticleReload", function(message) {
-        alert(message);
+        var model = JSON.parse(message);
+        alert("Reload! " + model.Id);
     });
 
     $(document).ready(function() {
 
-        startSignalR();
+        ccmsStartSignalR();
+
+        myConnectionId = ccsmsChatHub.connection.connectionId;
 
         window.ccmsChatWidget = $("#ccmsChatWidget").getKendoChat();
 
@@ -133,6 +148,5 @@
             var el = document.getElementById("chat-toast");
             el.style.display = "none";
         });
-
     });
 </script>
