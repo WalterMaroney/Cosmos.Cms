@@ -4,13 +4,13 @@
 
     /*
     * This chat component requires a button to be created
-    * somewhere on the webpage with the id "chat-toast-trigger"
+    * somewhere on the webpage with the class "ccms-chat-toast-trigger"
     * defined.  This button toggles the chat window visibility.
                             */
 }
 <script src="/lib/signalr/dist/browser/signalr.min.js"></script>
 
-<div id="chat-toast" class="toast show bg-dark" style="position: fixed; top:70px;right: 70px;z-index:50000">
+<div id="chat-toast" class="toast show bg-dark" style="position:fixed;top:70px;right:70px;z-index:50000;display:none;">
     <div class="toast-header">
         <strong class="me-auto">Chat</strong>
         <small>11 mins ago</small>
@@ -37,7 +37,9 @@
 <script>
     // Point to the Hub remote endpoint.
     window.ccsmsChatHub = new signalR.HubConnectionBuilder().withUrl('/chat').withAutomaticReconnect().build();
-    var myConnectionId
+    var myConnectionId;
+    var articleLock = null;
+    var ccmsEditorIsLocked = false;
 
     async function ccmsStartSignalR() {
         try {
@@ -102,21 +104,32 @@
     //
     // Receives a lock message.
     ccsmsChatHub.on("ArticleLock", function(message) {
-        var lock = JSON.parse(message);
-        if (typeof(lock) !== "undefined" && lock !== null && lock !== "") {
+        articleLock = JSON.parse(message);
+        var btn = $("#ccms-edit-lock-btn");
+        if (typeof(articleLock) !== "undefined" && articleLock !== null && articleLock !== "") {
             
-            if (lock.ConnectionId === this.connection.connectionId) {
-                alert("I am editing");
+            btn.removeClass("k-button-solid-base");
+            btn.removeClass("k-button-solid-error");
+            btn.removeClass("k-button-solid-success");
+            ccmsEditorIsLocked = false;
+
+            if (articleLock.ConnectionId === this.connection.connectionId) {
+                btn.html("Now Editing");
+                btn.addClass("k-button-solid-success");
+            } else if (articleLock.UserEmail !== ""){
+                ccmsEditorIsLocked = true; // Article is locked by another
+                btn.html(articleLock.UserEmail + " is editing");
+                btn.addClass("k-button-solid-error");
             } else {
-                alert(lock.UserEmail + " is now editing.");
+                btn.html("Ready to Edit");
+                btn.addClass("k-button-solid-base");
             }
         }
     });
 
-    // Recives an article reload message.
     ccsmsChatHub.on("ArticleReload", function(message) {
         var model = JSON.parse(message);
-        alert("Reload! " + model.Id);
+        ccmsLoadModel(model);
     });
 
     $(document).ready(function() {
@@ -139,14 +152,11 @@
             ccmsChatWidget.renderMessage({ type: 'typing' }, sender);
         });
 
-        // Chat toast popup
-        document.getElementById("chat-toast-trigger").addEventListener('click', () => {
-            var el = document.getElementById("chat-toast");
-            el.style.display = "block";
+        $(".ccms-chat-toast-trigger").click(function () {
+            $("#chat-toast").show();
         });
-        document.getElementById("btn-close-chat").addEventListener('click', () => {
-            var el = document.getElementById("chat-toast");
-            el.style.display = "none";
+        $("#btn-close-chat").click(function () {
+            $("#chat-toast").hide();
         });
     });
 </script>

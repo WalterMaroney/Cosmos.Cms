@@ -70,6 +70,7 @@ namespace CDT.Cosmos.Cms.Hubs
             var idno = int.Parse(id);
             var model = await _articleLogic.Get(idno, Controllers.EnumControllerName.Edit);
             await Clients.OthersInGroup(id).SendAsync("ArticleReload", JsonConvert.SerializeObject(model));
+            await ClearLocks(id);
         }
 
         /// <summary>
@@ -83,21 +84,6 @@ namespace CDT.Cosmos.Cms.Hubs
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, id);
             }
-        }
-
-        /// <summary>
-        /// Removes users from an editing "room"
-        /// </summary>
-        /// <param name="id">Article record id</param>
-        /// <returns></returns>
-        public async Task LeaveRoom(string id)
-        {
-            if (!string.IsNullOrEmpty(id))
-            {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, id);
-                await NotifyRoomOfLock(id);
-            }
-
         }
 
         /// <summary>
@@ -125,11 +111,15 @@ namespace CDT.Cosmos.Cms.Hubs
         /// <summary>
         /// Removes a lock on an article
         /// </summary>
+        /// <param name="id">Group ID</param>
         /// <returns></returns>
-        public async Task RemoveArticleLock()
+        public async Task ClearLocks(string id)
         {
-           
-            var articleLocks = await _dbContext.ArticleLocks.Where(w => w.ConnectionId == Context.ConnectionId).ToListAsync();
+
+            var connectionId = Context.ConnectionId;
+            var idno = int.Parse(id);
+
+            var articleLocks = await _dbContext.ArticleLocks.Where(w => w.ConnectionId == connectionId || w.ArticleId == idno).ToListAsync();
 
             if (articleLocks.Any())
             {
@@ -138,13 +128,10 @@ namespace CDT.Cosmos.Cms.Hubs
                 _dbContext.ArticleLocks.RemoveRange(articleLocks);
 
                 await _dbContext.SaveChangesAsync();
-
-                foreach (var i in ids)
-                {
-                    // Let everyone know of the lock releases
-                    await NotifyRoomOfLock(i.ToString());
-                }
             }
+
+            string message = JsonConvert.SerializeObject(new ArticleLockViewModel());
+            await Clients.Group(id).SendAsync("ArticleLock", message);
         }
 
         /// <summary>
@@ -186,7 +173,30 @@ namespace CDT.Cosmos.Cms.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await RemoveArticleLock();
+
+            var connectionId = Context.ConnectionId;
+            try
+            {
+                var articleLocks = await _dbContext.ArticleLocks.Where(w => w.ConnectionId == connectionId).ToListAsync();
+
+                if (articleLocks.Any())
+                {
+                    foreach (var item in articleLocks)
+                    {
+                        await Groups.RemoveFromGroupAsync(connectionId, item.ArticleId.ToString());
+                    }
+                    var ids = articleLocks.Select(s => s.ArticleId);
+
+                    _dbContext.ArticleLocks.RemoveRange(articleLocks);
+
+                    await _dbContext.SaveChangesAsync();
+                }
+            } 
+            catch (Exception ex)
+            {
+                var t = ex; // for debugging
+            }
+            
             await base.OnDisconnectedAsync(exception);
         }
 

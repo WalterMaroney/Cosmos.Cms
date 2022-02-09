@@ -6,14 +6,14 @@
 @inject IOptions<CosmosConfig> options
 @model ArticleViewModel
 @{
-            /*
-            This Layout is for use anywhere that Telerik/Kendo
-                    HTML WYSIWYG editor is used.
+    /*
+    This Layout is for use anywhere that Telerik/Kendo
+    HTML WYSIWYG editor is used.
 
-                    Currently, this is used in these two places:
-            Edit/Edit
-            Template/Edit
-                */
+    Currently, this is used in these two places:
+    Edit/Edit
+    Template/Edit
+     */
     // So we can display Cosmos version in
     var assemblyName = Assembly.GetExecutingAssembly().GetName();
 
@@ -29,26 +29,18 @@
 
     // Permissions configuration
     var isAuthor = false;
-    var isEditor = false;
-    var isAdministrator = false;
     var isTeamMember = teamMemberLogic != null;
     if (User != null && (User.IsInRole("Authors") || teamMemberLogic?.IsInRole(TeamRoleEnum.Author, teamName) == true))
     {
         isAuthor = true;
-        isEditor = false;
-        isAdministrator = false;
     }
     else if (User != null && User.IsInRole("Editors") || teamMemberLogic?.IsInRole(TeamRoleEnum.Editor, teamName) == true)
     {
         isAuthor = false;
-        isEditor = true;
-        isAdministrator = false;
     }
     else if (User != null && User.IsInRole("Administrators"))
     {
         isAuthor = false;
-        isEditor = false;
-        isAdministrator = true;
     }
 
     var accountBtnTemplate = "<div id='userAcctMenu' style='font-size:0.8em'><span class='fa fa-user'></span> Account</div>";
@@ -293,7 +285,7 @@
 
 
             items.Add().Template("<div id='pendingChangesBadge' class='badge badge-warning' style='display:none'>Changes Pending Save</div>");
-
+            items.Add().Type(CommandType.Button).Text("Ready to Edit").Id("ccms-edit-lock-btn");
             items.Add().Template("<span>Title: </span>");
             items.Add().Template(Html.Kendo().TextBox().Name("tbTitle").Value(Model.Title).HtmlAttributes(new {style = "width: 32vw;"}).ToHtmlString());
 
@@ -303,30 +295,34 @@
             menuButtons.Add().Text("Log Out");
             }).Click("bgEditClick");
 
-            if (isAuthor) {
-            items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Author'>(Author)</a>");
-            } else if (isEditor)
-            {
-            items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Editor)</a>");
-            } else if (isAdministrator)
-            {
-            items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Administrator)</a>");
-            }
+                @*if (isAuthor) {
+                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Author'>(Author)</a>");
+                    } else if (isEditor)
+                    {
+                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Editor)</a>");
+                    } else if (isAdministrator)
+                    {
+                    items.Add().Template("<a style='font-size:0.8em' title='Your role with this page is that of an Editor'>(Administrator)</a>");
+                    }*@
 
             items.Add().Type(CommandType.Button).Template("<div style='padding-top:4px;display:none;' class='k-button k-button-sm k-button-secondary' id='cdnLbl'></div> <div id='progressBar' style='width:80px'></div>");
 
             items.Add().Template("<div><span id='versInfo' style='margin-right:10px;font-size:0.6em;'>" + @assemblyName.Version + "</span> </div>");
-            items.Add().Type(CommandType.Button).Click("hideToolBar").Text("<span title='Collapse toolbar'>&laquo;</span>");
+
+            items.Add().Type(CommandType.Button).Click("hideToolBar").Text("<span title='Collapse toolbar' class='k-icon k-i-arrow-left'></span>");
             })
             )
             @* This button is required to by the Chat Component *@
-            <button id="chat-toast-trigger" type="button" class="btn btn-primary">
+            <button type="button" class="k-button k-button-md k-button-rectangle k-rounded-md k-button-solid k-button-solid-base ccms-chat-toast-trigger">
                 Chat
             </button>
         </div>
     </nav>
     <div id="k-ccms-showBar" style="display:none;position:absolute;top:0px;left:0px;z-index:2000000">
-        @(Html.Kendo().Button().Name("btnShowToolBar").Events(eve => eve.Click("showToolBar")).Content("<span title='Expand toolbar'>&raquo;</span>"))
+        <button type="button" class="k-button k-button-md k-button-rectangle k-rounded-md k-button-solid k-button-solid-base ccms-chat-toast-trigger">
+            Chat
+        </button>
+        @(Html.Kendo().Button().Name("btnShowToolBar").Events(eve => eve.Click("showToolBar")).Content("<span title='Expand toolbar' class='k-icon k-i-arrow-right'></span>"))
     </div>
     <style>
         #ccms-kendo-toolBar {
@@ -412,7 +408,14 @@
             var elements = $("[contenteditable='true']");
             $(elements).each(function () {
                 deployEditor(this);
-                $(this).click(function () { ccmsSendSignal("NotifyRoomOfLock"); });
+                $(this).click(function (event) {
+                    if (ccmsEditorIsLocked !== true) {
+                      ccmsSendSignal("SetArticleLock");
+                    } else {
+                        event.preventDefault();
+                        alert("Cannot edit while locked by another user.");
+                    }
+                });
             });
         }
 
@@ -459,7 +462,7 @@
                         read: "@Url.Action("FileBrowserRead", "FileManager")",
                         fileUrl: blobUrl + "{0}"
                     }
-                } 
+                }
             });
 
             // Add to the editor array
@@ -624,6 +627,12 @@
         }
 
         function handlePost() {
+
+            if (ccmsEditorIsLocked === true) {
+                alert("Cannot save while locked by another user.");
+                return;
+            }
+
             $("#saveChangesDialog").data("kendoDialog").open();
 
             var validator = $("#frmEdit").data("kendoValidator");
@@ -682,37 +691,39 @@
                         //
                         // Save the data that came back.
                         //
-                        $("#Id").val(response.Model.Id);
-                        $("#btnPreview").attr("href", "@Url.Action("Preview", "Home")/" + response.Model.Id);
-                        $("#ArticleNumber").val(response.Model.ArticleNumber);
+                        ccmsLoadModel(response.Model);
 
-                        // Template name
-                        editorSave("eTemplateName", "kendoDropDownList", response.Model.TemplateName);
+                        //$("#Id").val(response.Model.Id);
+                        //$("#btnPreview").attr("href", "@Url.Action("Preview", "Home")/" + response.Model.Id);
+                        //$("#ArticleNumber").val(response.Model.ArticleNumber);
 
-                        $("#UrlPath").val(response.Model.UrlPath);
+                        //// Template name
+                        //editorSave("eTemplateName", "kendoDropDownList", response.Model.TemplateName);
 
-                        // Version
-                        $("#VersionNumber").val(response.Model.VersionNumber);
-                        $("#versionLbl").text("Version: " + response.Model.VersionNumber);
+                        //$("#UrlPath").val(response.Model.UrlPath);
 
-                        // Published
-                        $("#Published").val(response.Model.Published);
-                        loadPublishLocalDateTime();
+                        //// Version
+                        //$("#VersionNumber").val(response.Model.VersionNumber);
+                        //$("#versionLbl").text("Version: " + response.Model.VersionNumber);
 
-                        // Role list
-                        $("RoleList").val(response.Model.RoleList);
-                        loadRoleListMultiSelect();
-                        updatePermissionsBtn();
+                        //// Published
+                        //$("#Published").val(response.Model.Published);
+                        //loadPublishLocalDateTime();
 
-                        // Title
-                        editorSave("eTitle", "kendoEditor", response.Model.Title);
+                        //// Role list
+                        //$("RoleList").val(response.Model.RoleList);
+                        //loadRoleListMultiSelect();
+                        //updatePermissionsBtn();
 
-                        // Load Content
-                        $("#eContent").html(response.Model.Content);
+                        //// Title
+                        //editorSave("eTitle", "kendoEditor", response.Model.Title);
 
-                        $("#savedVersionNo").text(response.Model.VersionNumber);
+                        //// Load Content
+                        //$("#eContent").html(response.Model.Content);
 
-                        loadEditors();
+                        //$("#savedVersionNo").text(response.Model.VersionNumber);
+
+                        //loadEditors();
 
                         $("#saveChangesDialog").data("kendoDialog").close();
                         if (response.IsValid) {
@@ -727,6 +738,43 @@
                 validationSummary.html("<p>Cannot save because this page has errors.</p>");
             }
             return false;
+        }
+
+        function ccmsLoadModel(model) {
+            //
+            // Save the data that came back.
+            //
+            $("#Id").val(model.Id);
+            $("#btnPreview").attr("href", "@Url.Action("Preview", "Home")/" + model.Id);
+            $("#ArticleNumber").val(model.ArticleNumber);
+
+            // Template name
+            editorSave("eTemplateName", "kendoDropDownList", model.TemplateName);
+
+            $("#UrlPath").val(model.UrlPath);
+
+            // Version
+            $("#VersionNumber").val(model.VersionNumber);
+            $("#versionLbl").text("Version: " + model.VersionNumber);
+
+            // Published
+            $("#Published").val(model.Published);
+            loadPublishLocalDateTime();
+
+            // Role list
+            $("RoleList").val(model.RoleList);
+            loadRoleListMultiSelect();
+            updatePermissionsBtn();
+
+            // Title
+            editorSave("eTitle", "kendoEditor", model.Title);
+
+            // Load Content
+            $("#eContent").html(model.Content);
+
+            $("#savedVersionNo").text(model.VersionNumber);
+
+            loadEditors();
         }
 
         function cdnProgress(seconds, detail) {
@@ -826,9 +874,12 @@
             $("#btnSave").on("click",
                 function(e) {
                     e.preventDefault();
-                    handlePost();
+                    if (ccmsEditorIsLocked === true) {
+                        handlePost();
+                    } else {
+                        alert("Cannot save while locked by another user.");
+                    }
              });
-
         });
     </script>
     <form id="frmLogout" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">

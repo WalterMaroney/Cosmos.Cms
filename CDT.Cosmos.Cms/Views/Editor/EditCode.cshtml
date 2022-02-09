@@ -32,6 +32,15 @@
         }
     }
 
+    // Used by signalR to re-load an article
+    function ccmsLoadModel(model) {
+        $("#Id").val(model.Id);
+        $("#Content").html(model.Content);
+        $("#HeaderJavaScript").html(model.HeaderJavaScript);
+        $("#FooterJavaScript").html(model.FooterJavaScript);
+        loadEditor($("#EditingField").val());
+    }
+
     function closeEditor() {
         window.location.href = "@Url.Action("Versions", "Editor", new {Id = Model.ArticleNumber})";
     }
