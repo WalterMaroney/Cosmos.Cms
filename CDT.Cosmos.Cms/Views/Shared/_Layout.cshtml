@@ -60,7 +60,7 @@
     }
     else
     {
-        <link rel="stylesheet" href="~/lib/mdb-ui-kit/mdb.dark.min.css" />
+        <link rel="stylesheet" href="~/lib/mdb-ui-kit/mdb.min.css" />
         <script src="~/lib/mdb-ui-kit/mdb.min.js"></script>
     }
     @*
@@ -164,9 +164,7 @@
             })
             )
             @* This button is required to by the Chat Component *@
-            <button id="chat-toast-trigger" type="button" class="btn btn-primary">
-                Chat
-            </button>
+            <partial name="_ChatButtonPartial" />
         </div>
     </nav>
     <div id="k-ccms-showBar" class="navbar fixed-top" style="display:none;">
@@ -318,8 +316,9 @@
         });
     </script>
     <form id="frmLogout" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
-        <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        
     </form>
+    
     <partial name="_ChatComponentsPartial" />
     @*
         Application Insights Scripts

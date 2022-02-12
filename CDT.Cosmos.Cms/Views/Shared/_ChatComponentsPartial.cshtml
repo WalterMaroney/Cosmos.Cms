@@ -6,7 +6,7 @@
     * This chat component requires a button to be created
     * somewhere on the webpage with the class "ccms-chat-toast-trigger"
     * defined.  This button toggles the chat window visibility.
-                            */
+                                    */
 }
 <script src="/lib/signalr/dist/browser/signalr.min.js"></script>
 
@@ -27,7 +27,7 @@
         .IconUrl("https://demos.telerik.com/kendo-ui/content/chat/avatar.png")
         )
         .Events(events => events
-        .TypingStart("onCcmsTypingStart")
+        .TypingStart("onCcmsTypingStart").TypingEnd("onCcmsTypingEnd")
         .Post("onCcmsChatPost")
         ).HtmlAttributes(new { style = "width:280px;height:460px;"})
         )
@@ -40,6 +40,7 @@
     var myConnectionId;
     var articleLock = null;
     var ccmsEditorIsLocked = false;
+    var stopTypingTimeout = null;
 
     async function ccmsStartSignalR() {
         try {
@@ -59,17 +60,33 @@
     async function onCcmsTypingStart(e) {
         try {
             await ccsmsChatHub.invoke("sendTyping", ccmsChatWidget.getUser());
+            console.log("Start typing.");
         } catch (err) {
+            console.log(err);
             alert(err);
         }
     };
+
+    // Fires when the user clears the chat message box which signals that the user has stopped typing.
+    // The event is also triggered when the user submits the currently typed in message.
+    async function onCcmsTypingEnd(e) {
+        try {
+            await ccsmsChatHub.invoke("stopTyping", ccmsChatWidget.getUser());
+            console.log("Stop typing.");
+        } catch (err) {
+            console.log(err);
+            alert(err);
+        }
+    }
 
     // The `post` handler will send the user data and the typed text to the SignalR Hub.
     // The Hub will then forward that info to the other clients.
     async function onCcmsChatPost(args) {
         try {
             await ccsmsChatHub.invoke("send", ccmsChatWidget.getUser(), args.text);
+            console.log("Send chat.");
         } catch (err) {
+            console.log(err);
             alert(err);
         }
     };
@@ -92,36 +109,50 @@
         if (id !== null && typeof(id) !== "undefined" && id !== "") {
             try {
                 await ccsmsChatHub.invoke(method, id);
+                console.log("Send signal: " + method + ", id: " + id);
             } catch (err) {
+                console.log(err);
                 alert(err);
             }
             console.log(method + " sent.");
         }
     };
 
+    function ccmsEditButtonOnClick(e){
+       var id = $("#Id").val();
+       ccmsSendSignal("AbandonEdits", id);
+    }
+
     // **************************
     // Signal R Receivers
     //
     // Receives a lock message.
     ccsmsChatHub.on("ArticleLock", function(message) {
+        console.log("ArticleLock recieved.");
         articleLock = JSON.parse(message);
         var btn = $("#ccms-edit-lock-btn");
         if (typeof(articleLock) !== "undefined" && articleLock !== null && articleLock !== "") {
-            
+
             btn.removeClass("k-button-solid-base");
             btn.removeClass("k-button-solid-error");
             btn.removeClass("k-button-solid-success");
             ccmsEditorIsLocked = false;
 
             if (articleLock.ConnectionId === this.connection.connectionId) {
-                btn.html("Now Editing");
+                
+                btn.html("Edit Mode");
                 btn.addClass("k-button-solid-success");
+                btn.attr ("title", "Click to cancel edit and reload original.");
             } else if (articleLock.UserEmail !== ""){
+                
                 ccmsEditorIsLocked = true; // Article is locked by another
                 btn.html(articleLock.UserEmail + " is editing");
+                btn.attr ("title", "This user is now editing this document and has it locked.");
                 btn.addClass("k-button-solid-error");
             } else {
+                
                 btn.html("Ready to Edit");
+                btn.attr ("title", "Click on any editable area to start editing and lock out others from doing the same.");
                 btn.addClass("k-button-solid-base");
             }
         }
@@ -129,8 +160,15 @@
 
     ccsmsChatHub.on("ArticleReload", function(message) {
         var model = JSON.parse(message);
-        ccmsLoadModel(model);
+        ccmsLoadModel(model); // Found on the *view* (not layout) for the editor (ie HTML view, Code View)
+        console.log("ArticleReload recieved.");
     });
+
+    function ccmsChatStopTyping () {
+        $(".ccms-chat-toast-trigger").addClass("k-button-solid-base");
+        $(".ccms-chat-toast-trigger").removeClass("k-button-solid-success");
+        $(".ccms-typing-indicator").hide();
+    }
 
     $(document).ready(function() {
 
@@ -145,11 +183,30 @@
 
             // Render the received message in the Chat.
             ccmsChatWidget.renderMessage(message, sender);
+
+            console.log("broadcastMessage recieved.");
         });
 
         ccsmsChatHub.on("typing", function(sender) {
             // Display the typing notification in the Chat.
+            if (stopTypingTimeout !== null) {
+                clearTimeout(stopTypingTimeout);
+            }
             ccmsChatWidget.renderMessage({ type: 'typing' }, sender);
+            console.log("typing recieved.");
+
+            $(".ccms-chat-sender").html(sender.name);
+            $(".ccms-chat-toast-trigger").removeClass("k-button-solid-base");
+            $(".ccms-chat-toast-trigger").addClass("k-button-solid-success");
+            $(".ccms-typing-indicator").show();
+        });
+
+        ccsmsChatHub.on("stoptyping", function(sender) {
+            $(".ccms-chat-toast-trigger").addClass("k-button-solid-base");
+            $(".ccms-chat-toast-trigger").removeClass("k-button-solid-success");
+            $(".ccms-typing-indicator").hide();
+            console.log("stoptyping recieved.");
+            stopTypingTimeout = setTimeout(ccmsChatStopTyping, 2000);
         });
 
         $(".ccms-chat-toast-trigger").click(function () {
@@ -158,5 +215,6 @@
         $("#btn-close-chat").click(function () {
             $("#chat-toast").hide();
         });
+
     });
 </script>

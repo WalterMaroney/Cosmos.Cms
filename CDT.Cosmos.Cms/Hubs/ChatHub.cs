@@ -56,6 +56,17 @@ namespace CDT.Cosmos.Cms.Hubs
             await Clients.Others.SendAsync("typing", sender);
         }
 
+        /// <summary>
+        /// Signals that the user has stopped typing in the chat window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <returns></returns>
+        public async Task StopTyping(object sender)
+        {
+            // Broadcast the typing notification to all clients except the sender
+            await Clients.Others.SendAsync("stoptyping", sender);
+        }
+
         #endregion
 
         #region ARTICLE EDITING
@@ -69,7 +80,20 @@ namespace CDT.Cosmos.Cms.Hubs
         {
             var idno = int.Parse(id);
             var model = await _articleLogic.Get(idno, Controllers.EnumControllerName.Edit);
+            await ClearLocks(id);
             await Clients.OthersInGroup(id).SendAsync("ArticleReload", JsonConvert.SerializeObject(model));
+        }
+
+        /// <summary>
+        /// Abandon edits, make everyone reload original.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task AbandonEdits(string id)
+        {
+            var idno = int.Parse(id);
+            var model = await _articleLogic.Get(idno, Controllers.EnumControllerName.Edit);
+            await Clients.Group(id).SendAsync("ArticleReload", JsonConvert.SerializeObject(model));
             await ClearLocks(id);
         }
 
@@ -93,8 +117,6 @@ namespace CDT.Cosmos.Cms.Hubs
         /// <returns></returns>
         public async Task NotifyRoomOfLock(string id)
         {
-            await JoinRoom(id);
-
             var idno = int.Parse(id);
             var model = await _dbContext.ArticleLocks.Where(w => w.ArticleId == idno).Select(l => new ArticleLockViewModel()
             {
@@ -107,7 +129,7 @@ namespace CDT.Cosmos.Cms.Hubs
             string message = JsonConvert.SerializeObject(model);
             await Clients.Group(id).SendAsync("ArticleLock", message);
         }
-
+                        
         /// <summary>
         /// Removes a lock on an article
         /// </summary>
@@ -128,10 +150,12 @@ namespace CDT.Cosmos.Cms.Hubs
                 _dbContext.ArticleLocks.RemoveRange(articleLocks);
 
                 await _dbContext.SaveChangesAsync();
+
             }
 
             string message = JsonConvert.SerializeObject(new ArticleLockViewModel());
             await Clients.Group(id).SendAsync("ArticleLock", message);
+
         }
 
         /// <summary>
@@ -183,13 +207,12 @@ namespace CDT.Cosmos.Cms.Hubs
                 {
                     foreach (var item in articleLocks)
                     {
+                        var id = item.ArticleId;
                         await Groups.RemoveFromGroupAsync(connectionId, item.ArticleId.ToString());
+                        _dbContext.ArticleLocks.RemoveRange(articleLocks);
+                        await _dbContext.SaveChangesAsync();
+                        await NotifyRoomOfLock(id.ToString());
                     }
-                    var ids = articleLocks.Select(s => s.ArticleId);
-
-                    _dbContext.ArticleLocks.RemoveRange(articleLocks);
-
-                    await _dbContext.SaveChangesAsync();
                 }
             } 
             catch (Exception ex)

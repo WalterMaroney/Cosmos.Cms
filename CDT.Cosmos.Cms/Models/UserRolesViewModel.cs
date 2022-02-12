@@ -50,6 +50,9 @@
         /// Has no role?
         /// </summary>
         public bool NoRole { get; set; }
+        /// <summary>
+        /// Remove account from a role
+        /// </summary>
         public bool RemoveAccount { get; set; }
         /// <summary>
         /// User role name

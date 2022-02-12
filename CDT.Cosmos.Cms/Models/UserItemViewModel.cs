@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CDT.Cosmos.Cms.Models
 {
+    /// <summary>
+    /// Identity user item view
+    /// </summary>
     [Serializable]
     public class UserItemViewModel
     {

@@ -3,6 +3,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace CDT.Cosmos.Cms
 {
+    /// <summary>
+    /// Application entry class
+    /// </summary>
     public class Program
     {
         /// <summary>

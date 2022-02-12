@@ -34,11 +34,20 @@
 
     // Used by signalR to re-load an article
     function ccmsLoadModel(model) {
-        $("#Id").val(model.Id);
-        $("#Content").html(model.Content);
-        $("#HeaderJavaScript").html(model.HeaderJavaScript);
-        $("#FooterJavaScript").html(model.FooterJavaScript);
-        loadEditor($("#EditingField").val());
+
+        var id = $("#Id");
+        var content = $("#Content");
+        var hjs = $("#HeaderJavaScript");
+        var fjs = $("#FooterJavaScript");
+
+        id.val(model.Id);
+        content.val(model.Content);
+        hjs.val(model.HeaderJavaScript);
+        fjs.val(model.FooterJavaScript);
+
+        var activeTab = $(".tabitem.nav-link.active");
+        var name = $(activeTab).attr("data-ccms-fieldname");
+        createAndLoadEditor(name);// tabOnSelect on _LayoutCodeEditor
     }
 
     function closeEditor() {

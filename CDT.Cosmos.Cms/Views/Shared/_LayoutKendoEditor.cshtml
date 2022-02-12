@@ -56,6 +56,8 @@
     @*
         Telerik/Kendo resources
     *@
+    <link rel="stylesheet" href="~/lib/mdb-ui-kit/mdb.min.css" />
+    <script src="~/lib/mdb-ui-kit/mdb.min.js"></script>
     <partial name="_KendoHeadPartial" />
     <script src="~/js/CosmosTimeZone.js"></script>
     <style>
@@ -313,9 +315,7 @@
             })
             )
             @* This button is required to by the Chat Component *@
-            <button type="button" class="k-button k-button-md k-button-rectangle k-rounded-md k-button-solid k-button-solid-base ccms-chat-toast-trigger">
-                Chat
-            </button>
+            <partial name="_ChatButtonPartial" />
         </div>
     </nav>
     <div id="k-ccms-showBar" style="display:none;position:absolute;top:0px;left:0px;z-index:2000000">
@@ -473,8 +473,10 @@
             $(editors).each(function() {
                 var element = $(this);
                 var editor = $(this).data("kendoEditor");
-                //editor.close();
-                editor.destroy();
+                if (editor !== null && typeof(editor) !== "undefined") {
+                    //editor.close();
+                    editor.destroy();
+                }
                 $(["k-widget", "k-editor", "k-editor-inline"]).each(function(i, css) {
                     element.removeClass(css);
                 });
