@@ -3,13 +3,13 @@ using CDT.Cosmos.Cms.Common.Data;
 using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Data.Logic;
+using CDT.Cosmos.Cms.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +18,6 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
-using CDT.Cosmos.Cms.Hubs;
 
 namespace CDT.Cosmos.Cms
 {
@@ -50,6 +49,8 @@ namespace CDT.Cosmos.Cms
         public void ConfigureServices(IServiceCollection services)
         {
             var appInsightsConfig = Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+            SqlConnectionStringBuilder connectionStringBuilder = null;
+             
             services.AddApplicationInsightsTelemetry(appInsightsConfig);
 
             //
@@ -68,7 +69,7 @@ namespace CDT.Cosmos.Cms
 
                 if (primary != null)
                 {
-                    var connectionStringBuilder = new SqlConnectionStringBuilder(primary.ToString());
+                    connectionStringBuilder = new SqlConnectionStringBuilder(primary.ToString());
 
                     var secondary = cosmosOptions.Value.SqlConnectionStrings.FirstOrDefault(f => f.CloudName.Equals(cosmosStartup.PrimaryCloud, StringComparison.CurrentCultureIgnoreCase) == false);
 
@@ -305,7 +306,33 @@ namespace CDT.Cosmos.Cms
             services.AddSingleton(cosmosStartup.GetStatus());
 
             // Add the SignalR service.
-            services.AddSignalR();
+            if (connectionStringBuilder == null)
+            {
+                services.AddSignalR();
+            }
+            else
+            {
+                // If there is a DB connection, then use SQL backplane.
+                // See: https://github.com/IntelliTect/IntelliTect.AspNetCore.SignalR.SqlServer
+                services.AddSignalR().AddSqlServer(o =>
+                {
+                    o.ConnectionString = connectionStringBuilder.ToString();
+                    // See above - attempts to enable Service Broker on the database at startup
+                    // if not already enabled. Default false, as this can hang if the database has other sessions.
+                    o.AutoEnableServiceBroker = false;
+                    // Every hub has its own message table(s). 
+                    // This determines the part of the table named that is derived from the hub name.
+                    // IF THIS IS NOT UNIQUE AMONG ALL HUBS, YOUR HUBS WILL COLLIDE AND MESSAGES MIX.
+                    o.TableSlugGenerator = hubType => hubType.Name;
+                    // The number of tables per Hub to use. Adding a few extra could increase throughput
+                    // by reducing table contention, but all servers must agree on the number of tables used.
+                    // If you find that you need to increase this, it is probably a hint that you need to switch to Redis.
+                    o.TableCount = 1;
+                    // The SQL Server schema to use for the backing tables for this backplane.
+                    o.SchemaName = "SignalRCore";
+                });
+            }
+            
         }
 
         /// <summary>
