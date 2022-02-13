@@ -36,11 +36,24 @@
 
 <script>
     // Point to the Hub remote endpoint.
-    window.ccsmsChatHub = new signalR.HubConnectionBuilder().withUrl('/chat').withAutomaticReconnect().build();
+    window.ccsmsChatHub = new signalR.HubConnectionBuilder().withUrl('/chat').withAutomaticReconnect([0, 2000, 5000, 10000, 15000, 30000]) .build();
     var myConnectionId;
     var articleLock = null;
     var ccmsEditorIsLocked = false;
     var stopTypingTimeout = null;
+
+    // See: https://docs.microsoft.com/en-us/aspnet/core/signalr/javascript-client?view=aspnetcore-6.0&tabs=visual-studio#bsleep
+    var lockResolver;
+    if (navigator && navigator.locks && navigator.locks.request) {
+        const promise = new Promise((res) => {
+            lockResolver = res;
+        });
+
+        navigator.locks.request('@Guid.NewGuid().ToString()', { mode: "shared" }, () => {
+            return promise;
+        });
+    }
+
 
     async function ccmsStartSignalR() {
         try {
@@ -63,7 +76,7 @@
             console.log("Start typing.");
         } catch (err) {
             console.log(err);
-            alert(err);
+            console.log(err);
         }
     };
 
@@ -75,7 +88,7 @@
             console.log("Stop typing.");
         } catch (err) {
             console.log(err);
-            alert(err);
+            console.log(err);
         }
     }
 
@@ -87,7 +100,7 @@
             console.log("Send chat.");
         } catch (err) {
             console.log(err);
-            alert(err);
+            console.log(err);
         }
     };
 
@@ -112,7 +125,6 @@
                 console.log("Send signal: " + method + ", id: " + id);
             } catch (err) {
                 console.log(err);
-                alert(err);
             }
             console.log(method + " sent.");
         }
@@ -216,5 +228,14 @@
             $("#chat-toast").hide();
         });
 
+        if (navigator && navigator.locks && navigator.locks.request) {
+            const promise = new Promise((res) => {
+                lockResolver = res;
+        });
+
+        navigator.locks.request('unique_lock_name', { mode: "shared" }, () => {
+            return promise;
+        });
+}
     });
 </script>
