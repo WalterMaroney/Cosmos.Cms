@@ -164,7 +164,7 @@
                     "linuxFxVersion": "DOCKER|toiyabe/cosmoseditor:latest",
                     "acrUseManagedIdentityCreds": false,
                     "alwaysOn": true,
-                    "http20Enabled": false,
+                    "http20Enabled": true,
                     "functionAppScaleLimit": 0,
                     "minimumElasticInstanceCount": 0
                 },
@@ -228,6 +228,88 @@
             ]
         },
         {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2021-02-01",
+            "name": "[concat(variables('editorName'), '/web')]",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('editorName'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "DOCKER|toiyabe/cosmoseditor:latest",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "[concat('$', variables('editorName'))]",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": true,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": true,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.0",
+                "ftpsState": "Disabled",
+                "preWarmedInstanceCount": 0,
+                "functionAppScaleLimit": 0,
+                "healthCheckPath": "/Identity/Account/Login",
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 1,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2020-12-01",
             "name": "[variables('publisherName')]",
@@ -259,9 +341,10 @@
                     "linuxFxVersion": "DOCKER|toiyabe/cosmospublisher:latest",
                     "acrUseManagedIdentityCreds": false,
                     "alwaysOn": true,
-                    "http20Enabled": false,
+                    "http20Enabled": true,
                     "functionAppScaleLimit": 0,
-                    "minimumElasticInstanceCount": 0
+                    "minimumElasticInstanceCount": 0,
+                    "healthCheckPath": "/Identity/Account/Login"
                 },
                 "scmSiteAlsoStopped": false,
                 "clientAffinityEnabled": true,

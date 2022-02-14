@@ -152,7 +152,8 @@ namespace CDT.Cosmos.Cms.Data
 
             if (loadSyncContext)
             {
-                return new ApplicationDbContext(sqlBulder.Options, _options);
+               var dbContext = new ApplicationDbContext(sqlBulder.Options);
+                dbContext.LoadSyncContext(new SqlDbSyncContext(_options));
             }
 
             return new ApplicationDbContext(sqlBulder.Options);

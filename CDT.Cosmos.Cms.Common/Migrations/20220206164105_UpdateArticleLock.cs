@@ -1,4 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using CDT.Cosmos.Cms.Common.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
@@ -10,9 +15,11 @@ namespace CDT.Cosmos.Cms.Common.Migrations
         {
             migrationBuilder.AddColumn<string>(
                 name: "ConnectionId",
-                table: "ArticleLocks",
+                table: "ArticleLock",
                 type: "nvarchar(max)",
                 nullable: true);
+
+            migrationBuilder.RenameTable("ArticleLock", "dbo", "ArticleLocks", "dbo");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -20,6 +27,8 @@ namespace CDT.Cosmos.Cms.Common.Migrations
             migrationBuilder.DropColumn(
                 name: "ConnectionId",
                 table: "ArticleLocks");
+
+            migrationBuilder.RenameTable("ArticleLocks", "dbo", "ArticleLock", "dbo");
         }
     }
 }
