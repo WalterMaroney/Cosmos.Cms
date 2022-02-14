@@ -89,8 +89,6 @@
                 "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
                 "zoneRedundant": false,
                 "readScale": "Disabled",
-                "requestedBackupStorageRedundancy": "Geo",
-                "maintenanceConfigurationId": "/subscriptions/aec61f6c-81f1-4589-b4a5-c743876b4847/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default",
                 "isLedgerOn": false
             }
         },
