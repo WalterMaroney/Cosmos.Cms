@@ -171,7 +171,6 @@
                 "clientCertEnabled": false,
                 "clientCertMode": "Required",
                 "hostNamesDisabled": false,
-                "customDomainVerificationId": "71DF7368D34D8605D1D7F387DD51E6E6317809B42D2951DF103C65F44E7ABD62",
                 "containerSize": 0,
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
