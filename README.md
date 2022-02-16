@@ -17,6 +17,8 @@ Quick links: [Developer Help](https://github.com/CosmosSoftware/Cosmos.Cms/blob/
 
 * Starting in December of 2021 management at the Department of Technology decided to make this project open-source.
 
+* January 2022 this project officially "opened its doors" for business as an open-source project.
+
 * In January of 2022 [Tek Yantra](https://tekyantra.com/) offered to sponsor this project and become a contributor.  Tek Yantra staff have been involved with this project from the begining.
 
 * Now the project is in a phase where we are trying to grow our developer and user community.
