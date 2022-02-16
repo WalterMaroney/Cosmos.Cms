@@ -13,7 +13,7 @@ Quick links: [Developer Help](https://github.com/CosmosSoftware/Cosmos.Cms/blob/
 
 ### Status
 
-* Cosmos CMS began as a project within the [State of California's](https://www.ca.gov/) [California Department of Technology](https://cdt.ca.gov/), Office of Enterprise Technology from 2019 through 2021 and was built as a collaboration between it's software engineering and DevOps teams.
+* Cosmos CMS began as a project within the [State of California's](https://www.ca.gov/) [California Department of Technology](https://cdt.ca.gov/), Office of Enterprise Technology from 2019 through 2021 and was built as a collaboration between it's DevOps and software engineering teams first for Azure, then for AWS.
 
 * Starting in December of 2021 management at the Department of Technology decided to make this project open-source.
 
@@ -23,7 +23,9 @@ Quick links: [Developer Help](https://github.com/CosmosSoftware/Cosmos.Cms/blob/
 
 ### Why a CMS
 
-This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users and be highly available.  It hosted State of California websites built for the fire response of 2019 and COVID 19 response of 2020.
+This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users and be highly available--capable of hosting a single website from both Azure and AWS with real-time content synchronization between the two.
+
+Cosmos CMS hosted websites built for the State of California's fire response of 2019 and COVID 19 response of 2020.
 
 [Please see our blog article](https://cosmos.moonrise.net/blog) that describes the unique architecture of this system.
 
