@@ -23,7 +23,7 @@ Now the project is in a phase where we are trying to grow our developer and user
 
 ### Why a CMS
 
-This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users, and be highly available.  It hosted websites built for the fire response of 2019 and COVID 19 response of 2020.
+This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users and be highly available.  It hosted websites built for the fire response of 2019 and COVID 19 response of 2020.
 
 [Please see our blog article](https://cosmos.moonrise.net/blog) that describes the unique architecture of this system.
 
@@ -38,10 +38,6 @@ Three repositories are associated with this project:
 The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
 
 Would you like to fork one of our repos and contribute? See our [contributing guidelines](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/CONTRIBUTING.md) to get started.
-
-## Origin
-
-If you would like to know the the Cosmos CMS architecture came about, please read [the origin story](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Origin.md).
 
 ## Developing with Cosmos
 
