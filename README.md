@@ -15,9 +15,9 @@ Quick links: [Developer Help](https://github.com/CosmosSoftware/Cosmos.Cms/blob/
 
 * Cosmos CMS began as a project within the [State of California's](https://www.ca.gov/) [California Department of Technology](https://cdt.ca.gov/), Office of Enterprise Technology from 2019 through 2021 and was built as a collaboration between it's software engineering and DevOps teams.
 
-* Starting in December of 2021 management at the Department of Technology decided to make this project was made open-source.
+* Starting in December of 2021 management at the Department of Technology decided to make this project open-source.
 
-* In January of 2022 [Tek Yantra](https://tekyantra.com/) offered to sponsor this project and become a contributor.  Tek Yantra staff have been involved with this project from the begining in 2019.
+* In January of 2022 [Tek Yantra](https://tekyantra.com/) offered to sponsor this project and become a contributor.  Tek Yantra staff have been involved with this project from the begining.
 
 * Now the project is in a phase where we are trying to grow our developer and user community.
 
