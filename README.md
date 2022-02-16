@@ -33,10 +33,12 @@ There are a number of ways you can help:
 
 * Give Cosmos a try with our 10 minute [Azure Install](https://cosmos.moonrise.net/get_started/install).
 * Provide us feedback through our online discussions:
-* * [General discussion](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/general).
-* * [Q & A](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a).
-* * [Ideas](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/ideas).
-* * [Show and tell](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/show-and-tell) what you have done with Cosmos.
+  * [General discussion](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/general).
+  * [Q & A](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a).
+  * [Ideas](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/ideas).
+  * [Show and tell](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/show-and-tell) what you have done with Cosmos.
+* Give this project a "Start" or click on "Watch"
+* "Fork" this repository, and help us with code development and/or documentation.
 
 # Cosmos Repos
 
