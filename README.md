@@ -1,4 +1,4 @@
-# Cosmos CMS
+# Cosmos CMS README
 
 This project is Sponsored by  [![Tek Yantra Logo](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/tekyantra.png?raw=true)](https://tekyantra.com/)
 
@@ -9,7 +9,19 @@ This project is Sponsored by  [![Tek Yantra Logo](https://github.com/CosmosSoftw
 
 Quick links: [Developer Help](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md) | [Manual Docker Install](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/README.md#docker-container-manual-install)
 
-# What Makes Cosmos so Terrific?
+## About Cosmos CMS
+
+### Status
+
+Cosmos CMS began as a project within the [State of California's](https://www.ca.gov/) [California Department of Technology](https://cdt.ca.gov/), Office of Enterprise Technology from 2019 through 2021 and was built as a collaboration between it's software engineering and DevOps teams.
+
+Starting in December of 2021 management at the Department of Technology decided to make this project was made open-source.
+
+In January of 2022 [Tek Yantra](https://tekyantra.com/) offered to sponsor this project and become a contributor.  Tek Yantra staff have been involved with this project from the begining in 2019.
+
+Now the project is in a phase where we are trying to grow our developer and user community.
+
+###
 
 [Please see our blog article](https://cosmos.moonrise.net/blog) on what makes Cosmos CMS different and terrific to use!
 
