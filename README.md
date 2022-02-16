@@ -27,6 +27,17 @@ This project began out of a need for a lean, high performance Content Management
 
 [Please see our blog article](https://cosmos.moonrise.net/blog) that describes the unique architecture of this system.
 
+### Join the Cosmos CMS Team
+
+There are a number of ways you can help:
+
+* Give Cosmos a try with our 10 minute [Azure Install](https://cosmos.moonrise.net/get_started/install).
+* Provide us feedback through our online discussions:
+* * [General discussion](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/general).
+* * [Q & A](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a).
+* * [Ideas](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/ideas).
+* * [Show and tell](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/show-and-tell) what you have done with Cosmos.
+
 # Cosmos Repos
 
 Three repositories are associated with this project:
