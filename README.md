@@ -23,7 +23,7 @@ Quick links: [Developer Help](https://github.com/CosmosSoftware/Cosmos.Cms/blob/
 
 ### Why a CMS
 
-This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users and be highly available.  It hosted websites built for the fire response of 2019 and COVID 19 response of 2020.
+This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users and be highly available.  It hosted State of California websites built for the fire response of 2019 and COVID 19 response of 2020.
 
 [Please see our blog article](https://cosmos.moonrise.net/blog) that describes the unique architecture of this system.
 
