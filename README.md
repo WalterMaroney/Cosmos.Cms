@@ -21,9 +21,11 @@ In January of 2022 [Tek Yantra](https://tekyantra.com/) offered to sponsor this 
 
 Now the project is in a phase where we are trying to grow our developer and user community.
 
-###
+### Why a CMS
 
-[Please see our blog article](https://cosmos.moonrise.net/blog) on what makes Cosmos CMS different and terrific to use!
+This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users, and be highly available.  It hosted websites built for the fire response of 2019 and COVID 19 response of 2020.
+
+[Please see our blog article](https://cosmos.moonrise.net/blog) that describes the unique architecture of this system.
 
 # Cosmos Repos
 
