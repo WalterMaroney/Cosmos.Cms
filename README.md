@@ -42,7 +42,11 @@ There are a number of ways you can help:
 * Give this project a "Start" or click on "Watch"
 * "Fork" this repository, and help us with code development and/or documentation.
 
-# Cosmos Repos
+# Developing with Cosmos
+
+Would you like to fork one of our repos and contribute? See our [contributing guidelines](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/CONTRIBUTING.md) and [please see our documentation on how to get started](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md) developing with Cosmos.
+
+## Cosmos Repos
 
 Three repositories are associated with this project:
 
@@ -52,13 +56,7 @@ Three repositories are associated with this project:
 
 The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
 
-Would you like to fork one of our repos and contribute? See our [contributing guidelines](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/CONTRIBUTING.md) to get started.
-
-## Developing with Cosmos
-
-If you would like to download and work with the code in this repository, [please see our documentation on how to get started](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/DevelopingWithCosmos.md).
-
-## Getting Started
+# Installing Cosmos CMS
 
 You can deploy Cosmos to Azure by clicking the following button (recommended) or manually install by following the directions below.
 
