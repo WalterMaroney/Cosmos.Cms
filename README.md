@@ -58,7 +58,7 @@ Three repositories are associated with this project:
 
 The publisher repository is a "stock" out of the box Visual Studio application. It is turned into a "Publisher" by adding and configuring the [Cosmos Common](https://www.nuget.org/packages/CDT.Cosmos.Cms.Common/) NuGet package.
 
-# Installing Cosmos CMS
+# Installation
 
 You can deploy Cosmos to Azure by clicking the following button (recommended) or manually install by following the directions below.
 
