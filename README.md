@@ -21,6 +21,7 @@ This Readme describes the current status of this project, why it was started, an
 * January 2022 this project officially "opened its doors" for business as an open-source project.
 * In January of 2022 [Tek Yantra](https://tekyantra.com/) offered to sponsor this project and become a contributor.  Tek Yantra staff have been involved with this project from the begining.
 * Collaboration between this project and staff from the California Department of Technology continues.
+* [Product website](https://cosmos.moonrise.net/) launched.
 * Now the project is in a phase where we are trying to grow our developer and user community.
 
 ### Why a CMS
