@@ -41,7 +41,7 @@ There are a number of ways you can help:
   * [Q & A](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/q-a).
   * [Ideas](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/ideas).
   * [Show and tell](https://github.com/CosmosSoftware/Cosmos.Cms/discussions/categories/show-and-tell) what you have done with Cosmos.
-* Give this project a "Start" or click on "Watch"
+* Give this project a "Star" or click on "Watch"
 * "Fork" this repository, and help us with code development and/or documentation.
 
 # Developing with Cosmos
