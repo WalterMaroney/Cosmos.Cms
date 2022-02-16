@@ -27,7 +27,7 @@ This Readme describes the current status of this project, why it was started, an
 
 This project began out of a need for a lean, high performance Content Management System that has the capacity to handle extremely high number of users and be highly available--capable of hosting a single website from both Azure and AWS with real-time content synchronization between the two.
 
-Cosmos CMS hosted websites built for the State of California's fire response of 2019 and COVID 19 response of 2020.
+Cosmos CMS hosted websites built for the State of California's fire response of 2019 through 2021 and COVID 19 response of 2020.
 
 [Please see our blog article](https://cosmos.moonrise.net/blog) that describes the unique architecture of this system.
 
