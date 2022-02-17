@@ -147,7 +147,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
         /// like a map, chart, graph, etc. to be uneditable on a page while the text around it is.
         /// </para>
         /// </remarks>
-        private async Task<Article> Ensure_ContentEditable_HasId(Article article)
+        private void Ensure_ContentEditable_HasId(ref Article article)
         {
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(article.Content);
@@ -171,11 +171,9 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 if (count > 0)
                 {
                     article.Content = htmlDoc.DocumentNode.OuterHtml;
-                    await DbContext.SaveChangesAsync();
                 }
             }
 
-            return article;
         }
 
         private async Task<List<ArticleListItem>> PrivateGetArticleList(IQueryable<Article> query)
@@ -475,7 +473,7 @@ namespace CDT.Cosmos.Cms.Data.Logic
             if (!string.IsNullOrEmpty(model.Content))
             {
                 //// When we save to the database, remove content editable attribute.
-                model.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
+                model.Content = model.Content.Replace("contenteditable=", "crx=",
                     StringComparison.CurrentCultureIgnoreCase);
             }
 
@@ -730,13 +728,15 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             article.Title = model.Title.Trim();
 
-            // When we save to the database, remove content editable attribute.
-            article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
-                StringComparison.CurrentCultureIgnoreCase);
-
             if (model.Content == null || model.Content.Trim() == "")
             {
                 article.Content = "";
+            }
+            else
+            {
+                //// When we save to the database, remove content editable attribute.
+                article.Content = model.Content.Replace("contenteditable=", "crx=",
+                    StringComparison.CurrentCultureIgnoreCase);
             }
 
             //
@@ -763,10 +763,6 @@ namespace CDT.Cosmos.Cms.Data.Logic
 
             // Resets the expiration dates, based on the last published article
             await ResetVersionExpirations(article.ArticleNumber);
-
-            // Now, prior to sending model back, re-enable the content editable attribute.
-            article.Content = model.Content.Replace(" crx=\"", " contenteditable=\"",
-                StringComparison.CurrentCultureIgnoreCase);
 
             var result = new ArticleUpdateResult
             {
@@ -933,14 +929,18 @@ namespace CDT.Cosmos.Cms.Data.Logic
                 .Include(l => l.Layout)
                 .FirstOrDefaultAsync(a => a.Id == id && a.StatusCode != 2);
 
-            article = await Ensure_ContentEditable_HasId(article);
+            Ensure_ContentEditable_HasId(ref article);
 
 
             if (controllerName == EnumControllerName.Edit)
+            {
                 if (!string.IsNullOrEmpty(article.Content))
-                    article.Content = article.Content.Replace(" crx=\"", " contenteditable=\"",
+                {
+                    article.Content = article.Content.Replace("crx=", "contenteditable=",
                         StringComparison.CurrentCultureIgnoreCase);
-
+                }
+            }
+               
             if (article == null) throw new Exception($"Article ID:{id} not found.");
             return await BuildArticleViewModel(article, "en-US", false);
         }

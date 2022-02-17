@@ -583,7 +583,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 model = result.Model;
 
                 // Re-enable editable sections.
-                model.Content = model.Content.Replace(" crx=\"", " contenteditable=\"",
+                model.Content = model.Content.Replace("crx=", "contenteditable=",
                     StringComparison.CurrentCultureIgnoreCase);
 
                 //
@@ -702,6 +702,11 @@ namespace CDT.Cosmos.Cms.Controllers
 
             ViewData["Version"] = article.VersionNumber;
 
+
+            // Re-enable editable sections.
+            article.Content = article.Content.Replace("crx=", "contenteditable=",
+                StringComparison.CurrentCultureIgnoreCase);
+
             return View(new EditCodePostModel
             {
                 Id = article.Id,
@@ -762,9 +767,9 @@ namespace CDT.Cosmos.Cms.Controllers
         {
             if (model == null) return NotFound();
 
-            var article = await _dbContext.Articles.FirstOrDefaultAsync(f => f.Id == model.Id);
+            var articleViewModel = await _articleLogic.Get(model.Id, EnumControllerName.Edit);
 
-            if (article == null) return NotFound();
+            if (articleViewModel == null) return NotFound();
 
             // Validate security for authors before going further
             if (User.IsInRole("Team Members"))
@@ -773,69 +778,61 @@ namespace CDT.Cosmos.Cms.Controllers
                 var teamMember = await _dbContext.TeamMembers
                     .Where(t => t.UserId == user.Id &&
                                 // ReSharper disable once AccessToModifiedClosure
-                                t.Team.Articles.Any(a => a.Id == article.Id))
+                                t.Team.Articles.Any(a => a.Id == articleViewModel.Id))
                     .FirstOrDefaultAsync();
 
-                if (teamMember == null || article.Published.HasValue &&
+                if (teamMember == null || articleViewModel.Published.HasValue &&
                     teamMember.TeamRole != (int)TeamRoleEnum.Editor)
                     return Unauthorized();
             }
             else
             {
-                if (article.Published.HasValue && User.IsInRole("Authors"))
+                if (articleViewModel.Published.HasValue && User.IsInRole("Authors"))
                     return Unauthorized();
             }
 
-            
-
             // Strip Byte Order Marks (BOM)
             model.Content = StripBOM(model.Content);
-
             model.HeaderJavaScript = StripBOM(model.HeaderJavaScript);
             model.FooterJavaScript = StripBOM(model.FooterJavaScript);
 
             // Validate HTML
             model.Content = BaseValidateHtml("Content", model.Content);
 
-            if (ModelState.IsValid)
-            {
-                // When we save to the database, remove content editable attribute.
-                if (!string.IsNullOrEmpty(model.Content))
-                {
-                    article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
-                                StringComparison.CurrentCultureIgnoreCase);
-                }
-                else
-                {
-                    article.Content = "";
-                }
-
-                if (string.IsNullOrEmpty(model.HeaderJavaScript) ||
-                    string.IsNullOrWhiteSpace(model.HeaderJavaScript))
-                    article.HeaderJavaScript = string.Empty;
-                else
-                    article.HeaderJavaScript = model.HeaderJavaScript.Trim();
-
-                if (string.IsNullOrEmpty(model.FooterJavaScript) ||
-                    string.IsNullOrWhiteSpace(model.FooterJavaScript))
-                    article.FooterJavaScript = string.Empty;
-                else
-                    article.FooterJavaScript = model.FooterJavaScript.Trim();
-            }
-
 
             // Check for validation errors...
             if (ModelState.IsValid)
                 try
                 {
+                    articleViewModel.Content = model.Content;
+
+                    if (string.IsNullOrEmpty(model.HeaderJavaScript) ||
+                    string.IsNullOrWhiteSpace(model.HeaderJavaScript))
+                        articleViewModel.HeaderJavaScript = string.Empty;
+                    else
+                        articleViewModel.HeaderJavaScript = model.HeaderJavaScript.Trim();
+
+                    if (string.IsNullOrEmpty(model.FooterJavaScript) ||
+                        string.IsNullOrWhiteSpace(model.FooterJavaScript))
+                        articleViewModel.FooterJavaScript = string.Empty;
+                    else
+                        articleViewModel.FooterJavaScript = model.FooterJavaScript.Trim();
                     // If no HTML errors were thrown, save here.
 
-                    await _dbContext.SaveChangesAsync();
+                    // Get the user's ID for logging.
+                    var user = await _userManager.GetUserAsync(User);
+
+                    //
+                    // SAVE HERE!
+                    //
+                    var result = await _articleLogic.UpdateOrInsert(articleViewModel, user.Id);
+
                     //
                     // Pull back out of the database, so user can see exactly what was saved.
                     //
-                    article = await _dbContext.Articles.FirstOrDefaultAsync(f => f.Id == model.Id);
+                    var article = await _dbContext.Articles.FirstOrDefaultAsync(f => f.Id == model.Id);
                     if (article == null) throw new Exception("Could not retrieve saved code!");
+                   
 
                 }
                 catch (Exception e)
@@ -852,7 +849,7 @@ namespace CDT.Cosmos.Cms.Controllers
             //}
 
             // ReSharper disable once PossibleNullReferenceException
-            ViewData["Version"] = article.VersionNumber;
+            ViewData["Version"] = articleViewModel.VersionNumber;
 
             var jsonModel = new SaveCodeResultJsonModel
             {
@@ -865,9 +862,9 @@ namespace CDT.Cosmos.Cms.Controllers
             jsonModel.ValidationState = ModelState.ValidationState;
 
             DateTime? publishedDateTime = null;
-            if (article.Published.HasValue)
+            if (articleViewModel.Published.HasValue)
             {
-                publishedDateTime = article.Published.Value.ToUniversalTime();
+                publishedDateTime = articleViewModel.Published.Value.ToUniversalTime();
             }
 
             return Json(jsonModel);
