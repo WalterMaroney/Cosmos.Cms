@@ -786,12 +786,7 @@ namespace CDT.Cosmos.Cms.Controllers
                     return Unauthorized();
             }
 
-            // When we save to the database, remove content editable attribute.
-            if (!string.IsNullOrEmpty(model.Content))
-            {
-                model.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
-                            StringComparison.CurrentCultureIgnoreCase);
-            }
+            
 
             // Strip Byte Order Marks (BOM)
             model.Content = StripBOM(model.Content);
@@ -802,19 +797,31 @@ namespace CDT.Cosmos.Cms.Controllers
             // Validate HTML
             model.Content = BaseValidateHtml("Content", model.Content);
 
-            if (ModelState.IsValid) article.Content = model.Content;
+            if (ModelState.IsValid)
+            {
+                // When we save to the database, remove content editable attribute.
+                if (!string.IsNullOrEmpty(model.Content))
+                {
+                    article.Content = model.Content.Replace(" contenteditable=\"", " crx=\"",
+                                StringComparison.CurrentCultureIgnoreCase);
+                }
+                else
+                {
+                    article.Content = "";
+                }
 
-            if (string.IsNullOrEmpty(model.HeaderJavaScript) ||
-                string.IsNullOrWhiteSpace(model.HeaderJavaScript))
-                article.HeaderJavaScript = string.Empty;
-            else
-                article.HeaderJavaScript = model.HeaderJavaScript.Trim();
+                if (string.IsNullOrEmpty(model.HeaderJavaScript) ||
+                    string.IsNullOrWhiteSpace(model.HeaderJavaScript))
+                    article.HeaderJavaScript = string.Empty;
+                else
+                    article.HeaderJavaScript = model.HeaderJavaScript.Trim();
 
-            if (string.IsNullOrEmpty(model.FooterJavaScript) ||
-                string.IsNullOrWhiteSpace(model.FooterJavaScript))
-                article.FooterJavaScript = string.Empty;
-            else
-                article.FooterJavaScript = model.FooterJavaScript.Trim();
+                if (string.IsNullOrEmpty(model.FooterJavaScript) ||
+                    string.IsNullOrWhiteSpace(model.FooterJavaScript))
+                    article.FooterJavaScript = string.Empty;
+                else
+                    article.FooterJavaScript = model.FooterJavaScript.Trim();
+            }
 
 
             // Check for validation errors...
@@ -837,12 +844,12 @@ namespace CDT.Cosmos.Cms.Controllers
                     ModelState.AddModelError("Save", e, provider.GetMetadataForType(typeof(string)));
                 }
 
-            // Now, prior to sending model back, re-enable the content editable attribute.
-            if (!string.IsNullOrEmpty(article.Content))
-            {
-                article.Content = article.Content.Replace(" crx=\"", " contenteditable=\"",
-                    StringComparison.CurrentCultureIgnoreCase);
-            }
+            //// Now, prior to sending model back, re-enable the content editable attribute.
+            //if (!string.IsNullOrEmpty(article.Content))
+            //{
+            //    article.Content = article.Content.Replace(" crx=\"", " contenteditable=\"",
+            //        StringComparison.CurrentCultureIgnoreCase);
+            //}
 
             // ReSharper disable once PossibleNullReferenceException
             ViewData["Version"] = article.VersionNumber;
