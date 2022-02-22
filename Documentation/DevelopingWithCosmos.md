@@ -5,7 +5,7 @@ You do not have to use the Publisher above. You can add the NuGet package above 
 
 This repository is the second repository.  It contains a Visual Studio solution with several projects--three of which are unit test projects, and a fourth produces the NuGet package used by the Publisher, and the remainder make up what is called the "Editor."
 
-The "Editor" is where web content is created and managed. It is your tool to manage website "layouts" and it is where web pages are authored. Editor also is a file manager. Upload JavaScript, CSS, imagery, videos and other types of files using "Editor."  It also manages Redis cache and Content Distribution Network (CDN) updates.
+The "Editor" is where web content is created and managed. It is your tool to manage website "layouts" and it is where web pages are authored. Editor also is a file manager. Upload JavaScript, CSS, imagery, videos and other types of files using "Editor."  It also manages Content Distribution Network (CDN) updates.
 
 
 ## Developing with Publisher
@@ -26,7 +26,7 @@ If you would like to make contributions to the [Editor repository](https://githu
 
 As of this writing, the Editor repository  has just over 100 unit tests contained in three projects.  These are designed to be run from Visual Studio. Any [edition (including the free Community Edition)](https://visualstudio.microsoft.com/vs/compare/) will work. As of this writing, we are using Visual Studio Enterprise, version 16.11.2.
 
-You will also need access to database, Redis cache, blob storage, web application services in Azure and Amazon Web Services.  You will also need CDN and SendGrid resources from Microsoft Azure, and, an Akamai developer account.
+You will also need access to database,blob storage, web application services in Azure and Amazon Web Services.  You will also need CDN and SendGrid resources from Microsoft Azure, and, an Akamai developer account.
 
 ### Secrets Files
 
