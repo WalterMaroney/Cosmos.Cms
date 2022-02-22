@@ -8,7 +8,7 @@ This repository is the second repository.  It contains a Visual Studio solution 
 The "Editor" is where web content is created and managed. It is your tool to manage website "layouts" and it is where web pages are authored. Editor also is a file manager. Upload JavaScript, CSS, imagery, videos and other types of files using "Editor."  It also manages Content Distribution Network (CDN) updates.
 
 
-## Developing with Publisher
+## Developing with Publisher Repository
 
 Most people will build customizations using the publisher and/or Cosmos Common NuGet package.  It is with publisher that people can "mash up" the functionality it comes with, with their own creative works.
 
@@ -17,7 +17,7 @@ The "Publisher" [repository is found on GitHub](https://github.com/CosmosSoftwar
 For developing with publisher, any IDE that can be used with ASP.NET (Core) will do.  Examples include Visual Studio Code, or Visual Studio Community or Professional or Enterprise Editions.
 
 
-## Developing with Editor
+## Developing with Editor Repository
 
 If you would like to make contributions to the [Editor repository](https://github.com/CosmosSoftware/Cosmos.Cms) you will need a Telerik UI for ASP.NET Core developer's license. [If you do not have a license, you can get a free trial](https://www.telerik.com/).  You DO NOT need a Telerik license to develop with the Publisher or any other of Cosmos CMS repos.
 
