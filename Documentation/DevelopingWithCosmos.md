@@ -19,7 +19,7 @@ For developing with publisher, any IDE that can be used with ASP.NET (Core) will
 
 ## Developing with Editor Repository
 
-If you would like to make contributions to the [Editor repository](https://github.com/CosmosSoftware/Cosmos.Cms) you will need a Telerik UI for ASP.NET Core developer's license. [If you do not have a license, you can get a free trial](https://www.telerik.com/).  You DO NOT need a Telerik license to develop with the Publisher or any other of Cosmos CMS repos.
+If you would like to make contributions to the [Editor repository](https://github.com/CosmosSoftware/Cosmos.Cms) you will need a [Telerik UI for ASP.NET Core](https://www.telerik.com/aspnet-core-ui) developer's license. [If you do not have a license, you can get a free trial](https://www.telerik.com/).  You DO NOT need a Telerik license to develop with the Publisher or any other of Cosmos CMS repos.
 
 For the repository to successfully build and, Docker and Nuget actions to complete, you will need the following "Secrets" in your repository:
 
