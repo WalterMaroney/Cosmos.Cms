@@ -137,14 +137,6 @@ Here is a complete list of items needed to run all the unit tests:
 * Akamai
   * Akamai Developer Account
 
-
-## Telerik Developer's License
-
-Telerik sells *developer* licenses not *run time* licenses. That means any product created here using a *developer* license can be freely distributed to the public as a package.  Cosmos is distributed *for free* as Docker containers for both Editor and Publisher.
-
-To develop with the Telerik components either use a [trial license](https://www.telerik.com/download) or purchase a [developer's license](https://www.telerik.com/purchase.aspx?filter=dotnet#individual-products)
-
-
 ## Unit Tests
 
 *TIP: When setting up your unit test environment make sure your development computers can connect to the all your cloud resources.*
