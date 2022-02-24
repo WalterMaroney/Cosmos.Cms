@@ -5,10 +5,10 @@ You do not have to use the Publisher above. You can add the NuGet package above 
 
 This repository is the second repository.  It contains a Visual Studio solution with several projects--three of which are unit test projects, and a fourth produces the NuGet package used by the Publisher, and the remainder make up what is called the "Editor."
 
-The "Editor" is where web content is created and managed. It is your tool to manage website "layouts" and it is where web pages are authored. Editor also is a file manager. Upload JavaScript, CSS, imagery, videos and other types of files using "Editor."  It also manages Redis cache and Content Distribution Network (CDN) updates.
+The "Editor" is where web content is created and managed. It is your tool to manage website "layouts" and it is where web pages are authored. Editor also is a file manager. Upload JavaScript, CSS, imagery, videos and other types of files using "Editor."  It also manages Content Distribution Network (CDN) updates.
 
 
-## Developing with Publisher
+## Developing with Publisher Repository
 
 Most people will build customizations using the publisher and/or Cosmos Common NuGet package.  It is with publisher that people can "mash up" the functionality it comes with, with their own creative works.
 
@@ -17,16 +17,29 @@ The "Publisher" [repository is found on GitHub](https://github.com/CosmosSoftwar
 For developing with publisher, any IDE that can be used with ASP.NET (Core) will do.  Examples include Visual Studio Code, or Visual Studio Community or Professional or Enterprise Editions.
 
 
-## Developing with Editor
+## Developing with Editor Repository
 
-If you would like to make contributions to the Editor you will need a Telerik UI for ASP.NET Core developer's license. [If you do not have a license, you can get a free trial](https://www.telerik.com/).  You DO NOT need a Telerik license to develop with the Publisher or any other of Cosmos CMS repositories.
+If you would like to make contributions to the [Editor repository](https://github.com/CosmosSoftware/Cosmos.Cms) you will need a [Telerik UI for ASP.NET Core](https://www.telerik.com/aspnet-core-ui) developer's license. [If you do not have a license, you can get a free trial](https://www.telerik.com/).  You DO NOT need a Telerik license to develop with the Publisher or any other of Cosmos CMS repos.
+
+The GitHub actions within the editor repository need the following secrets set:
+
+To enable Telerik NuGet package installation, you will need:
+* TELERIK_USER (User name of your Telerik Account)
+* TELERIK_PASSWORD (Passoword of your account)
+
+For Docker container build and deployment to Docker Hub:
+* DOCKERLOGIN
+* DOCKERPASSWORD
+
+For build and publishing of the Cosmos Common NuGet Package:
+* NUGET_KEY
 
 
 ## Unit Testing Requirements
 
 As of this writing, the Editor repository  has just over 100 unit tests contained in three projects.  These are designed to be run from Visual Studio. Any [edition (including the free Community Edition)](https://visualstudio.microsoft.com/vs/compare/) will work. As of this writing, we are using Visual Studio Enterprise, version 16.11.2.
 
-You will also need access to database, Redis cache, blob storage, web application services in Azure and Amazon Web Services.  You will also need CDN and SendGrid resources from Microsoft Azure, and, an Akamai developer account.
+You will also need access to database,blob storage, web application services in Azure and Amazon Web Services.  You will also need CDN and SendGrid resources from Microsoft Azure, and, an Akamai developer account.
 
 ### Secrets Files
 
@@ -123,14 +136,6 @@ Here is a complete list of items needed to run all the unit tests:
 
 * Akamai
   * Akamai Developer Account
-
-
-## Telerik Developer's License
-
-Telerik sells *developer* licenses not *run time* licenses. That means any product created here using a *developer* license can be freely distributed to the public as a package.  Cosmos is distributed *for free* as Docker containers for both Editor and Publisher.
-
-To develop with the Telerik components either use a [trial license](https://www.telerik.com/download) or purchase a [developer's license](https://www.telerik.com/purchase.aspx?filter=dotnet#individual-products)
-
 
 ## Unit Tests
 
