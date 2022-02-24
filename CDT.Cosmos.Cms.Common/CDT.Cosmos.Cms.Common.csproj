@@ -36,6 +36,10 @@
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 
+  <PropertyGroup>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
 	<PropertyGroup>
 		<DisableImplicitAspNetCoreAnalyzers>true</DisableImplicitAspNetCoreAnalyzers>
 	</PropertyGroup>
