@@ -408,7 +408,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
         /// <summary>
         ///     Allows the site to be setup
         /// </summary>
-        public bool AllowSetup { get; internal set; } = false;
+        public bool AllowSetup { get; set; } = false;
 
         /// <summary>
         ///     Allows the site to be wiped clean (factor reset)

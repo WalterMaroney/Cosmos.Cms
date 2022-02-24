@@ -162,203 +162,6 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
-        /// Setup database
-        /// </summary>
-        /// <param name="task"></param>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> Database([Bind("task")] string task)
-        {
-            if (string.IsNullOrEmpty(task))
-            {
-                return RedirectToAction("Index");
-            }
-
-            if (_options.Value.SiteSettings.AllowSetup ?? false)
-            {
-                var model = new SetupIndexViewModel();
-
-                // Fail if no database connection found.
-                if (_options.Value.SqlConnectionStrings == null || !_options.Value.SqlConnectionStrings.Any())
-                {
-                    return RedirectToAction("Instructions");
-                }
-
-                try
-                {
-                    // If there is a database connection, see if there any users.
-                    // If not it is OK to setup admin.
-                    if (_options.Value.SqlConnectionStrings != null &&
-                        _options.Value.SqlConnectionStrings.Any(a => a.IsPrimary))
-                    {
-                        // Setup or update the database schema
-                        var setupDatabase = new SetupDatabase(_options);
-                        var migrationsApplied = await setupDatabase.CreateOrUpdateSchema();
-                        // Seed the database with data needed for operations.
-
-                        if (task == "NewInstall")
-                        {
-                            await setupDatabase.SeedDatabase();
-                        }
-
-                        var connectionString = _options.Value.SqlConnectionStrings.FirstOrDefault();
-                        using var dbContext = GetDbContext(connectionString.ToString());
-                        var sqlSyncContext = new SqlDbSyncContext(_options);
-                        dbContext.LoadSyncContext(sqlSyncContext);
-
-                        using var userStore = new UserStore<IdentityUser>(dbContext);
-                        using var userManager = new UserManager<IdentityUser>(userStore, null,
-                            new PasswordHasher<IdentityUser>(), null,
-                            null, null, null, null, null);
-
-                        var results = await userManager.GetUsersInRoleAsync("Administrators");
-
-                        if (results.Count == 0)
-                        {
-                            // No administrators, setup one now.
-                            model.SetupState = SetupState.SetupAdmin;
-                        }
-                        else if (migrationsApplied > 0)
-                        {
-                            model.SetupState = SetupState.Upgrade;
-                        }
-                        else
-                        {
-                            model.SetupState = SetupState.UpToDate;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    ModelState.AddModelError("", e.Message);
-                }
-                return View(model);
-            }
-
-            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
-
-            return Unauthorized();
-        }
-
-        /// <summary>
-        /// Index post method.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<IActionResult> Database(SetupIndexViewModel model)
-        {
-            if (_options.Value.SiteSettings.AllowSetup ?? false)
-            {
-                if (model != null && ModelState.IsValid)
-                {
-                    //
-                    // Check for any migrations or empty tables.
-                    var primary = _options.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
-                    var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-                    builder.UseSqlServer(primary.ToString());
-
-                    using var dbContext = new ApplicationDbContext(builder.Options);
-
-                    using var userStore = new UserStore<IdentityUser>(dbContext);
-                    using var userManager = new UserManager<IdentityUser>(userStore, null,
-                        new PasswordHasher<IdentityUser>(), null,
-                        null, null, null, null, null);
-
-                    var user = new IdentityUser { UserName = model.AdminEmail, Email = model.AdminEmail, EmailConfirmed = true };
-                    var result = await userManager.CreateAsync(user, model.Password);
-                    if (result.Succeeded)
-                    {
-                        var roleResult = await userManager.AddToRoleAsync(user, "Administrators");
-
-                        if (roleResult.Succeeded)
-                        {
-                            return RedirectToAction("NextSteps");
-                        }
-
-                        foreach (var error in roleResult.Errors)
-                        {
-                            ModelState.AddModelError("", $"Error: ({error.Code}) {error.Description}");
-                        }
-                    }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError("", $"Error: ({error.Code}) {error.Description}");
-                        }
-                    }
-                }
-                return View(model);
-            }
-
-            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
-
-            return Unauthorized();
-        }
-
-        /// <summary>
-        /// Installation Next steps
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        public async Task<IActionResult> NextSteps()
-        {
-            if (_options.Value.SiteSettings.AllowSetup ?? false)
-            {
-                // Check SendGrid
-                var sendGridResult = await TestSendGrid(_options.Value.SendGridConfig.SendGridKey);
-                return View(sendGridResult);
-            }
-
-            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
-
-            return Unauthorized();
-        }
-
-        [AllowAnonymous]
-        public IActionResult Instructions()
-        {
-            return View();
-        }
-
-        /// <summary>
-        /// Diagnostics display
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Diagnostics()
-        {
-
-            if (_options.Value.SiteSettings.AllowSetup ?? false)
-            {
-                return View(_cosmosStatus);
-            }
-
-            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
-
-            return Unauthorized();
-        }
-
-        [HttpPost]
-        public ActionResult Excel_Export_Save(string contentType, string base64, string fileName)
-        {
-
-            if (_options.Value.SiteSettings.AllowSetup ?? false)
-            {
-                var fileContents = Convert.FromBase64String(base64);
-
-                return File(fileContents, contentType, fileName);
-            }
-
-            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
-
-            return Unauthorized();
-        }
-
-        /// <summary>
         ///     Configuration wizard
         /// </summary>
         /// <returns></returns>
@@ -387,7 +190,7 @@ namespace CDT.Cosmos.Cms.Controllers
         ///     Configuraton wizard post back
         /// </summary>
         /// <param name="model"></param>
-        /// <returns></returns>
+        /// <returns>SetupIndexViewModel</returns>
         [HttpPost]
         [ResponseCache(NoStore = true)]
         public IActionResult ConfigWizard(ConfigureIndexViewModel model)
@@ -631,6 +434,214 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
+        /// Setup database
+        /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Database([Bind("task")] string task)
+        {
+            if (string.IsNullOrEmpty(task))
+            {
+                return RedirectToAction("Index");
+            }
+
+            if (_options.Value.SiteSettings.AllowSetup ?? false)
+            {
+                var model = new SetupIndexViewModel();
+
+                // Fail if no database connection found.
+                if (_options.Value.SqlConnectionStrings == null || !_options.Value.SqlConnectionStrings.Any())
+                {
+                    return RedirectToAction("Instructions");
+                }
+
+                try
+                {
+                    // If there is a database connection, see if there any users.
+                    // If not it is OK to setup admin.
+                    if (_options.Value.SqlConnectionStrings != null &&
+                        _options.Value.SqlConnectionStrings.Any(a => a.IsPrimary))
+                    {
+                        // Setup or update the database schema
+                        var setupDatabase = new SetupDatabase(_options);
+                        var migrationsApplied = await setupDatabase.CreateOrUpdateSchema();
+                        // Seed the database with data needed for operations.
+
+                        if (task == "NewInstall")
+                        {
+                            await setupDatabase.SeedDatabase();
+                        }
+
+                        var connectionString = _options.Value.SqlConnectionStrings.FirstOrDefault();
+                        using var dbContext = GetDbContext(connectionString.ToString());
+                        var sqlSyncContext = new SqlDbSyncContext(_options);
+                        dbContext.LoadSyncContext(sqlSyncContext);
+
+                        using var userStore = new UserStore<IdentityUser>(dbContext);
+                        using var userManager = new UserManager<IdentityUser>(userStore, null,
+                            new PasswordHasher<IdentityUser>(), null,
+                            null, null, null, null, null);
+
+                        var results = await userManager.GetUsersInRoleAsync("Administrators");
+
+                        if (results.Count == 0)
+                        {
+                            // No administrators, setup one now.
+                            model.SetupState = SetupState.SetupAdmin;
+                        }
+                        else if (migrationsApplied > 0)
+                        {
+                            model.SetupState = SetupState.Upgrade;
+                        }
+                        else
+                        {
+                            model.SetupState = SetupState.UpToDate;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.Message);
+                }
+                return View(model);
+            }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
+            return Unauthorized();
+        }
+
+        /// <summary>
+        /// Index post method.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Database(SetupIndexViewModel model)
+        {
+            if (_options.Value.SiteSettings.AllowSetup ?? false)
+            {
+                if (model != null && ModelState.IsValid)
+                {
+                    //
+                    // Check for any migrations or empty tables.
+                    var primary = _options.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
+                    var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+                    builder.UseSqlServer(primary.ToString());
+
+                    using var dbContext = new ApplicationDbContext(builder.Options);
+
+                    using var userStore = new UserStore<IdentityUser>(dbContext);
+                    using var userManager = new UserManager<IdentityUser>(userStore, null,
+                        new PasswordHasher<IdentityUser>(), null,
+                        null, null, null, null, null);
+
+                    var user = new IdentityUser { UserName = model.AdminEmail, Email = model.AdminEmail, EmailConfirmed = true };
+                    var result = await userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        var roleResult = await userManager.AddToRoleAsync(user, "Administrators");
+
+                        if (roleResult.Succeeded)
+                        {
+                            return RedirectToAction("NextSteps");
+                        }
+
+                        foreach (var error in roleResult.Errors)
+                        {
+                            ModelState.AddModelError("", $"Error: ({error.Code}) {error.Description}");
+                        }
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", $"Error: ({error.Code}) {error.Description}");
+                        }
+                    }
+                }
+                return View(model);
+            }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
+            return Unauthorized();
+        }
+
+        /// <summary>
+        /// Installation Next steps
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public async Task<IActionResult> NextSteps()
+        {
+            if (_options.Value.SiteSettings.AllowSetup ?? false)
+            {
+                // Check SendGrid
+                var sendGridResult = await TestSendGrid(_options.Value.SendGridConfig.SendGridKey);
+                return View(sendGridResult);
+            }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
+            return Unauthorized();
+        }
+
+        /// <summary>
+        /// View installation instructions.
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public IActionResult Instructions()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Diagnostics display
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Diagnostics()
+        {
+
+            if (_options.Value.SiteSettings.AllowSetup ?? false)
+            {
+                return View(_cosmosStatus);
+            }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
+            return Unauthorized();
+        }
+
+        /// <summary>
+        /// Exports configuration as an Excel document.
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="base64"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Excel_Export_Save(string contentType, string base64, string fileName)
+        {
+
+            if (_options.Value.SiteSettings.AllowSetup ?? false)
+            {
+                var fileContents = Convert.FromBase64String(base64);
+
+                return File(fileContents, contentType, fileName);
+            }
+
+            _logger.LogError("Unauthorized access attempted.", new Exception("Unauthorized access attempted."));
+
+            return Unauthorized();
+        }
+
+        /// <summary>
         ///     Shows how to install the configuration
         /// </summary>
         /// <returns></returns>
@@ -727,15 +738,39 @@ namespace CDT.Cosmos.Cms.Controllers
         #region CONNECTION TESTS
 
         /// <summary>
+        /// Tests all the connections
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> TestAll(ConfigureIndexViewModel model)
+        {
+            if (!CanUseConfigWizard()) return Unauthorized();
+
+            var resultsModel = new ValConViewModel();
+
+            var sqlResult = await TestSql(model);
+            var storageResult = await TestStorage(model);
+            var cdnResult = await TestCdn(model);
+            var transResult = await TestTrans(model);
+            var sendGridResult = await TestSendGrid(model);
+
+            resultsModel.Results.AddRange(sqlResult.Results);
+            resultsModel.Results.AddRange(storageResult.Results);
+            resultsModel.Results.AddRange(cdnResult.Results);
+            resultsModel.Results.AddRange(transResult.Results);
+            resultsModel.Results.AddRange(sendGridResult.Results);
+
+            return Json(resultsModel);
+        }
+
+        /// <summary>
         ///     Test SQL Connections
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> TestSql(ConfigureIndexViewModel model)
+        private async Task<ValConViewModel> TestSql(ConfigureIndexViewModel model)
         {
-            if (!CanUseConfigWizard()) return Unauthorized();
-
             // Load JSON configurations
             LoadJson(model);
 
@@ -778,19 +813,17 @@ namespace CDT.Cosmos.Cms.Controllers
                 viewModel.Results.Add(connectionResult);
             }
 
-            return Json(viewModel);
+            return viewModel;
         }
 
         /// <summary>
-        ///     Test SQL Connections
+        ///     Test storage Connections
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> TestStorage(ConfigureIndexViewModel model)
+        private async Task<ValConViewModel> TestStorage(ConfigureIndexViewModel model)
         {
-            if (!CanUseConfigWizard()) return Unauthorized();
-
             // Load JSON configurations
             LoadJson(model);
 
@@ -852,7 +885,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 viewModel.Results.Add(connectionResult);
             }
 
-            return Json(viewModel);
+            return viewModel;
         }
 
         /// <summary>
@@ -861,10 +894,8 @@ namespace CDT.Cosmos.Cms.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> TestCdn(ConfigureIndexViewModel model)
+        private async Task<ValConViewModel> TestCdn(ConfigureIndexViewModel model)
         {
-            if (!CanUseConfigWizard()) return Unauthorized();
-
             // Load JSON configurations
             LoadJson(model);
 
@@ -939,7 +970,7 @@ namespace CDT.Cosmos.Cms.Controllers
                 }
             }
 
-            return Json(viewModel);
+            return viewModel;
         }
 
         /// <summary>
@@ -947,10 +978,8 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<IActionResult> TestTrans(ConfigureIndexViewModel model)
+        private async Task<ValConViewModel> TestTrans(ConfigureIndexViewModel model)
         {
-            if (!CanUseConfigWizard()) return Unauthorized();
-
             // Load JSON configurations
             LoadJson(model);
 
@@ -1021,7 +1050,7 @@ namespace CDT.Cosmos.Cms.Controllers
             }
 
 
-            return Json(viewModel);
+            return viewModel;
         }
 
         /// <summary>
@@ -1029,10 +1058,8 @@ namespace CDT.Cosmos.Cms.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<IActionResult> TestSendGrid(ConfigureIndexViewModel model)
+        private async Task<ValConViewModel> TestSendGrid(ConfigureIndexViewModel model)
         {
-            if (!CanUseConfigWizard()) return Unauthorized();
-
             // Load JSON configurations
             LoadJson(model);
 
@@ -1069,9 +1096,14 @@ namespace CDT.Cosmos.Cms.Controllers
 
             viewModel.Results.Add(connResult);
 
-            return Json(viewModel);
+            return viewModel;
         }
 
+        /// <summary>
+        /// Performs a connection test to SendGrid in sandbox mode.
+        /// </summary>
+        /// <param name="sendGridKey"></param>
+        /// <returns></returns>
         private async Task<Response> TestSendGrid(string sendGridKey)
         {
             var client = new SendGridClient(sendGridKey);

@@ -3,10 +3,10 @@ using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A08CdnManagerTests
+    public class CORE_G01_CdnManagerTests
     {
         private static Utilities utils;
         private static AzureCdnConfig _azureCdnConfig;

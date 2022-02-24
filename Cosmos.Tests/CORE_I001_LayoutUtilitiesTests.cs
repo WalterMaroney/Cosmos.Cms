@@ -1,15 +1,11 @@
 ﻿using CDT.Cosmos.Cms.Data.Logic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class C001LayoutUtilitiesTests
+    public class CORE_I001_LayoutUtilitiesTests
     {
         [TestMethod]
         public void A01_ReadCatalogSuccess()
@@ -39,21 +35,5 @@ namespace CDT.Cosmos.Cms.Common.Tests
             Assert.IsTrue(layouts.Count > 1);
         }
 
-        [TestMethod]
-        public async Task A04_GetTemplates()
-        {
-            var layoutUtilities = new LayoutUtilities();
-
-            var layouts = await layoutUtilities.GetAllCommunityLayouts();
-
-            foreach(var layout in layouts)
-            {
-                var pageTemplates = await layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
-
-                Assert.IsNotNull(pageTemplates);
-                Assert.IsTrue(pageTemplates.Count > 0);
-            }
-
-        }
     }
 }

@@ -1,7 +1,7 @@
-﻿using CDT.Cosmos.BlobService;
+﻿using Azure.Identity;
+using CDT.Cosmos.BlobService;
 using CDT.Cosmos.Cms.Common.Data;
 using CDT.Cosmos.Cms.Common.Data.Logic;
-using CDT.Cosmos.Cms.Common.Services;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using CDT.Cosmos.Cms.Controllers;
 using CDT.Cosmos.Cms.Data.Logic;
@@ -27,14 +27,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
-    public static class TestUsers
-    {
-        public const string Foo = "foo@foo.com";
-        public const string Teamfoo1 = "teamfoo1@foo.com";
-        public const string Teamfoo2 = "teamfoo2@foo.com";
-    }
 
     public class Utilities
     {
@@ -49,11 +43,15 @@ namespace CDT.Cosmos.Cms.Common.Tests
         ///     Gets the application Db context with sync context loaded.
         /// </summary>
         /// <returns></returns>
-        public ApplicationDbContext GetApplicationDbContext(SqlConnectionString connectionString = null)
+        public ApplicationDbContext GetApplicationDbContext(SqlConnectionString connectionString = null, IOptions<CosmosConfig> cosmosConfig = null)
         {
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            var cosmosConfig = GetCosmosConfigOptions();
+            if (cosmosConfig == null)
+            {
+                cosmosConfig = GetCosmosConfigOptions();
+            }
+
             var primary = connectionString ?? cosmosConfig.Value.SqlConnectionStrings.FirstOrDefault(f => f.IsPrimary);
 
             Debug.Assert(primary != null, nameof(primary) + " != null");
@@ -126,9 +124,13 @@ namespace CDT.Cosmos.Cms.Common.Tests
             return new FormFile(stream, 0, stream.Length, fileName, fileName);
         }
 
-        public SqlDbSyncContext GetSqlDbSyncContext()
+        public SqlDbSyncContext GetSqlDbSyncContext(IOptions<CosmosConfig> config = null)
         {
-            return new(GetCosmosConfigOptions());
+            if (config == null)
+            {
+                config = GetCosmosConfigOptions();
+            }
+            return new(config);
         }
 
         /// <summary>
@@ -181,18 +183,84 @@ namespace CDT.Cosmos.Cms.Common.Tests
         {
             if (_cosmosOptions == null)
             {
-                var bootConfig = GetCosmosBootConfig();
+                _configuration = GetConfig(true);
+                var optionsBuilder = new CosmosStartup(_configuration);
 
-                if (awsSecrets) bootConfig.UseAzureVault = false;
+                optionsBuilder.TryRun(out _cosmosOptions);
 
-                if (!string.IsNullOrEmpty(secretKeyName)) bootConfig.SecretName = secretKeyName;
-
-                var section = GetConfig().GetSection(bootConfig.SecretName);
-                var model = JsonConvert.DeserializeObject<CosmosConfig>(section.Value);
-                _cosmosOptions = Options.Create(model);
+                if (_cosmosOptions == null)
+                {
+                    throw new InvalidOperationException("Could not load configuration");
+                }
             }
 
             return _cosmosOptions;
+        }
+
+        public IOptions<CosmosConfig> GetCosmosConfigOptionsInSetupMode(bool awsSecrets = false, string secretKeyName = "")
+        {
+            var options = GetCosmosConfigOptions(awsSecrets, secretKeyName).Value;
+
+
+            var cosmosConfig = new CosmosConfig()
+            {
+                AuthenticationConfig = options.AuthenticationConfig,
+                CdnConfig = options.CdnConfig,
+                EditorUrls = options.EditorUrls,
+                EnvironmentVariable = options.EnvironmentVariable,
+                GoogleCloudAuthConfig = options.GoogleCloudAuthConfig,
+                PrimaryCloud = options.PrimaryCloud,
+                SecretKey = options.SecretKey,
+                SendGridConfig = options.SendGridConfig,
+                SqlConnectionStrings = options.SqlConnectionStrings,
+                StorageConfig = options.StorageConfig,
+                SiteSettings = new SiteSettings()
+                {
+                    AllowSetup = true, // SETUP MODE HERE
+                    AllowConfigEdit = false,
+                    AllowedFileTypes = options.SiteSettings.AllowedFileTypes,
+                    AllowReset = false,
+                    BlobPublicUrl = options.SiteSettings.BlobPublicUrl,
+                    ContentSecurityPolicy = options.SiteSettings.ContentSecurityPolicy,
+                    PublisherUrl = options.SiteSettings.PublisherUrl,
+                    XFrameOptions = options.SiteSettings.XFrameOptions
+                }
+            };
+
+            return Options.Create(cosmosConfig);
+        }
+
+        public IOptions<CosmosConfig> GetCosmosConfigOptionsNotInSetupMode(bool awsSecrets = false, string secretKeyName = "")
+        {
+            var options = GetCosmosConfigOptions(awsSecrets, secretKeyName).Value;
+
+
+            var cosmosConfig = new CosmosConfig()
+            {
+                AuthenticationConfig = options.AuthenticationConfig,
+                CdnConfig = options.CdnConfig,
+                EditorUrls = options.EditorUrls,
+                EnvironmentVariable = options.EnvironmentVariable,
+                GoogleCloudAuthConfig = options.GoogleCloudAuthConfig,
+                PrimaryCloud = options.PrimaryCloud,
+                SecretKey = options.SecretKey,
+                SendGridConfig = options.SendGridConfig,
+                SqlConnectionStrings = options.SqlConnectionStrings,
+                StorageConfig = options.StorageConfig,
+                SiteSettings = new SiteSettings()
+                {
+                    AllowSetup = false, // SETUP MODE HERE
+                    AllowConfigEdit = false,
+                    AllowedFileTypes = options.SiteSettings.AllowedFileTypes,
+                    AllowReset = false,
+                    BlobPublicUrl = options.SiteSettings.BlobPublicUrl,
+                    ContentSecurityPolicy = options.SiteSettings.ContentSecurityPolicy,
+                    PublisherUrl = options.SiteSettings.PublisherUrl,
+                    XFrameOptions = options.SiteSettings.XFrameOptions
+                }
+            };
+
+            return Options.Create(cosmosConfig);
         }
 
         public Guid GetCacheId()
@@ -214,7 +282,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
             return data;
         }
 
-        internal IConfiguration GetConfig()
+        internal IConfiguration GetConfig(bool allowSetup = false)
         {
             if (_configuration != null) return _configuration;
 
@@ -249,8 +317,9 @@ namespace CDT.Cosmos.Cms.Common.Tests
 
             var awsSecretAccessKey = GetKeyValue(config, "CosmosAwsSecretAccessKey");
 
-            _cosmosBootConfig = new CosmosStartup
+            _cosmosBootConfig = new CosmosStartup()
             {
+                AllowSetup = allowSetup,
                 AllowConfigEdit = true,
                 AzureVaultClientId = clientId,
                 AzureVaultClientSecret = key,
@@ -264,12 +333,12 @@ namespace CDT.Cosmos.Cms.Common.Tests
             };
 
 
-            //_clientSecretCredential = new ClientSecretCredential(
-            //    _cosmosBootConfig.AzureVaultTenantId,
-            //    _cosmosBootConfig.AzureVaultClientId,
-            //    _cosmosBootConfig.AzureVaultClientSecret);
+            var clientSecretCredential = new ClientSecretCredential(
+                tenantId,
+                clientId,
+                key);
 
-            builder.AddAzureKeyVault(vaultUrl, clientId, key);
+            builder.AddAzureKeyVault(new Uri(vaultUrl), clientSecretCredential);
 
             _configuration = Retry.Do(() => builder.Build(), TimeSpan.FromSeconds(1));
 
@@ -367,26 +436,23 @@ namespace CDT.Cosmos.Cms.Common.Tests
 
         #endregion
 
-        public EditorController GetEditorController(ClaimsPrincipal user, bool allowSetup = false,
-            IOptions<CosmosConfig> config = null)
+        #region CONTROLLERS
+
+        public EditorController GetEditorController(ClaimsPrincipal user, bool allowSetup = false)
         {
             var logger = new Logger<EditorController>(new NullLoggerFactory());
 
-            if (config == null)
-            {
-                config = GetCosmosConfigOptions();
-                config.Value.SiteSettings.AllowSetup = allowSetup;
-            }
+            var options = GetCosmosConfigOptionsNotInSetupMode();
 
-            var dbContext = GetApplicationDbContext();
+            var dbContext = GetApplicationDbContext(null, options);
 
             var controller = new EditorController(
                 logger,
                 dbContext,
-                GetUserManager(),
+                GetUserManager(dbContext),
                 GetArticleEditLogic(dbContext),
-                config,
-                GetSqlDbSyncContext())
+                options,
+                GetSqlDbSyncContext(options))
             {
                 ControllerContext = { HttpContext = GetMockContext(user) }
             };
@@ -417,6 +483,30 @@ namespace CDT.Cosmos.Cms.Common.Tests
             return controller;
         }
 
+        public LayoutsController GetLayoutsController()
+        {
+            var logger = new Logger<LayoutsController>(new NullLoggerFactory());
+
+            var options = GetCosmosConfigOptionsNotInSetupMode();
+
+            var dbContext = GetApplicationDbContext(null, options);
+
+            var user = GetPrincipal(TestUsers.Foo).Result;
+
+            var controller = new LayoutsController(
+                dbContext,
+                GetUserManager(dbContext),
+                GetArticleEditLogic(dbContext),
+                GetSqlDbSyncContext(options), 
+                options, 
+                logger)
+            {
+                ControllerContext = { HttpContext = GetMockContext(user) }
+            }; ;
+
+            return controller;
+        }
+
         public SetupController GetSetupController()
         {
             var logger = new Logger<SetupController>(new NullLoggerFactory());
@@ -425,27 +515,12 @@ namespace CDT.Cosmos.Cms.Common.Tests
             //var redisConfig = Options.Create(GetRedisContextConfig());
             //var dbContext = GetApplicationDbContext();
 
-            var configuration = GetConfig();
-
-            var startup = new CosmosStartup(configuration);
-
-            _ = startup.TryRun(out var options);
-
-            //if (startup.HasErrors || options == null || options.Value == null || options.Value.SqlConnectionStrings.Any() == false)
-            //{
-            //    var errors = startup.Diagnostics.Where(w => w.Success == false).ToArray();
-            //    var builder = new StringBuilder();
-            //    foreach (var error in errors)
-            //    {
-            //        builder.AppendLine(error.Message);
-            //    }
-            //    throw new Exception(builder.ToString());
-            //}
+            var cosmosConfig = GetCosmosConfigOptionsInSetupMode();
 
             var controller = new SetupController(
                 logger,
-                options,
-                startup.GetStatus()
+                cosmosConfig,
+                null
                 );
 
             return controller;
@@ -457,7 +532,9 @@ namespace CDT.Cosmos.Cms.Common.Tests
             //var blobOptions = Options.Create(new AzureBlobServiceConfig());
             var claimsPrincipal = GetPrincipal(TestUsers.Foo).Result;
 
-            var siteOptions = GetCosmosConfigOptions();
+            // Clone the options because we are going to set allow setup to false
+            var siteOptions = Options.Create(_cosmosOptions.Value);
+
             siteOptions.Value.SiteSettings.AllowSetup = false;
 
             var dbContext = GetApplicationDbContext();
@@ -473,6 +550,8 @@ namespace CDT.Cosmos.Cms.Common.Tests
             };
             return controller;
         }
+
+        #endregion
 
         #endregion
 
@@ -509,7 +588,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
 
         public IEmailSender GetEmailSender()
         {
-            var emailSender = new EmailSender(_cosmosOptions);
+            var emailSender = new CDT.Cosmos.Cms.Common.Services.EmailSender(_cosmosOptions);
             return emailSender;
         }
 
@@ -555,9 +634,13 @@ namespace CDT.Cosmos.Cms.Common.Tests
             return principal;
         }
 
-        public UserManager<IdentityUser> GetUserManager()
+        public UserManager<IdentityUser> GetUserManager(ApplicationDbContext dbContext = null)
         {
-            var userStore = new UserStore<IdentityUser>(GetApplicationDbContext());
+            if (dbContext == null)
+            {
+                dbContext = GetApplicationDbContext();
+            }
+            var userStore = new UserStore<IdentityUser>(dbContext);
             var userManager = new UserManager<IdentityUser>(userStore, null, new PasswordHasher<IdentityUser>(), null,
                 null, null, null, null, GetLogger<UserManager<IdentityUser>>());
             return userManager;

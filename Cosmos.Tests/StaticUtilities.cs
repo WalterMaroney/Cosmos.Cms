@@ -5,11 +5,11 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Reflection;
 
-namespace CDT.Cosmos.BlobService.Tests
+namespace Cosmos.Tests
 {
     public class StaticUtilities
     {
-        private static CosmosStartup _cosmosBootConfig;
+        private static CosmosStartup? _cosmosBootConfig;
 
         private static string GetKeyValue(IConfigurationRoot config, string key)
         {

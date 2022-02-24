@@ -1,16 +1,16 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using CDT.Cosmos.BlobService.Drivers;
+﻿using CDT.Cosmos.BlobService.Drivers;
 using CDT.Cosmos.BlobService.Models;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CDT.Cosmos.BlobService.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A02_AzureDriverTests
+    public class BLOB_A02_AzureDriverTests
     {
         private static CosmosConfig _cosmosConfig;
 
@@ -28,7 +28,7 @@ namespace CDT.Cosmos.BlobService.Tests
 
             _cosmosConfig = config;
 
-            _fullPathTestFile = Path.Combine(context.DeploymentDirectory, DriverTestConstants.TestFile1);
+            _fullPathTestFile = Path.Combine(context.DeploymentDirectory, BLOB_Driver_TestConstants.TestFile1);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace CDT.Cosmos.BlobService.Tests
         {
             var driver = new AzureStorage(_cosmosConfig.StorageConfig.AzureConfigs.FirstOrDefault());
 
-            await driver.CreateFolderAsync(DriverTestConstants.FolderHelloWorld1);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.FolderHelloWorld1);
 
             // Get all blobs
             var items = await driver.GetObjectsAsync("");
@@ -72,13 +72,13 @@ namespace CDT.Cosmos.BlobService.Tests
         {
             var driver = new AzureStorage(_cosmosConfig.StorageConfig.AzureConfigs.FirstOrDefault());
 
-            await driver.CreateFolderAsync(DriverTestConstants.FolderHelloWorld1);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.FolderHelloWorld1);
 
-            await driver.CreateFolderAsync(DriverTestConstants.HelloWorld1SubDirectory1);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.HelloWorld1SubDirectory1);
 
-            await driver.CreateFolderAsync(DriverTestConstants.HelloWorldSubDirectory2);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.HelloWorldSubDirectory2);
 
-            await driver.CreateFolderAsync(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3);
 
             // Get all blobs
             var items = await driver.GetBlobItemsByPath("");
@@ -95,10 +95,10 @@ namespace CDT.Cosmos.BlobService.Tests
 
             Assert.AreEqual(3, blobs.Count);
 
-            var subBlobs1 = await driver.GetObjectsAsync(DriverTestConstants.HelloWorld1SubDirectory1 + "/");
+            var subBlobs1 = await driver.GetObjectsAsync(BLOB_Driver_TestConstants.HelloWorld1SubDirectory1 + "/");
             Assert.AreEqual(1, subBlobs1.Count);
 
-            var subBlobs2 = await driver.GetObjectsAsync(DriverTestConstants.HelloWorldSubDirectory2 + "/");
+            var subBlobs2 = await driver.GetObjectsAsync(BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/");
             Assert.AreEqual(2, subBlobs2.Count);
         }
 
@@ -112,13 +112,13 @@ namespace CDT.Cosmos.BlobService.Tests
 
             var driver = new AzureStorage(_cosmosConfig.StorageConfig.AzureConfigs.FirstOrDefault());
 
-            var fullPath = DriverTestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" +
-                           DriverTestConstants.TestFile1;
+            var fullPath = BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" +
+                           BLOB_Driver_TestConstants.TestFile1;
 
             var fileUploadMetadata = new FileUploadMetaData
             {
                 UploadUid = Guid.NewGuid().ToString(),
-                FileName = DriverTestConstants.TestFile1,
+                FileName = BLOB_Driver_TestConstants.TestFile1,
                 RelativePath = fullPath.TrimStart('/'),
                 ContentType = "image/jpeg",
                 ChunkIndex = 0,
@@ -137,8 +137,8 @@ namespace CDT.Cosmos.BlobService.Tests
         [TestMethod]
         public async Task A07_GetAndCopyFile()
         {
-            var source = DriverTestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" + DriverTestConstants.TestFile1;
-            var destination = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile1;
+            var source = BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" + BLOB_Driver_TestConstants.TestFile1;
+            var destination = BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/" + BLOB_Driver_TestConstants.TestFile1;
 
             var driver = new AzureStorage(_cosmosConfig.StorageConfig.AzureConfigs.FirstOrDefault());
 

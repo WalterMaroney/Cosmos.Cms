@@ -4,10 +4,10 @@ using CDT.Cosmos.Cms.Common.Services.Configurations;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A04SimpleProxyTests
+    public class CORE_A04_SimpleProxyTests
     {
         private static SimpleProxyConfigs configs;
 

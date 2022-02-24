@@ -1,17 +1,18 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CDT.Cosmos.BlobService;
 using CDT.Cosmos.BlobService.Drivers;
 using CDT.Cosmos.BlobService.Models;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CDT.Cosmos.BlobService.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A03_StorageContext_Tests
+    public class BLOB_A03_StorageContext_Tests
     {
         //private static AmazonStorageConfig _amazonStorageConfig;
         private static string _fullPathTestFile;
@@ -31,7 +32,7 @@ namespace CDT.Cosmos.BlobService.Tests
 
             _cosmosConfig = config;
 
-            _fullPathTestFile = Path.Combine(context.DeploymentDirectory, DriverTestConstants.TestFile1);
+            _fullPathTestFile = Path.Combine(context.DeploymentDirectory, BLOB_Driver_TestConstants.TestFile1);
         }
 
         [TestMethod]
@@ -68,12 +69,12 @@ namespace CDT.Cosmos.BlobService.Tests
             memStream.Position = 0;
             var data = memStream.ToArray();
 
-            var fullPath1 = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile2;
+            var fullPath1 = BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/" + BLOB_Driver_TestConstants.TestFile2;
 
             var fileUploadMetadata1 = new FileUploadMetaData
             {
                 UploadUid = Guid.NewGuid().ToString(),
-                FileName = DriverTestConstants.TestFile2,
+                FileName = BLOB_Driver_TestConstants.TestFile2,
                 RelativePath = fullPath1.TrimStart('/'),
                 ContentType = "image/jpeg",
                 ChunkIndex = 0,
@@ -93,12 +94,12 @@ namespace CDT.Cosmos.BlobService.Tests
             var service2 =
                 new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
 
-            var fullPath2 = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile3;
+            var fullPath2 = BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/" + BLOB_Driver_TestConstants.TestFile3;
 
             var fileUploadMetadata2 = new FileUploadMetaData
             {
                 UploadUid = Guid.NewGuid().ToString(),
-                FileName = DriverTestConstants.TestFile3,
+                FileName = BLOB_Driver_TestConstants.TestFile3,
                 RelativePath = fullPath2.TrimStart('/'),
                 ContentType = "image/jpeg",
                 ChunkIndex = 0,
@@ -129,12 +130,12 @@ namespace CDT.Cosmos.BlobService.Tests
                 new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
 
             var blobsToMove =
-                await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3);
-            await service1.RenameAsync(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3,
-                DriverTestConstants.FolderRename1);
-            var blobsMoved = await service1.GetFolderContents(DriverTestConstants.FolderRename1);
+                await service1.GetFolderContents(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3);
+            await service1.RenameAsync(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3,
+                BLOB_Driver_TestConstants.FolderRename1);
+            var blobsMoved = await service1.GetFolderContents(BLOB_Driver_TestConstants.FolderRename1);
             var blobsRemaining =
-                await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3);
+                await service1.GetFolderContents(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3);
 
             // The number of blobs to move, should match the number moved
             Assert.AreEqual(blobsToMove.Count, blobsMoved.Count);
@@ -150,9 +151,9 @@ namespace CDT.Cosmos.BlobService.Tests
             var service1 =
                 new StorageContext(Options.Create(_cosmosConfig), StaticUtilities.GetMemoryCache());
 
-            var fileToRename = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile3;
+            var fileToRename = BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/" + BLOB_Driver_TestConstants.TestFile3;
 
-            var fileNewName = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.RenameFile2;
+            var fileNewName = BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/" + BLOB_Driver_TestConstants.RenameFile2;
 
             Assert.IsTrue(await service1.BlobExistsAsync(fileToRename));
 
@@ -173,7 +174,7 @@ namespace CDT.Cosmos.BlobService.Tests
             //
             // Arrange sub folders with files
             //
-            var folder = service1.CreateFolder(DriverTestConstants.HelloWorldSubdirectory2Subdirectory5);
+            var folder = service1.CreateFolder(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory5);
 
             // Create a file to upload.
             await using var memStream = new MemoryStream();
@@ -185,7 +186,7 @@ namespace CDT.Cosmos.BlobService.Tests
             for (var i = 0; i < 5; i++)
             {
                 var fileName = $"file{i}.jpg";
-                var path = DriverTestConstants.HelloWorldSubDirectory2 + "/" + fileName;
+                var path = BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/" + fileName;
 
                 var fileUploadMetadata1 = new FileUploadMetaData
                 {
@@ -201,7 +202,7 @@ namespace CDT.Cosmos.BlobService.Tests
                 service1.AppendBlob(memStream, fileUploadMetadata1);
             }
 
-            var folder1 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubDirectory2);
+            var folder1 = await service1.GetFolderContents(BLOB_Driver_TestConstants.HelloWorldSubDirectory2);
 
             foreach (var entry in folder1)
             {
@@ -212,7 +213,7 @@ namespace CDT.Cosmos.BlobService.Tests
             for (var i = 0; i < 9; i++)
             {
                 var fileName = $"file{i}.jpg";
-                var path = DriverTestConstants.HelloWorldSubdirectory2Subdirectory5 + "/" + fileName;
+                var path = BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory5 + "/" + fileName;
 
                 var fileUploadMetadata1 = new FileUploadMetaData
                 {
@@ -228,7 +229,7 @@ namespace CDT.Cosmos.BlobService.Tests
                 service1.AppendBlob(memStream, fileUploadMetadata1);
             }
 
-            var folder2 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory5);
+            var folder2 = await service1.GetFolderContents(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory5);
 
             foreach (var entry in folder2)
             {
@@ -253,7 +254,7 @@ namespace CDT.Cosmos.BlobService.Tests
 
             //var service2 = new BlobService.StorageContext(Options.Create(_cosmosConfig));
 
-            var folder1 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubDirectory2);
+            var folder1 = await service1.GetFolderContents(BLOB_Driver_TestConstants.HelloWorldSubDirectory2);
 
             foreach (var entry in folder1)
             {
@@ -261,7 +262,7 @@ namespace CDT.Cosmos.BlobService.Tests
                 Assert.IsNotNull(entry.Path);
             }
 
-            var folder2 = await service1.GetFolderContents(DriverTestConstants.HelloWorldSubdirectory2Subdirectory5);
+            var folder2 = await service1.GetFolderContents(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory5);
 
             foreach (var entry in folder2)
             {

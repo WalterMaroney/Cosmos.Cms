@@ -150,7 +150,6 @@ namespace CDT.Cosmos.Cms.Common.Data
                 "ArticleLogs",
                 "ArticleLocks",
                 "Articles",
-                "FontIcons",
                 "Layouts",
                 "MenuItems",
                 "TeamMembers",

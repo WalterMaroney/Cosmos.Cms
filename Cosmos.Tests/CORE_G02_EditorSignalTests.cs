@@ -1,16 +1,14 @@
-﻿using CDT.Cosmos.Cms.Common.Services;
-using CDT.Cosmos.Cms.Controllers;
+﻿using CDT.Cosmos.Cms.Controllers;
 using CDT.Cosmos.Cms.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A11EditorSignalTests
+    public class CORE_G02_EditorSignalTests
     {
         private static Utilities utils;
 
@@ -20,7 +18,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
             options.Value.PrimaryCloud = "azure";
 
             using var controller =
-                utils.GetEditorController(utils.GetPrincipal(TestUsers.Foo).Result, false, options);
+                utils.GetEditorController(utils.GetPrincipal(TestUsers.Foo).Result);
             return controller;
         }
         private static EditorController Get_SignalRecieve_Controller()
@@ -29,7 +27,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
             options.Value.PrimaryCloud = "amazon";
 
             using var controller =
-                utils.GetEditorController(utils.GetPrincipal(TestUsers.Foo).Result, false, options);
+                utils.GetEditorController(utils.GetPrincipal(TestUsers.Foo).Result);
             return controller;
         }
 

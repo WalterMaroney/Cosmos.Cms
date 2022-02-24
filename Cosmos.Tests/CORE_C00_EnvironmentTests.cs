@@ -1,15 +1,18 @@
 ﻿using CDT.Cosmos.Cms.Common.Data;
+using CDT.Cosmos.Cms.Models;
 using Dotmim.Sync.Enumerations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A00EnvironmentTests
+    public class CORE_C00_EnvironmentTests
     {
         public static Utilities utils;
 
@@ -17,6 +20,27 @@ namespace CDT.Cosmos.Cms.Common.Tests
         public static void Initialize(TestContext context)
         {
             utils = new Utilities();
+
+            var options = utils.GetCosmosConfigOptions();
+
+            foreach (var connection in options.Value.SqlConnectionStrings)
+            {
+                var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+                builder.UseSqlServer(connection.ToString());
+                using (var dbContext = new ApplicationDbContext(builder.Options))
+                {
+                    var sqlRemoveProc = File.ReadAllText("DropStoredProcs.sql");
+                    dbContext.Database.BeginTransaction();
+                    dbContext.Database.ExecuteSqlRaw(sqlRemoveProc);
+                    dbContext.Database.CommitTransaction();
+
+                    var sqlRemoveTables = File.ReadAllText("DropAllTables.sql");
+                    dbContext.Database.BeginTransaction();
+                    dbContext.Database.ExecuteSqlRaw(sqlRemoveTables);
+                    dbContext.Database.CommitTransaction();
+                }
+            }
+
         }
 
         [TestMethod]
@@ -25,7 +49,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
             //
             // Setup context.
             //
-            var dbContext = utils.GetApplicationDbContext();
+            using var dbContext = utils.GetApplicationDbContext();
 
             //
             // Wipe clean the database before starting.
@@ -51,11 +75,21 @@ namespace CDT.Cosmos.Cms.Common.Tests
         [TestMethod]
         public async Task A01_InstallDatabases_Success()
         {
-            var setupController = utils.GetSetupController();
+            using var setupController = utils.GetSetupController();
 
             // Now recreate the database and schema
-            await setupController.Database("NewInstall");
 
+            var result = (ViewResult) await setupController.Database("NewInstall");
+
+            var model = result.Model as SetupIndexViewModel;
+
+            Assert.IsNotNull(model);
+            Assert.IsTrue(model.SetupState == SetupState.SetupAdmin);
+        }
+
+        [TestMethod]
+        public async Task A02_TestSetup()
+        {
             var options = utils.GetCosmosConfigOptions();
 
             foreach (var connection in options.Value.SqlConnectionStrings)
@@ -67,11 +101,7 @@ namespace CDT.Cosmos.Cms.Common.Tests
                 var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
                 Assert.IsTrue(migrations.Count() > 1);
             }
-        }
 
-        [TestMethod]
-        public async Task A02_TestSetup()
-        {
             using (var roleManager = utils.GetRoleManager())
             {
                 Assert.IsTrue(await roleManager.RoleExistsAsync("Editors"));
@@ -83,13 +113,15 @@ namespace CDT.Cosmos.Cms.Common.Tests
 
             var foo = await utils.GetIdentityUser(TestUsers.Foo);
 
-            using var userManager = utils.GetUserManager();
+            using (var userManager = utils.GetUserManager())
+            {
+                var result = await userManager.AddToRoleAsync(foo, "Administrators");
 
-            var result = await userManager.AddToRoleAsync(foo, "Administrators");
+                Assert.IsTrue(result.Succeeded);
 
-            Assert.IsTrue(result.Succeeded);
+                Assert.IsTrue(await userManager.IsInRoleAsync(foo, "Administrators"));
+            }
 
-            Assert.IsTrue(await userManager.IsInRoleAsync(foo, "Administrators"));
         }
 
 
@@ -105,17 +137,9 @@ namespace CDT.Cosmos.Cms.Common.Tests
         }
 
         [TestMethod]
-        public void A04_TestPublisherHealth_Redis_Success()
+        public void A04_TestPublisherHealth_Success()
         {
             var articleLogic = utils.GetArticleLogic(utils.GetApplicationDbContext());
-
-            Assert.IsTrue(articleLogic.GetPublisherHealth());
-        }
-
-        [TestMethod]
-        public void A05_TestPublisherHealth_SqlOnly_Success()
-        {
-            var articleLogic = utils.GetArticleLogicNoRedis(utils.GetApplicationDbContext());
 
             Assert.IsTrue(articleLogic.GetPublisherHealth());
         }

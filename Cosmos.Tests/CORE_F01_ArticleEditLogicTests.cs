@@ -3,21 +3,19 @@ using CDT.Cosmos.Cms.Data.Logic;
 using CDT.Cosmos.Cms.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     /// <summary>
     ///     Tests the <see cref="ArticleEditLogic" /> functions independent of controllers.
     /// </summary>
     [TestClass]
-    public class A07ArticleLogicTests
+    public class CORE_F01_ArticleEditLogicTests
     {
         private static Utilities utils;
         private static IdentityUser _testUser;
@@ -518,42 +516,42 @@ namespace CDT.Cosmos.Cms.Common.Tests
             Assert.AreEqual(newArticleViewModel.Model.Id, publishedArticle.Id);
         }
 
-        [TestMethod]
-        public async Task I_Get_Translations_Home_Page()
-        {
-            await using var dbContext = utils.GetApplicationDbContext();
-            var logic = utils.GetArticleEditLogic(dbContext);
+        //[TestMethod]
+        //public async Task I_Get_Translations_Home_Page()
+        //{
+        //    await using var dbContext = utils.GetApplicationDbContext();
+        //    var logic = utils.GetArticleEditLogic(dbContext);
 
-            //var article = await _dbContext.Articles.FirstOrDefaultAsync(w => w.UrlPath == "ROOT");
+        //    //var article = await _dbContext.Articles.FirstOrDefaultAsync(w => w.UrlPath == "ROOT");
 
-            var article = await logic.Create("Rosetta Stone");
+        //    var article = await logic.Create("Rosetta Stone");
 
-            article.Content =
-                "The other night 'bout two o'clock, or maybe it was three,\r\nAn elephant with shining tusks came chasing after me.\r\nHis trunk was wavin' in the air an'  spoutin' jets of steam\r\nAn' he was out to eat me up, but still I didn't scream\r\nOr let him see that I was scared - a better thought I had,\r\nI just escaped from where I was and crawled in bed with dad.\r\n\r\nSource: https://www.familyfriendpoems.com/poem/being-brave-at-night-by-edgar-albert-guest";
+        //    article.Content =
+        //        "The other night 'bout two o'clock, or maybe it was three,\r\nAn elephant with shining tusks came chasing after me.\r\nHis trunk was wavin' in the air an'  spoutin' jets of steam\r\nAn' he was out to eat me up, but still I didn't scream\r\nOr let him see that I was scared - a better thought I had,\r\nI just escaped from where I was and crawled in bed with dad.\r\n\r\nSource: https://www.familyfriendpoems.com/poem/being-brave-at-night-by-edgar-albert-guest";
 
-            article.Published = DateTime.Now.ToUniversalTime().AddDays(-1);
+        //    article.Published = DateTime.Now.ToUniversalTime().AddDays(-1);
 
-            var result = await logic.UpdateOrInsert(article, _testUser.Id);
+        //    var result = await logic.UpdateOrInsert(article, _testUser.Id);
 
-            //
-            // All four should find the home page.
-            //
-            //var test1 = await logic.GetByUrl(result.UrlPath, "en");
-            //var test2 = await logic.GetByUrl(result.UrlPath, "es");
-            var test3 = await logic.GetByUrl(result.Model.UrlPath, "vi");
-            //var test4 = await logic.GetByUrl(result.UrlPath, "fr");
+        //    //
+        //    // All four should find the home page.
+        //    //
+        //    //var test1 = await logic.GetByUrl(result.UrlPath, "en");
+        //    //var test2 = await logic.GetByUrl(result.UrlPath, "es");
+        //    var test3 = await logic.GetByUrl(result.Model.UrlPath, "vi");
+        //    //var test4 = await logic.GetByUrl(result.UrlPath, "fr");
 
-            //Assert.IsNotNull(test1);
-            //Assert.IsNotNull(test2);
-            Assert.IsNotNull(test3);
-            //Assert.IsNotNull(test4);
+        //    //Assert.IsNotNull(test1);
+        //    //Assert.IsNotNull(test2);
+        //    Assert.IsNotNull(test3);
+        //    //Assert.IsNotNull(test4);
 
-            //Assert.AreEqual(test1.Id, test2.Id);
-            Assert.AreEqual(result.Model.Id, test3.Id);
+        //    //Assert.AreEqual(test1.Id, test2.Id);
+        //    Assert.AreEqual(result.Model.Id, test3.Id);
 
-            Assert.AreEqual("đá Rosetta", test3.Title);
-            //Assert.AreEqual(test1.Id, test4.Id);
-        }
+        //    Assert.AreEqual("đá Rosetta", test3.Title);
+        //    //Assert.AreEqual(test1.Id, test4.Id);
+        //}
 
     }
 }

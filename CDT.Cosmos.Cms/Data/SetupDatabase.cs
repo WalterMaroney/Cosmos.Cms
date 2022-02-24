@@ -75,54 +75,6 @@ namespace CDT.Cosmos.Cms.Data
 
                 using var dbContext = GetDbContext(conn.ToString(), true);
 
-                //if (!dbContext.FontIcons.Any())
-                //{
-                //    var tblSeeding = new TableSeeding(dbContext);
-
-                //    // Load fonts if they don't already exist.
-                //    await tblSeeding.LoadFontIcons();
-                //}
-
-                // Load default layouts if they don't already exist.
-                //if (!dbContext.Layouts.Any())
-                //{
-                //    // Load default layout and pages
-                //    var layoutUtilities = new LayoutUtilities();
-
-                //    var layout = await layoutUtilities.GetDefaultCommunityLayout();
-                //    dbContext.Layouts.Add(layout);
-                //    await dbContext.SaveChangesAsync();
-
-                //    var templates = await layoutUtilities.GetCommunityTemplatePages(layout.CommunityLayoutId);
-
-                //    dbContext.Templates.Add(templates.FirstOrDefault());
-
-                //    await dbContext.SaveChangesAsync();
-                //}
-
-                //// Add home page if they don't already exist.
-                //if (!dbContext.Articles.Any())
-                //{
-                //    var defaultLayoutId = dbContext.Layouts.FirstOrDefault(f => f.IsDefault).Id;
-
-                //    var homeTemplate = dbContext.Templates.FirstOrDefault(f => f.LayoutId == defaultLayoutId);
-
-                //    dbContext.Articles.Add(new Article()
-                //    {
-                //        ArticleNumber = 1,
-                //        Content = homeTemplate.Content,
-                //        LayoutId = defaultLayoutId,
-                //        Published = DateTime.UtcNow.AddMinutes(-5),
-                //        StatusCode = (int)StatusCodeEnum.Active,
-                //        Title = "Home Page",
-                //        UrlPath = "root",
-                //        Updated = DateTime.UtcNow.AddMinutes(-5),
-                //        VersionNumber = 1
-                //    });
-
-                //    await dbContext.SaveChangesAsync();
-                //}
-
                 if (!dbContext.Roles.Any())
                 {
                     // Setup roles if they don't already exist. //

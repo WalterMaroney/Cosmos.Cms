@@ -67,9 +67,6 @@ namespace CDT.Cosmos.Cms.Controllers
         ///     </para>
         ///     <list type="bullet">
         ///         <item>
-        ///             ViewData["FontIcons"] set with CA theme font icon list.
-        ///         </item>
-        ///         <item>
         ///             ViewData["PageUrls"] set as a list of type <see cref="SelectListItem" />
         ///         </item>
         ///         <item>

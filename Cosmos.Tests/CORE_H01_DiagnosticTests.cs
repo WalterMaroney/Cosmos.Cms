@@ -2,16 +2,13 @@
 using CDT.Cosmos.Cms.Common.Services.Configurations.BootUp;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class B00DiagnosticTests
+    public class CORE_H01_DiagnosticTests
     {
         private static Utilities utils;
 

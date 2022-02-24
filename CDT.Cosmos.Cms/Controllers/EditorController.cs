@@ -54,7 +54,7 @@ namespace CDT.Cosmos.Cms.Controllers
             IOptions<CosmosConfig> options,
             SqlDbSyncContext syncContext
         ) :
-            base(dbContext, userManager, articleLogic, options)
+             base(dbContext, userManager, articleLogic, options)
         {
 
             if (options.Value.SiteSettings.AllowSetup ?? true)

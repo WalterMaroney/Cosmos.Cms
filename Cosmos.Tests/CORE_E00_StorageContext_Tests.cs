@@ -6,10 +6,10 @@ using CDT.Cosmos.BlobService;
 using CDT.Cosmos.BlobService.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CDT.Cosmos.Cms.Common.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A02_StorageContext_Tests
+    public class CORE_E00_StorageContext_Tests
     {
         private const string FileRoot = "files";
         private static Utilities utils;

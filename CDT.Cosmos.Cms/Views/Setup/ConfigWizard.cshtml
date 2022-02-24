@@ -444,11 +444,7 @@
 
         chkValid = true; // reset to true.
 
-        callTest("@Url.Action("TestSql")", data, "Testing DB connection(s)...");
-        callTest("@Url.Action("TestStorage")", data, "Testing storage connection(s)...");
-        callTest("@Url.Action("TestCdn")", data, "Testing CDN connection...");
-        callTest("@Url.Action("TestTrans")", data, "Testing Google translate connection...");
-        callTest("@Url.Action("TestSendGrid")", data, "Testing SendGrid (Email) connection...");
+        callTest("@Url.Action("TestAll")", data, "Testing all connection(s)...");
 
         // Wrap up tests here.
         loader.hide();

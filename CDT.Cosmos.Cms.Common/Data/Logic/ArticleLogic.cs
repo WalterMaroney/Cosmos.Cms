@@ -521,7 +521,6 @@ namespace CDT.Cosmos.Cms.Common.Data.Logic
         /// <returns></returns>
         public bool GetPublisherHealth()
         {
-            // If we get here, we cannot connect to either Redis or SQL.
             return true;
         }
     }

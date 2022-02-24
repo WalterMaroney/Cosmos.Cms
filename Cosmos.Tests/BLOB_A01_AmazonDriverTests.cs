@@ -1,20 +1,20 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using CDT.Cosmos.BlobService.Drivers;
 using CDT.Cosmos.BlobService.Models;
 using CDT.Cosmos.Cms.Common.Services.Configurations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CDT.Cosmos.BlobService.Tests
+namespace Cosmos.Tests
 {
     [TestClass]
-    public class A01_AmazonDriverTests
+    public class BLOB_A01_AmazonDriverTests
     {
-        private static CosmosConfig _cosmosConfig;
+        private static CosmosConfig? _cosmosConfig;
 
-        private static string _fullPathTestFile;
+        private static string? _fullPathTestFile;
 
         [ClassInitialize]
         public static void Initialize(TestContext context)
@@ -30,7 +30,7 @@ namespace CDT.Cosmos.BlobService.Tests
 
             _cosmosConfig = config;
 
-            _fullPathTestFile = Path.Combine(context.DeploymentDirectory, DriverTestConstants.TestFile1);
+            _fullPathTestFile = Path.Combine(context.DeploymentDirectory, BLOB_Driver_TestConstants.TestFile1);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace CDT.Cosmos.BlobService.Tests
             var driver = new AmazonStorage(_cosmosConfig.StorageConfig.AmazonConfigs.FirstOrDefault(),
                 StaticUtilities.GetMemoryCache());
 
-            await driver.CreateFolderAsync(DriverTestConstants.FolderHelloWorld1);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.FolderHelloWorld1);
         }
 
         [TestMethod]
@@ -74,13 +74,13 @@ namespace CDT.Cosmos.BlobService.Tests
             var driver = new AmazonStorage(_cosmosConfig.StorageConfig.AmazonConfigs.FirstOrDefault(),
                 StaticUtilities.GetMemoryCache());
 
-            await driver.CreateFolderAsync(DriverTestConstants.FolderHelloWorld1);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.FolderHelloWorld1);
 
-            await driver.CreateFolderAsync(DriverTestConstants.HelloWorld1SubDirectory1);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.HelloWorld1SubDirectory1);
 
-            await driver.CreateFolderAsync(DriverTestConstants.HelloWorldSubDirectory2);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.HelloWorldSubDirectory2);
 
-            await driver.CreateFolderAsync(DriverTestConstants.HelloWorldSubdirectory2Subdirectory3);
+            await driver.CreateFolderAsync(BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3);
 
             // Get all blobs
             var blobs = await driver.GetObjectsAsync("", null);
@@ -98,10 +98,10 @@ namespace CDT.Cosmos.BlobService.Tests
 
             Assert.AreEqual(4, blobs.Count);
 
-            var subBlobs1 = await driver.GetObjectsAsync(DriverTestConstants.HelloWorld1SubDirectory1, null);
+            var subBlobs1 = await driver.GetObjectsAsync(BLOB_Driver_TestConstants.HelloWorld1SubDirectory1, null);
             Assert.AreEqual(1, subBlobs1.Count);
 
-            var subBlobs2 = await driver.GetObjectsAsync(DriverTestConstants.HelloWorldSubDirectory2, null);
+            var subBlobs2 = await driver.GetObjectsAsync(BLOB_Driver_TestConstants.HelloWorldSubDirectory2, null);
             Assert.AreEqual(2, subBlobs2.Count);
         }
 
@@ -117,13 +117,13 @@ namespace CDT.Cosmos.BlobService.Tests
             var driver = new AmazonStorage(_cosmosConfig.StorageConfig.AmazonConfigs.FirstOrDefault(),
                 StaticUtilities.GetMemoryCache());
 
-            var fullPath = DriverTestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" +
-                           DriverTestConstants.TestFile1;
+            var fullPath = BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" +
+                           BLOB_Driver_TestConstants.TestFile1;
 
             var fileUploadMetadata = new FileUploadMetaData
             {
                 UploadUid = Guid.NewGuid().ToString(),
-                FileName = DriverTestConstants.TestFile1,
+                FileName = BLOB_Driver_TestConstants.TestFile1,
                 RelativePath = fullPath.TrimStart('/'),
                 ContentType = "image/jpeg",
                 ChunkIndex = 0,
@@ -141,8 +141,8 @@ namespace CDT.Cosmos.BlobService.Tests
         [TestMethod]
         public async Task A07_GetAndCopyFile()
         {
-            var source = DriverTestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" + DriverTestConstants.TestFile1;
-            var destination = DriverTestConstants.HelloWorldSubDirectory2 + "/" + DriverTestConstants.TestFile1;
+            var source = BLOB_Driver_TestConstants.HelloWorldSubdirectory2Subdirectory3 + "/" + BLOB_Driver_TestConstants.TestFile1;
+            var destination = BLOB_Driver_TestConstants.HelloWorldSubDirectory2 + "/" + BLOB_Driver_TestConstants.TestFile1;
 
             var driver = new AmazonStorage(_cosmosConfig.StorageConfig.AmazonConfigs.FirstOrDefault(),
                 StaticUtilities.GetMemoryCache());

@@ -1,6 +1,6 @@
-﻿namespace CDT.Cosmos.BlobService.Tests
+﻿namespace Cosmos.Tests
 {
-    public static class DriverTestConstants
+    public static class BLOB_Driver_TestConstants
     {
         public const string FolderHelloWorld1 = "/hello-world-1";
 
