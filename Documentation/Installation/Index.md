@@ -1,7 +1,7 @@
 # Installation
 
 The type of Cosmos installation depends on what your needs my be. For many situations a basic installation may suffice,
-but if higher performance or higher availablility is required then CDN and other options might be considered.
+but if higher performance or higher availability is required then CDN and other options might be considered.
 
 Note: For installations on Microsoft Azure, please consider using our [automated quick install](https://cosmos.moonrise.net/get_started/install).  It takes about 10 minutes to run.
 
@@ -10,7 +10,7 @@ two web applications--one for the "Publisher" and another for the "Editor."
 
 ## Manual Installation
 
-The basic install requires five resources to be deloployed for Cosmos include the following: 
+The basic install requires five resources to be deployed for Cosmos include the following: 
 
 * SendGrid Account
 * MS SQL Database
@@ -43,7 +43,7 @@ If you are using an automated means of deploying Cosmos [as is used for Deployme
 * sqlServerName [This is the SQL Server DNS name]
 * sqlServerPassword [SQL Server random password]
 * CosmosPublisherUrl [The public URL to the Publisher website]
-* CosmosEditorUrl [The publick URL of the editor website]
+* CosmosEditorUrl [The public URL of the editor website]
 * CosmosPrimaryCloud [Can be one of these: amazon, azure, google]
 * CosmosBlobContainer [Can be either '$web' for Azure, or the name of the S3 container for Amazon]
 
@@ -73,7 +73,7 @@ Files are stored in either AWS S3 or Azure Storage accounts with the public webs
 * [Azure Storage with public website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
 
 IMPORTANT:
-* The storage account API needs to be accessable to the Editor Website.
+* The storage account API needs to be accessible to the Editor Website.
 * IMPORTANT! For Amazon S3 you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/). This can be done through CloudFront or a load balancer.
 
 ### MS SQL Database
