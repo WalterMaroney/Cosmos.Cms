@@ -67,7 +67,7 @@ For Microsoft Azure you will need the following:
 
 ### File Storage
 
-Files are stored in either AWS S3 or Azure Storage accounts. Make sure each is accessible to the "Editor" and each is setup with a public website enabled.
+Files are stored in either AWS S3 or Azure Storage accounts. 
 
 * [AWS S3 with public website](https://docs.aws.amazon.com/AmazonS3/latest/userguide/HostingWebsiteOnS3Setup.html). 
 * [Azure Storage with public website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
@@ -75,17 +75,6 @@ Files are stored in either AWS S3 or Azure Storage accounts. Make sure each is a
 IMPORTANT:
 * The storage account API needs to be accessable to the Editor Website.
 * Note you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/). This can be done through CloudFront or a load balancer.
-
-### Editor and Publisher Website Docker Container Installation
-
-Cosmos requires two websites to be deployed as Docker Containers. It is recommended to install these first as the docker containers take a while to download and spin up.  By the time the storage and database resources are deployed, these websites will be ready to use.
-
-#### Editor Website
-
-The purpose of the "Editor" is to manage content.  Here are the particulars about the installation:
-
-* The Docker Container can be found on [Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor).
-* 
 
 ### MS SQL Database
 
@@ -96,11 +85,67 @@ IMPORTANT! The database has to be accessible to both the Publisher and Editor we
 * [Amazon RDS For SQL Server](https://aws.amazon.com/rds/sqlserver/)
 * [Azure SQL Server](https://azure.microsoft.com/en-us/products/azure-sql/database/)
 
+### Editor and Publisher Website Docker Container Installation
+
+Cosmos requires two websites to be deployed as Docker Containers. It is recommended to install these first as the docker containers take a while to download and spin up.  By the time the storage and database resources are deployed, these websites will be ready to use.
+
+#### Editor Website
+
+The purpose of the "Editor" is to manage content.  Here are the particulars about the installation:
+
+* The Docker Container can be found on [Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor).
+* The Editor Website needs the following settings enabled:
+  * Affinity Bit Enabled
+  * Web Sockets Allowed
+
+The editor website needs the following "Secrets" to be set:
+
+* CosmosPrimaryCloud [This is the cloud where this installation is located. It can be amazon, azure, or google]
+* CosmosAdminEmail [Email address of the person who will be the administrator of this website]
+* CosmosSendGridApiKey [SendGrid API Key that is enabled to send email]
+* sqlDatabaseName [Database name to be used such as 'cosmosdb']
+* sqlServerAdminName [A random SQL Server admin name]
+* sqlServerName [This is the SQL Server DNS name]
+* sqlServerPassword [SQL Server random password]
+* CosmosPublisherUrl [The public URL to the Publisher website]
+* CosmosEditorUrl [The publick URL of the editor website]
+* CosmosPrimaryCloud [Can be one of these: amazon, azure, google]
+* CosmosBlobContainer [Can be either '$web' for Azure, or the name of the S3 container for Amazon]
+* ConnectionStrings:
+  * DefaultConnection [This is the MS SQL Connection String to the database and database server]
+
+For Amazon the following environment variables will be needed:
+* AmazonAwsAccessKeyId [API Access key ID]
+* AmazonAwsSecretAccessKey [The actual access key]
+* AmazonRegion [Amazon region where deployed]
+
+For Microsoft Azure you will need the following:
+
+* storageAccountName [Azure Storage Account or S3 Bucket Name]
+* ConnectionStrings:
+  * BlobConnection [Connection string to the Azure Storage Account]
+
+#### Publisher Website
+
+The publisher installation is relatively simple as it's sole purpose is the "publish" content on the web. By design it is light-weight and "lean."
+
+* The Docker Container for the publisher can be found on [Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmospublisher).
+* The Editor Website needs the following settings enabled:
+  * Affinity Bit DISABLED (IMPORTANT! For performance reasons DISABLE the affinity bit for the Publisher)
+
+The publisher needs the following "Secrets" set:
+
+* CosmosPrimaryCloud [This is the cloud where this installation is located. It can be amazon, azure, or google]
+* ConnectionStrings:
+  * DefaultConnection [This is the MS SQL Connection String to the database and database server]
 
 
+## Performance Tips
 
+For optimal performance, do not install the "Publisher" and "Editor" websites on the same resource.  Keep them separate.  For performance let the "Publisher" resource scale out rapidly and draw back slowly.  For example, scale out 2 instances at a time when a certain CPU threashold is hit, and then, reduce by 1 instance at a time as CPU usage decreases.
 
+The publisher and editor has been tested with Azure Front Doort Firewall. This firewall uses OWASP rules.  Both the publisher and editor function well with all OWASP rules turned on.  This means other firewalls that are also using OWASP rules should work fine in full "prevention mode" with Cosmos.
 
-### Cosmos Editor Installation - Amazon Web Services
+## CDN
 
-Instructions for AWS are in development.
+Cosmos is capabilbe of integrating with Akamai Fast Purge, or through Microsoft Azure Akamai, Microsoft and Verizon CDN's.
