@@ -292,6 +292,7 @@ namespace Cosmos.Tests
 
             var builder = new ConfigurationBuilder()
                 .AddJsonFile(jsonConfig, true)
+                .AddEnvironmentVariables() // Added to read environment variables from GitHub Actions
                 .AddUserSecrets(Assembly.GetExecutingAssembly(), true); // User secrets override all - put here
 
             var config = Retry.Do(() => builder.Build(), TimeSpan.FromSeconds(1));
