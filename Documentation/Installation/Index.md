@@ -10,50 +10,96 @@ two web applications--one for the "Publisher" and another for the "Editor."
 
 ## Manual Installation
 
-The basic install requires four resources to be deloployed: a database, blob storage account, and a web application for the publisher and the editor.  Shown below are links
-that show how to install these resources in Amazon Web Services (AWS) and Microsoft Azure.
+The basic install requires five resources to be deloployed for Cosmos include the following: 
 
-### Database
+* SendGrid Account
+* MS SQL Database
+* Blob storage account
+* Two "docker containerized" websites:
+  * Publisher Website
+  * Editor Website
 
-Cosmos uses MS SQL Server as it's database. Below are links that show how to deploy a database to AWS and Azure:
+An explanation of the architecture behind Cosmos can be found [on the product website](https://cosmos.moonrise.net/blog).
 
-* [Amazon RDS For SQL Server](https://aws.amazon.com/rds/sqlserver/)
-* [Azure SQL Server](https://azure.microsoft.com/en-us/products/azure-sql/database/)
+## Installation Order and Requirements.
+
+### SendGrid Account
+
+A [SendGrid account](https://docs.sendgrid.com/for-developers/partners) is needed by the Cosmos Editor for sending Emails related to user account management services. For most first-time installations the "free" SendGrid account will do.  You can obtain a free account through [Amazon Market Place, Google, Jetlastic, and Microsoft Azure](https://docs.sendgrid.com/for-developers/partners).
+
+Tip:
+* By default, SendGrid restricts address to an account [through IP Address "Allow Lists."](https://docs.sendgrid.com/ui/account-and-settings/ip-access-management). To simplify installation, this security feature can be disabled by clicking the "Disable Allow List" button on the IP Address Management console screen.  For "high-value" or "high-risk" scenarios, it is highly recommended to leave the IP Address Allow List enabled.
+* As of this writing, it may be necessary to deploy the SendGrid account manually--not through using Terraform or other automation technology.
+
+### Automation Environment Variables Requirements
+
+If you are using an automated means of deploying Cosmos [as is used for Deployment to Azure](https://cosmos.moonrise.net/get_started/install), you will want to establish the following environment variables prior to the script running:
+
+* CosmosPrimaryCloud [This is the cloud where this installation is located. It can be amazon, azure, or google]
+* CosmosAdminEmail [Email address of the person who will be the administrator of this website]
+* CosmosSendGridApiKey [SendGrid API Key that is enabled to send email]
+* sqlDatabaseName [Database name to be used such as 'cosmosdb']
+* sqlServerAdminName [A random SQL Server admin name]
+* sqlServerName [This is the SQL Server DNS name]
+* sqlServerPassword [SQL Server random password]
+* CosmosPublisherUrl [The public URL to the Publisher website]
+* CosmosEditorUrl [The publick URL of the editor website]
+* CosmosPrimaryCloud [Can be one of these: amazon, azure, google]
+* CosmosBlobContainer [Can be either '$web' for Azure, or the name of the S3 container for Amazon]
+
+* ConnectionStrings:
+  * DefaultConnection [This is the MS SQL Connection String to the database and database server]
+
+For Amazon Web Services you will need the following:
+
+* An API Access key with permissions to upload, rename, and delete blobs in the S3 bucket.
+
+For Amazon the following environment variables will be needed:
+* AmazonAwsAccessKeyId [API Access key ID]
+* AmazonAwsSecretAccessKey [The actual access key]
+* AmazonRegion [Amazon region where deployed]
+
+For Microsoft Azure you will need the following:
+
+* storageAccountName [Azure Storage Account or S3 Bucket Name]
+* ConnectionStrings:
+  * BlobConnection [Connection string to the Azure Storage Account]
 
 ### File Storage
 
 Files are stored in either AWS S3 or Azure Storage accounts. Make sure each is accessible to the "Editor" and each is setup with a public website enabled.
 
-* [AWS S3 with public website](https://docs.aws.amazon.com/AmazonS3/latest/userguide/HostingWebsiteOnS3Setup.html). Note you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/).
+* [AWS S3 with public website](https://docs.aws.amazon.com/AmazonS3/latest/userguide/HostingWebsiteOnS3Setup.html). 
 * [Azure Storage with public website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
 
-### SendGrid Account
+IMPORTANT:
+* The storage account API needs to be accessable to the Editor Website.
+* Note you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/). This can be done through CloudFront or a load balancer.
 
-A [SendGrid account](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021#create-a-twilio-sendgrid-account) is needed by the Cosmos Editor for sending Emails related to user account management services.
+### Editor and Publisher Website Docker Container Installation
 
-### Cosmos Editor Installation - Azure
+Cosmos requires two websites to be deployed as Docker Containers. It is recommended to install these first as the docker containers take a while to download and spin up.  By the time the storage and database resources are deployed, these websites will be ready to use.
 
-The following describes how to setup the editor and publisher web applications in Azure.
+#### Editor Website
 
-Step 1: Use the "Create a resource" to create a new Web App the dialog is shown below.
+The purpose of the "Editor" is to manage content.  Here are the particulars about the installation:
 
-![Image of New Resource Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp01.jpg)
+* The Docker Container can be found on [Docker Hub](https://hub.docker.com/repository/docker/toiyabe/cosmoseditor).
+* 
 
-Step 2: In the "Basics" dialog, make sure the choice for "Publish" is set to "Docker Container" and the "Operating System" is set to "Linux" as shown below.  Continue to the Docker tab.
+### MS SQL Database
 
-![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp01b.jpg)
+Shown below are links that show how to deploy a database to AWS and Azure.
 
-Step 3: For the docker settings, make sure "Options" is set to "Single Container" and that "Image source" is set to "Docker Hub," and "Image and tag" is set to "toiyabe/cosmoseditor:latest" as shown below.
+IMPORTANT! The database has to be accessible to both the Publisher and Editor websites.
 
-![Image of Basics Dialog](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp02.jpg)
+* [Amazon RDS For SQL Server](https://aws.amazon.com/rds/sqlserver/)
+* [Azure SQL Server](https://azure.microsoft.com/en-us/products/azure-sql/database/)
 
-Step 4: Now pick the App Service Plan tier.  Choose the one based on your expected load and performance, and budget.  Any will do even the "free" tier, but "B1" is recommenended as the minimum for good performance.  Finish the installation, and once complete open the website.
 
-![Image of Spec Picker](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp03.jpg)
 
-Step 5: Open the website and you should see the setup screen as shown below.
 
-![Image of Yaktocat](https://github.com/CosmosSoftware/Cosmos.Cms/blob/main/Documentation/Installation/CreateWebApp07.jpg)
+
 
 ### Cosmos Editor Installation - Amazon Web Services
 
