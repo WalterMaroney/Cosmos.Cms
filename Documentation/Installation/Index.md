@@ -67,14 +67,14 @@ For Microsoft Azure you will need the following:
 
 ### File Storage
 
-Files are stored in either AWS S3 or Azure Storage accounts. 
+Files are stored in either AWS S3 or Azure Storage accounts with the public website enabled.
 
 * [AWS S3 with public website](https://docs.aws.amazon.com/AmazonS3/latest/userguide/HostingWebsiteOnS3Setup.html). 
 * [Azure Storage with public website](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website).
 
 IMPORTANT:
 * The storage account API needs to be accessable to the Editor Website.
-* Note you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/). This can be done through CloudFront or a load balancer.
+* IMPORTANT! For Amazon S3 you will need to [enable SSL for the S3 website](https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-serve-static-website/). This can be done through CloudFront or a load balancer.
 
 ### MS SQL Database
 
