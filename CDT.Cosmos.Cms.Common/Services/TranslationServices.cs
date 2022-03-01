@@ -20,7 +20,9 @@ namespace CDT.Cosmos.Cms.Common.Services
         public TranslationServices(IOptions<CosmosConfig> config)
         {
             if (config.Value != null && config.Value.GoogleCloudAuthConfig != null)
+            {
                 _translationConfig = config.Value.GoogleCloudAuthConfig;
+            }    
         }
 
         /// <summary>
@@ -83,7 +85,7 @@ namespace CDT.Cosmos.Cms.Common.Services
                 SourceLanguageCode = sourceLanguage,
                 Contents = { content },
                 TargetLanguageCode = destinationLanguage,
-                Parent = new ProjectName("translator-oet").ToString() // Must match .json file
+                Parent = new ProjectName(_translationConfig.ParentProjectId).ToString() // Must match .json file
             };
             var response = await client.TranslateTextAsync(request);
             // response.Translations will have one entry, because request.Contents has one entry.
@@ -102,8 +104,8 @@ namespace CDT.Cosmos.Cms.Common.Services
             var model = await client.GetSupportedLanguagesAsync(new GetSupportedLanguagesRequest
             {
                 DisplayLanguageCode = returnLanguage,
-                Parent = new ProjectName("translator-oet").ToString(),
-                ParentAsLocationName = new LocationName("translator-oet", "us-central1")
+                Parent = new ProjectName(_translationConfig.ParentProjectId).ToString(),
+                ParentAsLocationName = new LocationName(_translationConfig.ParentProjectId, "us-central1")
             });
 
             //

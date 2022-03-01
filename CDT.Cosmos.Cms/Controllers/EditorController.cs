@@ -301,6 +301,93 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
+        /// Create a duplicate page from a specified page.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Duplicate(int id)
+        {
+            var articleViewModel = await _articleLogic.Get(id, EnumControllerName.Edit);
+
+            ViewData["Original"] = articleViewModel;
+
+            if (articleViewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(new DuplicateViewModel()
+            {
+                Id = articleViewModel.Id,
+                Published = articleViewModel.Published,
+                Title = articleViewModel.Title
+            });
+        }
+
+        /// <summary>
+        /// Creates a duplicate page from a specified page and version.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrators, Editors, Authors")]
+        public async Task<IActionResult> Duplicate(DuplicateViewModel model)
+        {
+            string title = "";
+
+            if (string.IsNullOrEmpty(model.ParentPageTitle))
+            {
+                title = model.Title;
+            }
+            else
+            {
+                title = $"{ model.ParentPageTitle.Trim('/')}/{ model.Title.Trim('/')} ";
+            }
+
+            if (_dbContext.Articles.Any(a => a.Title.ToLower() == title.ToLower()))
+            {
+                if (string.IsNullOrEmpty(model.ParentPageTitle))
+                {
+                    ModelState.AddModelError("Title", "Page title already taken.");
+                }
+                else
+                {
+                    ModelState.AddModelError("Title", "Sub-page title already taken.");
+                }
+            }
+
+            
+
+            var articleViewModel = await _articleLogic.Get(model.Id, EnumControllerName.Edit);
+
+            if (ModelState.IsValid)
+            {
+                articleViewModel.ArticleNumber = 0;
+                articleViewModel.Id = 0;
+                articleViewModel.Published = model.Published;
+                articleViewModel.Title = title;
+
+                var identityUser = await _userManager.GetUserAsync(User);
+
+                try
+                {
+                    var result = await _articleLogic.UpdateOrInsert(articleViewModel, identityUser.Id);
+
+                    return RedirectToAction("Edit", new { Id = result.Model.Id });
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.Message);
+                }
+            }
+
+            ViewData["Original"] = articleViewModel;
+
+            return View(model);
+        }
+
+        /// <summary>
         ///     Creates a <see cref="CreatePageViewModel" /> used to create a new article.
         /// </summary>
         /// <returns></returns>
@@ -832,7 +919,7 @@ namespace CDT.Cosmos.Cms.Controllers
                     //
                     var article = await _dbContext.Articles.FirstOrDefaultAsync(f => f.Id == model.Id);
                     if (article == null) throw new Exception("Could not retrieve saved code!");
-                   
+
 
                 }
                 catch (Exception e)
@@ -951,6 +1038,46 @@ namespace CDT.Cosmos.Cms.Controllers
         }
 
         /// <summary>
+        /// Gets a list of articles (web pages)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetArticleList()
+        {
+            List<ArticleListItem> list;
+
+            if (User.IsInRole("Team Members"))
+            {
+                var identityUser = await _userManager.GetUserAsync(User);
+                ViewData["TeamsLookup"] = await _dbContext.Teams
+                    .Where(a => a.Members.Any(x => x.UserId == identityUser.Id))
+                    .Select(s => new TeamViewModel
+                    {
+                        Id = s.Id,
+                        TeamDescription = s.TeamDescription,
+                        TeamName = s.TeamName
+                    }).OrderBy(o => o.TeamName)
+                    .ToListAsync();
+
+                var userId = await _userManager.GetUserIdAsync(await _userManager.GetUserAsync(User));
+
+                var query = _dbContext.Articles
+                    .Include(i => i.Team)
+                    .Where(w => w.Team.Members.Any(a => a.UserId == userId));
+
+                list = await _articleLogic.GetArticleList(query, true);
+            }
+            else
+            {
+                list = await _articleLogic.GetArticleList(query: null, true);
+
+                ViewData["TeamsLookup"] = null;
+            }
+            return Json(list.OrderBy(o => o.Title).ToList());
+        }
+
+
+        /// <summary>
         ///     Get list of articles
         /// </summary>
         /// <param name="request"></param>
@@ -961,6 +1088,7 @@ namespace CDT.Cosmos.Cms.Controllers
         public async Task<IActionResult> Get_Articles([DataSourceRequest] DataSourceRequest request)
         {
             List<ArticleListItem> list;
+
             var defaultSort = request.Sorts?.Any() == false && request.Filters?.Any() == false;
 
             if (User.IsInRole("Team Members"))

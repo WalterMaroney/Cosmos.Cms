@@ -196,13 +196,12 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             AwsSecretAccessKey = GetValue<string>("CosmosAwsSecretAccessKey");
 
             var dbConnection = GetConnectionString("DefaultConnection");
-            var blobConnection = GetConnectionString("BlobConnection");
 
             #endregion
 
             #region VALIDATE REQUIRED VALUES
 
-            if (string.IsNullOrEmpty(SecretName) && string.IsNullOrEmpty(dbConnection) && string.IsNullOrEmpty(blobConnection))
+            if (string.IsNullOrEmpty(SecretName) && string.IsNullOrEmpty(dbConnection))
             {
                 AddDiagnostic("Boot environment variable CosmosSecretName is null or empty.", false);
             }
@@ -217,6 +216,7 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
             }
             else
             {
+
                 if (PrimaryCloud != "azure" && PrimaryCloud != "amazon")
                 {
                     AddDiagnostic($"CosmosPrimaryCloud must be set to azure or amazon, not '{PrimaryCloud}'.", false);

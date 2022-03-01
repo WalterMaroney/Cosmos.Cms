@@ -34,7 +34,8 @@
             .Columns(c =>
             {
             c.Bound(b => b.Id).Hidden(true);
-            c.Template($"<a target=\"_blank\" class=\"btn btn-sm btn-primary\" href=\"{Url.Action("Preview", "Home")}/#: Id #\" title=\"Click to preview\"><span class=\"fa fa-external-link\"></span> #: VersionNumber #</a>").Width(100).Title("Version");
+            c.Bound(b => b.VersionNumber).Title("Version");
+            c.Template($"<a target=\"_blank\" class=\"btn btn-sm btn-primary\" href=\"{Url.Action("Preview", "Home")}/#: Id #\" title=\"Click to preview\"><span class=\"fas fa-search\"></span></a> <a class=\"btn btn-sm btn-secondary\" href=\"{Url.Action("Duplicate", "Editor")}/#: Id #\" title=\"Create a new web page based on this version.\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, true) #><span class=\"fa fa-external-link\"></span></a>").Title("Preview/New Page");
             c.Template($"<a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('HTML', #: Id #, '#: Published #') \" title=\"Edit online with Kendo WSYWIG editor.\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, UsesHtmlEditor) #>HTML View</a> <a class=\"btn btn-sm btn-secondary\" href=\"javascript:showEditDialog('CODE', #: Id #, '#: Published #')\" title=\"Edit code using Monaco Editor.\" #: visibleStyle('{isReviewer}', '{isAuthor}', Published, true) #>Code View</a>").Title("Edit Tools");
             c.Template("#= formatPublishedDate(Published) #").Title("Published");
             c.Template("#= kendo.toString(Updated, 'G') #").Title("Last Edited");
@@ -76,6 +77,85 @@
         <action action="editPublishedVersion" text="Edit Published" title="Edit already published version of page">
         </action>
     </actions>
+</kendo-dialog>
+<kendo-dialog name="duplicateVersionDialog" title="Duplicate" modal="true" visible="false" width="550">
+    <content>
+        <h4>Duplicate Page</h4>
+        <p>Use this dialo to make a duplication of this web page.</p>
+        <form id="dupForm" class="row g-3 needs-validation" novalidate>
+            <div class="col-md-4">
+                <label for="ParentPageUrl" class="form-label">Parent page (optional)</label>
+                @(Html.Kendo().AutoComplete()
+                .Name("ParentPageUrl")
+                .Filter("startswith")
+                .Placeholder("Select country...")
+                .BindTo(new string[] {
+                "Albania",
+                "Andorra",
+                "Armenia",
+                "Austria",
+                "Azerbaijan",
+                "Belarus",
+                "Belgium",
+                "Bosnia & Herzegovina",
+                "Bulgaria",
+                "Croatia",
+                "Cyprus",
+                "Czech Republic",
+                "Denmark",
+                "Estonia",
+                "Finland",
+                "France",
+                "Georgia",
+                "Germany",
+                "Greece",
+                "Hungary",
+                "Iceland",
+                "Ireland",
+                "Italy",
+                "Kosovo",
+                "Latvia",
+                "Liechtenstein",
+                "Lithuania",
+                "Luxembourg",
+                "Macedonia",
+                "Malta",
+                "Moldova",
+                "Monaco",
+                "Montenegro",
+                "Netherlands",
+                "Norway",
+                "Poland",
+                "Portugal",
+                "Romania",
+                "Russia",
+                "San Marino",
+                "Serbia",
+                "Slovakia",
+                "Slovenia",
+                "Spain",
+                "Sweden",
+                "Switzerland",
+                "Turkey",
+                "Ukraine",
+                "United Kingdom",
+                "Vatican City"
+                })
+                .Separator(", ")
+                )
+                <div class="valid-feedback">
+                    OK
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="Title" class="form-label">New title</label>
+                <input type="text" class="form-control" id="Title" value="Mark" required>
+                <div class="valid-feedback">
+                    OK
+                </div>
+            </div>
+        </form>
+    </content>
 </kendo-dialog>
 <script>
     function visibleStyle(isReviewer, isAuthor, isPublished, usesEditor) {

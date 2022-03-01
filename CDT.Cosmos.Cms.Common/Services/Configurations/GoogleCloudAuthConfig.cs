@@ -22,6 +22,24 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
         public string ProjectId { get; set; }
 
         /// <summary>
+        /// Parent project ID (if there is one)
+        /// </summary>
+        [Display(Name = "Parent projec Id (if there is one)")]
+        public string ParentProjectId { 
+            get
+            {
+                if (string.IsNullOrEmpty(ParentProjectId))
+                    return ProjectId;
+                return ParentProjectId;
+            }
+            set 
+            {
+                ParentProjectId = value;
+            }
+        }
+
+
+        /// <summary>
         ///     Private key Id
         /// </summary>
         [Display(Name = "Private Key Id")]

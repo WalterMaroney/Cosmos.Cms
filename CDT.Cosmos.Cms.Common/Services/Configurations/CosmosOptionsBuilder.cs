@@ -316,6 +316,24 @@ namespace CDT.Cosmos.Cms.Common.Services.Configurations
                         });
                     }
                 }
+                else if (model.PrimaryCloud.Equals("amazon", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var container = configuration.GetValue<string>("CosmosBlobContainer");
+                    var region = configuration.GetValue<string>("AmazonRegion");
+
+                    if (!string.IsNullOrEmpty(_cosmosStartup.AwsKeyId) && !string.IsNullOrEmpty(_cosmosStartup.AwsSecretAccessKey) && !string.IsNullOrEmpty(container) && !string.IsNullOrEmpty(region) && !string.IsNullOrEmpty(model.SiteSettings.BlobPublicUrl))
+                    {
+                        model.StorageConfig.AmazonConfigs.Add(new Storage.AmazonStorageConfig()
+                        {
+                            AmazonAwsAccessKeyId = _cosmosStartup.AwsKeyId,
+                            AmazonAwsSecretAccessKey = _cosmosStartup.AwsSecretAccessKey,
+                            AmazonBucketName = container,
+                            AmazonRegion = region,
+                            ProfileName = "S3-" + region,
+                            ServiceUrl = model.SiteSettings.BlobPublicUrl
+                        });
+                    }
+                }
 
             }
             else

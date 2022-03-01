@@ -353,6 +353,11 @@
             .Hint("For example 'translator-oet'.");
 
             items.Add()
+            .Field(p => p.GoogleCloudAuthConfig.ParentProjectId)
+            .Label("Project Id")
+            .Hint("For example 'translator-oet'.");
+
+            items.Add()
             .Field(p => p.GoogleCloudAuthConfig.PrivateKeyId)
             .Label("Private Key Id");
 
