@@ -45,6 +45,7 @@ If you are using an automated means of deploying Cosmos [as is used for Deployme
 * CosmosPublisherUrl [The public URL to the Publisher website]
 * CosmosEditorUrl [The public URL of the editor website]
 * CosmosPrimaryCloud [Can be one of these: amazon, azure, google]
+* CosmosStorageUrl [Public URL of the Azure Storage or S3 bucket]
 * CosmosBlobContainer [Can be either '$web' for Azure, or the name of the S3 container for Amazon]
 
 * ConnectionStrings:
